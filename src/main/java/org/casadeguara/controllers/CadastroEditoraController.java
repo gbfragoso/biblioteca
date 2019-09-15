@@ -7,9 +7,9 @@ import javafx.concurrent.Task;
 
 public class CadastroEditoraController implements GenericController {
     
+	private Editora editoraAtual;
     private EditoraModel model;
     private CadastroEditoraView view;
-    private int currentID = 0;
     
     public CadastroEditoraController(CadastroEditoraView view, EditoraModel model) {
         this.view = view;
@@ -24,17 +24,18 @@ public class CadastroEditoraController implements GenericController {
             view.acaoBotaoAlterar(event -> atualizarEditora());
             view.acaoBotaoCadastrar(event -> cadastrarEditora());
             view.acaoBotaoLimpar(event -> limparCampos());
-            view.acaoPesquisarEditora((observable, oldValue, newValue) -> pesquisarEditora(newValue));
+            view.acaoPesquisarEditora(event -> pesquisarEditora());
             
-            view.setListaSugestoes(model.getListaEditoras());
+            view.setAutoComplete(model);
         }
     }
     
     public int atualizarEditora() {
         String novoNome = view.getNomeEditora();
 
-        if (getCurrentID() > 0 && !novoNome.isEmpty()) {
-            Editora novaEditora = new Editora(getCurrentID(), novoNome);
+        if (getEditoraAtual() != null && !novoNome.isEmpty()) {
+            Editora novaEditora = getEditoraAtual();
+            novaEditora.setNome(novoNome);
             
             Task<Void> atualizarEditora = new Task<Void>() {
 
@@ -42,8 +43,6 @@ public class CadastroEditoraController implements GenericController {
                 protected Void call() throws Exception {
                     updateMessage("Atualizando a editora " + novoNome);
                     if(model.atualizar(novaEditora) == 0) {
-                        updateMessage("Atualizando lista de editoras.");
-                        model.atualizarListaEditoras();
                         updateMessage("Editora atualizada com sucesso.");
                     } else {
                         updateMessage("Não foi possível atualizar a editora.");
@@ -73,8 +72,6 @@ public class CadastroEditoraController implements GenericController {
                 protected Void call() throws Exception {
                     updateMessage("Cadastrando a editora " + nome);
                     if(model.cadastrar(new Editora(0, nome)) == 0) {
-                        updateMessage("Atualizando a lista de editoras.");
-                        model.atualizarListaEditoras();
                         updateMessage("Editora cadastrada com sucesso.");
                     } else {
                         updateMessage("Editora não cadastrada. Verifique se ela já existe.");
@@ -94,30 +91,29 @@ public class CadastroEditoraController implements GenericController {
     }
     
     public void limparCampos() {
-        setCurrentID(0);
+        setEditoraAtual(null);
         view.limparCampos();
     }
     
-    public int pesquisarEditora(String nomeEditora) {
-        if(nomeEditora != null && !nomeEditora.isEmpty()) {
-            setAutorAtual(model.consultarEditora(nomeEditora));
+    public int pesquisarEditora() {
+    	Editora editora = view.getTermoPesquisado();
+        if(editora != null) {
+            setEditoraAtual(editora);
+            view.estaCadastrando(false);
+            view.setNomeEditora(editora.getNome());
             
-            if(getCurrentID() > 0) {
-                view.estaCadastrando(false);
-                view.setNomeEditora(nomeEditora);
-                return 0;
-            } else {
-                view.mensagemInformativa("Editora não encontrada");
-            }
+            return 0;
+        } else {
+            view.mensagemInformativa("Editora não encontrada");
         }
         return 1;
     }
     
-    public int getCurrentID() {
-        return currentID;
+    public Editora getEditoraAtual() {
+        return editoraAtual;
     }
     
-    public void setCurrentID(int id) {
-        this.currentID = id;
+    public void setEditoraAtual(Editora editora) {
+        this.editoraAtual = editora;
     }
 }

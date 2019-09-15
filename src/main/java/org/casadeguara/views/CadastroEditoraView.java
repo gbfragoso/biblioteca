@@ -1,14 +1,15 @@
 package org.casadeguara.views;
 
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import org.casadeguara.componentes.CustomComboBox;
+
+import org.casadeguara.componentes.AutoCompleteTextField;
+import org.casadeguara.entidades.Editora;
+import org.casadeguara.models.GenericModel;
 
 /**
  * Controi a tela de cadastro de editora.
@@ -20,7 +21,7 @@ public class CadastroEditoraView implements GenericView{
     private Button btnAlterar;
     private Button btnCadastrar;
     private Button btnLimpar;
-    private CustomComboBox<String> pesquisarEditoras;
+    private AutoCompleteTextField<Editora> pesquisarEditoras;
     private TextField txtNome;
 
     public CadastroEditoraView() {
@@ -46,7 +47,7 @@ public class CadastroEditoraView implements GenericView{
         txtNome.setPrefWidth(535);
         btnAlterar.setDisable(true);
 
-        pesquisarEditoras = new CustomComboBox<>();
+        pesquisarEditoras = new AutoCompleteTextField<>();
         pesquisarEditoras.setPrefWidth(535);
         pesquisarEditoras.setPromptText("Digite o nome de uma editora");
         
@@ -86,8 +87,8 @@ public class CadastroEditoraView implements GenericView{
         btnLimpar.setOnAction(event);
     }
     
-    public void acaoPesquisarEditora(ChangeListener<String> listener) {
-        pesquisarEditoras.valueProperty().addListener(listener);
+    public void acaoPesquisarEditora(EventHandler<ActionEvent> event) {
+        pesquisarEditoras.setOnAction(event);
     }
     
     public void estaCadastrando(boolean resposta) {
@@ -100,7 +101,7 @@ public class CadastroEditoraView implements GenericView{
         estaCadastrando(true);
         
         txtNome.clear();
-        pesquisarEditoras.getSelectionModel().clearSelection();
+        pesquisarEditoras.clear();
     }
     
     public String getNomeEditora() {
@@ -111,13 +112,16 @@ public class CadastroEditoraView implements GenericView{
         txtNome.setText(nomeEditora);
     }
     
-    public void setListaSugestoes(ObservableList<String> listaEditoras) {
-        pesquisarEditoras.setItems(listaEditoras);
+    public void setAutoComplete(GenericModel<Editora> model) {
+    	pesquisarEditoras.setModel(model);
+    }
+    
+    public Editora getTermoPesquisado() {
+    	return pesquisarEditoras.getResult();
     }
     
     @Override
     public AnchorPane getRoot() {
         return painelEditora;
     }
-
 }

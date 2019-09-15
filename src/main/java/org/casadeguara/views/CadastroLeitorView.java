@@ -1,7 +1,5 @@
 package org.casadeguara.views;
 
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -10,9 +8,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import org.casadeguara.componentes.CustomComboBox;
+
+import org.casadeguara.componentes.AutoCompleteTextField;
 import org.casadeguara.componentes.LimitedTextField;
 import org.casadeguara.componentes.MaskedTextField;
+import org.casadeguara.entidades.Leitor;
+import org.casadeguara.models.GenericModel;
 
 /**
  * Controi a tela de cadastro de leitor
@@ -29,7 +30,7 @@ public class CadastroLeitorView implements GenericView{
     private CheckBox chbInativo;
     private CheckBox chbIncompleto;
     private ComboBox<String> cbbSexo;
-    private CustomComboBox<String> pesquisarLeitores;
+    private AutoCompleteTextField<Leitor> pesquisarLeitores;
     private MaskedTextField txtRg;
     private MaskedTextField txtCep;
     private MaskedTextField txtCpf;
@@ -102,7 +103,7 @@ public class CadastroLeitorView implements GenericView{
         txtTelefone1.setPrefWidth(135);
         txtTelefone2.setPrefWidth(135);
 
-        pesquisarLeitores = new CustomComboBox<>();
+        pesquisarLeitores = new AutoCompleteTextField<>();
         pesquisarLeitores.setPrefWidth(535);
         pesquisarLeitores.setPromptText("Selecione um leitor para alteração");
         
@@ -202,8 +203,8 @@ public class CadastroLeitorView implements GenericView{
         btnLimpar.setOnAction(event);
     }
     
-    public void acaoPesquisarLeitor(ChangeListener<String> listener) {
-        pesquisarLeitores.valueProperty().addListener(listener);
+    public void acaoPesquisarLeitor(EventHandler<ActionEvent> event) {
+        pesquisarLeitores.setOnAction(event);
     }
     
     public void estaCadastrando(boolean resposta) {
@@ -328,7 +329,7 @@ public class CadastroLeitorView implements GenericView{
     public void limparCampos() {
         estaCadastrando(true);
         
-        pesquisarLeitores.getSelectionModel().clearSelection();
+        pesquisarLeitores.clear();
         txtNome.clear();
         txtEmail.clear();
         txtTelefone1.clear();
@@ -343,11 +344,15 @@ public class CadastroLeitorView implements GenericView{
         chbInativo.setSelected(false);
         chbIncompleto.setSelected(false);
     }
-    
-    public void setListaSugestoes(ObservableList<String> lista) {
-        pesquisarLeitores.setItems(lista);
+
+    public void setAutoComplete(GenericModel<Leitor> model) {
+    	pesquisarLeitores.setModel(model);
     }
     
+    public Leitor getTermoPesquisado() {
+    	return pesquisarLeitores.getResult();
+    }
+
     @Override
     public AnchorPane getRoot() {
         return painelLeitor;

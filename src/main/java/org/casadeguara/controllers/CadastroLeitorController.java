@@ -28,9 +28,9 @@ public class CadastroLeitorController implements GenericController {
         view.acaoBotaoCadastrar(event -> cadastrarLeitor());
         view.acaoBotaoImprimirFicha(event -> imprimirFichaCadastro());
         view.acaoBotaoLimpar(event -> limparCampos());
-        view.acaoPesquisarLeitor((observable, oldValue, newValue) -> pesquisarLeitor(newValue));
+        view.acaoPesquisarLeitor(event -> pesquisarLeitor());
         
-        view.setListaSugestoes(model.getListaLeitores());
+        view.setAutoComplete(model);
     }
     
     private void updateView(Leitor leitor) {
@@ -62,8 +62,6 @@ public class CadastroLeitorController implements GenericController {
                 protected Void call() throws Exception {
                     updateMessage("Atualizando o leitor " + nome);
                     if(model.atualizar(novoLeitor) == 0) {
-                        updateMessage("Atualizando a lista de leitores.");
-                        model.atualizarListaLeitores();
                         updateMessage("Leitor atualizado com sucesso.");
                     } else {
                         updateMessage("Não foi possível atualizar o leitor.");
@@ -92,8 +90,6 @@ public class CadastroLeitorController implements GenericController {
                 protected Void call() throws Exception {
                     updateMessage("Cadastrando o leitor " + nome);
                     if(model.cadastrar(construirLeitor(0, nome)) == 0) {
-                        updateMessage("Atualizando a lista de leitores.");
-                        model.atualizarListaLeitores();
                         updateMessage("Leitor cadastrado com sucesso.");
                     } else {
                         updateMessage("Leitor não cadastrado. Verifique se ele já existe.");
@@ -124,18 +120,16 @@ public class CadastroLeitorController implements GenericController {
         view.limparCampos();
     }
     
-    public int pesquisarLeitor(String nomeLeitor) {
-        if(nomeLeitor != null && !nomeLeitor.isEmpty()) {
-            setLeitorSelecionado(model.consultar(nomeLeitor));
-            
-            if(getLeitorSelecionado() != null) {
-                view.estaCadastrando(false);
-                updateView(getLeitorSelecionado());
-                
-                return 0;
-            } else {
-                view.mensagemInformativa("Leitor não encontrado");
-            }
+    public int pesquisarLeitor() {
+    	Leitor leitor = view.getTermoPesquisado();
+        
+    	if(leitor != null) {
+            setLeitorSelecionado(leitor);
+            view.estaCadastrando(false);
+            updateView(getLeitorSelecionado());
+            return 0;
+        } else {
+            view.mensagemInformativa("Leitor não encontrado");
         }
         return 1;
     }

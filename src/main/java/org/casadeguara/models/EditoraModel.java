@@ -68,11 +68,11 @@ public class EditoraModel implements GenericModel<Editora>{
 		try (Connection con = Conexao.abrir();
              PreparedStatement ps = con.prepareStatement(query)) {
             
-            ps.setString(1, nome);
+            ps.setString(1, "%" + nome + "%");
             ps.setInt(2, resultados);
             
             try(ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
                     autores.add(new Editora(rs.getInt(1), rs.getString(2)));
                 }
             }

@@ -1,7 +1,7 @@
 package org.casadeguara.controllers;
 
 import java.util.Optional;
-import org.casadeguara.dialogos.DialogoComboBox;
+import org.casadeguara.dialogos.AutoCompleteDialog;
 import org.casadeguara.impressora.Impressora;
 import org.casadeguara.models.ImpressosModel;
 import org.casadeguara.views.ImpressosView;
@@ -64,7 +64,7 @@ public class ImpressosController implements GenericController {
     }
 
     public void historico() {
-        DialogoComboBox dialogo = new DialogoComboBox("Selecione um leitor", 
+        AutoCompleteDialog dialogo = new AutoCompleteDialog("Selecione um leitor", 
                 "Selecione um leitor para gerar o histórico\nde empréstimos.",
                 model.getListaLeitores());
         

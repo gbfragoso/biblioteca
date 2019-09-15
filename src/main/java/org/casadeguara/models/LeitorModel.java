@@ -107,11 +107,11 @@ public class LeitorModel implements GenericModel<Leitor>{
         try (Connection con = Conexao.abrir();
              PreparedStatement ps = con.prepareStatement(query.toString())) {
 
-            ps.setString(1, nome);
+            ps.setString(1, "%" + nome + "%");
             ps.setInt(2, resultados);
             
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
                 	leitores.add(
                 		new LeitorBuilder(rs.getString(2))
                             .id(rs.getInt(1))

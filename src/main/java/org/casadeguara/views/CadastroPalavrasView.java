@@ -1,14 +1,15 @@
 package org.casadeguara.views;
 
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import org.casadeguara.componentes.CustomComboBox;
+
+import org.casadeguara.componentes.AutoCompleteTextField;
+import org.casadeguara.entidades.PalavraChave;
+import org.casadeguara.models.GenericModel;
 
 /**
  * Constroi a tela de cadastro de palavras-chave
@@ -20,7 +21,7 @@ public class CadastroPalavrasView implements GenericView{
     private Button btnAlterar;
     private Button btnCadastrar;
     private Button btnLimpar;
-    private CustomComboBox<String> pesquisarPalavras;
+    private AutoCompleteTextField<PalavraChave> pesquisarPalavras;
     private TextField txtAssunto;
 
     public CadastroPalavrasView() {
@@ -47,7 +48,7 @@ public class CadastroPalavrasView implements GenericView{
         
         btnAlterar.setDisable(true);
 
-        pesquisarPalavras = new CustomComboBox<>();
+        pesquisarPalavras = new AutoCompleteTextField<>();
         pesquisarPalavras.setPrefWidth(535);
         pesquisarPalavras.setPromptText("Digite uma palavra-chave");
 
@@ -87,8 +88,8 @@ public class CadastroPalavrasView implements GenericView{
         btnLimpar.setOnAction(event);
     }
 
-    public void acaoPesquisarPalavraChave(ChangeListener<String> listener) {
-        pesquisarPalavras.getSelectionModel().selectedItemProperty().addListener(listener);
+    public void acaoPesquisarPalavraChave(EventHandler<ActionEvent> event) {
+        pesquisarPalavras.setOnAction(event);
     }
     
     public void estaCadastrando(boolean resposta) {
@@ -101,7 +102,7 @@ public class CadastroPalavrasView implements GenericView{
         estaCadastrando(true);
         
         txtAssunto.clear();
-        pesquisarPalavras.getSelectionModel().clearSelection();
+        pesquisarPalavras.clear();
     }
     
     public String getPalavraChave() {
@@ -112,8 +113,12 @@ public class CadastroPalavrasView implements GenericView{
         txtAssunto.setText(novaPalavra);
     }
     
-    public void setListaSugestoes(ObservableList<String> listaPalavras) {
-        pesquisarPalavras.setItems(listaPalavras);
+    public void setAutoComplete(GenericModel<PalavraChave> model) {
+    	pesquisarPalavras.setModel(model);
+    }
+    
+    public PalavraChave getTermoPesquisado() {
+    	return pesquisarPalavras.getResult();
     }
     
     @Override

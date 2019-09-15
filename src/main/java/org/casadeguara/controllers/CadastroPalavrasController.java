@@ -7,9 +7,9 @@ import javafx.concurrent.Task;
 
 public class CadastroPalavrasController implements GenericController{
     
-    private CadastroPalavrasView view;
+	private PalavraChave palavraChave;
     private PalavraChaveModel model;
-    private int currentID = 0;
+    private CadastroPalavrasView view;
     
     public CadastroPalavrasController(CadastroPalavrasView view, PalavraChaveModel model) {
         this.view = view;
@@ -24,17 +24,18 @@ public class CadastroPalavrasController implements GenericController{
             view.acaoBotaoAlterar(event -> atualizarPalavraChave());
             view.acaoBotaoCadastrar(event -> cadastrarPalavraChave());
             view.acaoBotaoLimpar(event -> limparCampos());
-            view.acaoPesquisarPalavraChave((observable, oldValue, newValue) -> pesquisarPalavraChave(newValue));
+            view.acaoPesquisarPalavraChave(event -> pesquisarPalavraChave());
             
-            view.setListaSugestoes(model.getListaPalavras());
+            view.setAutoComplete(model);
         }
     }
     
     public int atualizarPalavraChave() {
         String novoAssunto = view.getPalavraChave();
 
-        if (getCurrentID() > 0 && !novoAssunto.isEmpty()) {
-            PalavraChave palavraChave = new PalavraChave(getCurrentID() , novoAssunto);
+        if (getPalavraChaveAtual() != null && !novoAssunto.isEmpty()) {
+            PalavraChave palavraChave = getPalavraChaveAtual();
+            palavraChave.setAssunto(novoAssunto);
             
             Task<Void> atualizarPalavraChave = new Task<Void>() {
 
@@ -42,8 +43,6 @@ public class CadastroPalavrasController implements GenericController{
                 protected Void call() throws Exception {
                     updateMessage("Atualizando a palavra-chave " + novoAssunto);
                     if(model.atualizar(palavraChave) == 0) {
-                        updateMessage("Atualizando lista de palavras-chave.");
-                        model.atualizarListaPalavras();
                         updateMessage("Palavra-chave alterada com sucesso.");
                     } else {
                         updateMessage("Não foi possível atualizar a palavra-chave.");
@@ -73,8 +72,6 @@ public class CadastroPalavrasController implements GenericController{
                 protected Void call() throws Exception {
                     updateMessage("Cadastrando a palavra-chave " + assunto);
                     if(model.cadastrar(new PalavraChave(0, assunto)) > 0) {
-                        updateMessage("Atualizando a lista de palavras-chave.");
-                        model.atualizarListaPalavras();
                         updateMessage("Palavra-chave cadastrada com sucesso.");
                     } else {
                         updateMessage("Palavra-chave não cadastrada. Verifique se ela já existe.");
@@ -95,32 +92,31 @@ public class CadastroPalavrasController implements GenericController{
     }
     
     public void limparCampos() {
-        setCurrentID(0);
+        setPalavraChaveAtual(null);
         view.limparCampos();
     }
     
-    public int pesquisarPalavraChave(String novaPalavra) {
-        if(novaPalavra != null && !novaPalavra.isEmpty()) {
-            setAutorAtual(model.consultarPalavraChave(novaPalavra));
+    public int pesquisarPalavraChave() {
+    	PalavraChave palavraChave = view.getTermoPesquisado();
+    	
+    	if(palavraChave != null) {
+        	setPalavraChaveAtual(palavraChave);
+            view.estaCadastrando(false);
+            view.setPalavraChave(palavraChave.getAssunto());
 
-            if(getCurrentID() > 0) {
-                view.estaCadastrando(false);
-                view.setPalavraChave(novaPalavra);
-
-                return 0;
-            } else {
-                view.mensagemInformativa("Palavra-chave não encontrada");
-            }
+            return 0;
+        } else {
+            view.mensagemInformativa("Palavra-chave não encontrada");
         }
         return 1;
     }
 
-    public int getCurrentID() {
-        return currentID;
+    public PalavraChave getPalavraChaveAtual() {
+        return palavraChave;
     }
 
-    public void setCurrentID(int currentID) {
-        this.currentID = currentID;
+    public void setPalavraChaveAtual(PalavraChave palavraChave) {
+        this.palavraChave = palavraChave;
     }
     
 }
