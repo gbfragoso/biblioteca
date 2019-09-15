@@ -1,3 +1,7 @@
 /target/
 /backup/
 /logs/
+/.settings/
+.classpath
+.project
+build.fxbuild
