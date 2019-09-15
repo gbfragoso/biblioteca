@@ -2,8 +2,9 @@ package org.casadeguara.controllers;
 
 import java.util.Optional;
 import org.casadeguara.dialogos.AutoCompleteDialog;
+import org.casadeguara.entidades.Leitor;
 import org.casadeguara.impressora.Impressora;
-import org.casadeguara.models.ImpressosModel;
+import org.casadeguara.models.LeitorModel;
 import org.casadeguara.views.ImpressosView;
 import javafx.scene.control.TextInputDialog;
 
@@ -11,11 +12,9 @@ public class ImpressosController implements GenericController {
 
     private ImpressosView view;
     private Impressora imprimir;
-    private ImpressosModel model;
     
-    public ImpressosController(ImpressosView view, ImpressosModel model) {
+    public ImpressosController(ImpressosView view) {
         this.view = view;
-        this.model = model;
         
         imprimir = new Impressora();
         
@@ -64,13 +63,14 @@ public class ImpressosController implements GenericController {
     }
 
     public void historico() {
-        AutoCompleteDialog dialogo = new AutoCompleteDialog("Selecione um leitor", 
-                "Selecione um leitor para gerar o histórico\nde empréstimos.",
-                model.getListaLeitores());
+        AutoCompleteDialog<Leitor> dialogo = new AutoCompleteDialog<>(
+        	"Selecione um leitor", 
+            "Selecione um leitor para gerar o histórico\nde empréstimos.",
+            new LeitorModel());
         
         dialogo.showAndWait().ifPresent(leitor -> {
-            if (leitor != null && !leitor.isEmpty()) {
-                imprimir.historicoLeitor(leitor);
+            if (leitor != null) {
+                imprimir.historicoLeitor(leitor.getNome());
             }
         });
         

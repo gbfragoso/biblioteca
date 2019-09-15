@@ -2,11 +2,16 @@ package org.casadeguara.dialogos;
 
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.layout.VBox;
 
 import org.casadeguara.componentes.AutoCompleteTextField;
 import org.casadeguara.models.GenericModel;
 
+/**
+ * Janela de diálogo com um textfield autocompletável
+ * @author Gustavo
+ */
 public class AutoCompleteDialog<T> extends Dialog<T>{
     
     private AutoCompleteTextField<T> field;
@@ -14,8 +19,9 @@ public class AutoCompleteDialog<T> extends Dialog<T>{
     public AutoCompleteDialog(String prompt, String header, GenericModel<T> model) {
         setHeaderText(header);
 
-        getDialogPane().setContent(createContent(prompt, model));
-        getDialogPane().getButtonTypes().add(ButtonType.OK);
+        DialogPane dialogPane = getDialogPane();
+		dialogPane.setContent(createContent(prompt, model));
+        dialogPane.getButtonTypes().add(ButtonType.OK);
         
         setResultConverter(button -> {
             if(button != null && button.equals(ButtonType.OK)) {

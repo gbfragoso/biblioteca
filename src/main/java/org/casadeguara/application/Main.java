@@ -33,7 +33,6 @@ import org.casadeguara.models.AutorModel;
 import org.casadeguara.models.ConsultaModel;
 import org.casadeguara.models.EditoraModel;
 import org.casadeguara.models.GraficoModel;
-import org.casadeguara.models.ImpressosModel;
 import org.casadeguara.models.LeitorModel;
 import org.casadeguara.models.LivroModel;
 import org.casadeguara.models.LoginModel;
@@ -101,7 +100,6 @@ public class Main extends Application {
     private PalavraChaveModel palavraChaveModel;
     private ConsultaModel consultaModel;
     private GraficoModel graficoModel;
-    private ImpressosModel impressosModel;
     private LoginModel loginModel;
     private MovimentacaoModel movimentacaoModel;
     private ReservaModel reservaModel;
@@ -122,7 +120,6 @@ public class Main extends Application {
         consultaModel = new ConsultaModel();
         editoraModel = new EditoraModel();
         graficoModel = new GraficoModel();
-        impressosModel = new ImpressosModel(dataSource);
         leitorModel = new LeitorModel();
         livroModel = new LivroModel(dataSource);
         loginModel = new LoginModel();
@@ -161,7 +158,7 @@ public class Main extends Application {
         new CadastroUsuarioController(cadastroUsuarioView, usuarioModel);
         consultaController = new ConsultaController(consultaView, consultaModel);
         new GraficoController(graficoView, graficoModel);
-        new ImpressosController(impressosView, impressosModel);
+        new ImpressosController(impressosView);
         loginController = new LoginController(loginView, loginModel);
         new MovimentacaoController(movimentacaoView, movimentacaoModel);
         new ReservaController(reservaView, reservaModel);
