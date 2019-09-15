@@ -59,8 +59,8 @@ public class CadastroLeitorView implements GenericView{
         Label lblBairro = new Label("Bairro: ");
         Label lblComp = new Label("Comp.: ");
         Label lblCep = new Label("Cep: ");
-        Label lblTelefone1 = new Label("Telefone 1: ");
-        Label lblTelefone2 = new Label("Telefone 2: ");
+        Label lblTelefone1 = new Label("Celular: ");
+        Label lblTelefone2 = new Label("Whatsapp: ");
         Label lblRg = new Label("RG: ");
         Label lblCpf = new Label("CPF: ");
         Label lblSexo = new Label("Sexo: ");
