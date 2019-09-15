@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configurarion status="info">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <RollingFile name="RollingFile" fileName="logs/biblioteca.log" filePattern="logs/biblioteca_%d{yyyy-MM-dd}-%i.log" >
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+              <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="5" />
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>     
+    <Root level="info">
+      <appender-ref ref="Console" level="trace"/>
+      <appender-ref ref="RollingFile" level="error"/>
+    </Root>    
+  </Loggers>
+</Configurarion>
