@@ -98,18 +98,17 @@ public class LivroModel implements GenericModel<Livro>{
     }
 
     public ObservableList<Livro> consultar(String titulo, int resultados) {
-        StringBuilder query = new StringBuilder();
+    	StringBuilder query = new StringBuilder();
         query.append("select idlivro, tombo, titulo, editora.ideditora, editora.nome from livro ");
         query.append("left join editora on (editora = ideditora) " );
-        query.append("where titulo = ?");
-        
+        query.append("where tombo || ' : ' || unaccent(titulo) like unaccent(?) limit ?");
         ObservableList<Livro> livros = FXCollections.observableArrayList();
         
         logger.trace("Iniciando a consulta do livro: " + titulo);
         try (Connection con = Conexao.abrir();
              PreparedStatement ps = con.prepareStatement(query.toString())) {
             
-            ps.setString(1, titulo);
+        	ps.setString(1, "%" + titulo + "%");
             ps.setInt(2, resultados);
             
             try(ResultSet rs = ps.executeQuery()) {
@@ -124,7 +123,7 @@ public class LivroModel implements GenericModel<Livro>{
         } catch (SQLException ex) {
             logger.fatal("Não foi possível consultar o livro", ex);
         }
-        return null;
+        return livros;
     }
     
     public String consultarUltimoTombo() {
