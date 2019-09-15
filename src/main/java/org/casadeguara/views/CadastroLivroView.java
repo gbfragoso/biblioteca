@@ -1,7 +1,5 @@
 package org.casadeguara.views;
 
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -9,9 +7,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import org.casadeguara.componentes.CustomComboBox;
+
+import org.casadeguara.componentes.AutoCompleteTextField;
 import org.casadeguara.componentes.MaskedTextField;
 import org.casadeguara.componentes.NotificationButton;
+import org.casadeguara.entidades.Editora;
+import org.casadeguara.entidades.Livro;
+import org.casadeguara.models.GenericModel;
 
 /**
  * Tela de cadastro de livros.
@@ -27,8 +29,8 @@ public class CadastroLivroView implements GenericView{
     private Button btnLimpar;
     private Button btnCadastrar;
     private Button btnSugerir;
-    private CustomComboBox<String> pesquisarLivros;
-    private CustomComboBox<String> pesquisarEditoras;
+    private AutoCompleteTextField<Livro> pesquisarLivros;
+    private AutoCompleteTextField<Editora> pesquisarEditoras;
     private MaskedTextField txtTombo;
     private NotificationButton btnAdicionarAutor;
     private NotificationButton btnAdicionarExemplar;
@@ -50,11 +52,11 @@ public class CadastroLivroView implements GenericView{
         Label lblIncluir = new Label("Informações Adicionais");
         Label opcoes = new Label("Opções");
 
-        pesquisarLivros = new CustomComboBox<>();
+        pesquisarLivros = new AutoCompleteTextField<>();
         pesquisarLivros.setPromptText("Digite o tombo ou título de um livro");
         pesquisarLivros.setPrefWidth(535);
         
-        pesquisarEditoras = new CustomComboBox<>();
+        pesquisarEditoras = new AutoCompleteTextField<>();
         pesquisarEditoras.setPrefWidth(535);
 
         txtTitulo = new TextField();
@@ -161,8 +163,8 @@ public class CadastroLivroView implements GenericView{
         btnSugerir.setOnAction(event);
     }
     
-    public void acaoPesquisarLivro(ChangeListener<String> listener) {
-        pesquisarLivros.valueProperty().addListener(listener);
+    public void acaoPesquisarLivro(EventHandler<ActionEvent> event) {
+        pesquisarLivros.setOnAction(event);
     }
     
     public void estaCadastrando(boolean resposta) {
@@ -177,8 +179,8 @@ public class CadastroLivroView implements GenericView{
         
         txtTitulo.clear();
         txtTombo.clear();
-        pesquisarLivros.getSelectionModel().clearSelection();
-        pesquisarEditoras.getSelectionModel().clearSelection();
+        pesquisarLivros.clear();
+        pesquisarEditoras.clear();
     }
     
     public void limparNotificacoes() {
@@ -203,12 +205,12 @@ public class CadastroLivroView implements GenericView{
         txtTombo.setPlainText(tombo);
     }
     
-    public String getEditora() {
-        return pesquisarEditoras.getSelectionModel().getSelectedItem();
+    public Editora getEditora() {
+        return pesquisarEditoras.getResult();
     }
     
-    public void setEditora(String nomeEditora) {
-        pesquisarEditoras.getSelectionModel().select(nomeEditora);
+    public void setEditora(Editora editora) {
+        pesquisarEditoras.setResult(editora);
     }
     
     public void quantidadeAutores(int valor) {
@@ -223,17 +225,20 @@ public class CadastroLivroView implements GenericView{
         btnAdicionarPalavra.setNotificationText(valor);
     }
     
-    public void setListaSugestoesEditoras(ObservableList<String> listaEditoras) {
-        pesquisarEditoras.setItems(listaEditoras);
+    public void setAutoCompleteEditora(GenericModel<Editora> editoraModel) {
+    	pesquisarEditoras.setModel(editoraModel);
     }
     
-    public void setListaSugestoesLivros(ObservableList<String> listaLivros) {
-        pesquisarLivros.setItems(listaLivros);
+    public void setAutoCompleteLivro(GenericModel<Livro> model) {
+    	pesquisarLivros.setModel(model);
+    }
+    
+    public Livro getTermoPesquisado() {
+    	return pesquisarLivros.getResult();
     }
     
     @Override
     public AnchorPane getRoot() {
         return painelLivro;
     }
-
 }

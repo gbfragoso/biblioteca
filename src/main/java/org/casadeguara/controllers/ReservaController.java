@@ -1,5 +1,9 @@
 package org.casadeguara.controllers;
 
+import org.casadeguara.entidades.Leitor;
+import org.casadeguara.entidades.Livro;
+import org.casadeguara.models.LeitorModel;
+import org.casadeguara.models.LivroModel;
 import org.casadeguara.models.ReservaModel;
 import org.casadeguara.movimentacao.Reserva;
 import org.casadeguara.views.ReservaView;
@@ -24,31 +28,40 @@ public class ReservaController implements GenericController {
         view.acaoBotaoReservar(event -> adicionarReserva());
         view.acaoPesquisarReserva(event -> pesquisarReservas());
         
-        view.setListaLeitores(model.getListaLeitores());
-        view.setListaLivros(model.getListaLivros());
+        view.setAutoCompleteLeitor(new LeitorModel());
+        view.setAutoCompleteLivro(new LivroModel());
         
         model.expirarReservas();
     }
     
-    public void adicionarReserva() {
-        String leitor = view.getLeitor();
-        String livro = view.getLivro();
-
-        if (leitor != null && livro != null) {
-            int idleitor = model.consultarLeitor(leitor);
-            int idlivro = model.consultarLivro(livro);
-
-            if (!model.possuiReserva(idleitor, idlivro)) {
-                model.reservar(idleitor, idlivro);
-                view.limparCampos();
-                
-                view.mensagemSucesso("Livro reservado com sucesso");
-            } else {
-                view.mensagemInformativa("Esse leitor já efetuou esta reserva.");
-            }
-        } else {
-            view.mensagemInformativa("Você esqueceu de selecionar um leitor ou item.");
+    public int adicionarReserva() {
+        Leitor leitor = view.getLeitor();
+        Livro livro = view.getLivro();
+        
+        if(leitor == null) {
+        	view.mensagemInformativa("Leitor não encontrado");
+        	return 1;
         }
+        
+        if(livro == null) {
+        	view.mensagemInformativa("Livro não encontrado");
+        	return 1;
+        }
+        
+        int idleitor = leitor.getId();
+        int idlivro = livro.getId();
+
+        if (!model.possuiReserva(idleitor, idlivro)) {
+            model.reservar(idleitor, idlivro);
+            view.limparCampos();
+            view.mensagemSucesso("Livro reservado com sucesso");
+            
+            return 0;
+        } else {
+            view.mensagemInformativa("Esse leitor já efetuou esta reserva.");
+        }
+        
+        return 1;
     }
     
     public void cancelarReserva() {

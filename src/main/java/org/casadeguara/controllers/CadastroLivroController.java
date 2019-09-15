@@ -3,11 +3,16 @@ package org.casadeguara.controllers;
 import java.util.List;
 import java.util.Optional;
 import org.casadeguara.dialogos.DialogoAdicionarExemplar;
-import org.casadeguara.dialogos.DialogoListaItens;
+import org.casadeguara.dialogos.ListViewDialog;
+import org.casadeguara.entidades.Autor;
+import org.casadeguara.entidades.Editora;
 import org.casadeguara.entidades.Exemplar;
 import org.casadeguara.entidades.Livro;
-import org.casadeguara.models.IdentificadorModel;
+import org.casadeguara.entidades.PalavraChave;
+import org.casadeguara.models.AutorModel;
+import org.casadeguara.models.EditoraModel;
 import org.casadeguara.models.LivroModel;
+import org.casadeguara.models.PalavraChaveModel;
 import org.casadeguara.views.CadastroLivroView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,16 +24,13 @@ public class CadastroLivroController implements GenericController{
     private LivroModel model;
     private Livro livroAtual;
     
-    private ObservableList<String> listaAutores;
+    private ObservableList<Autor> listaAutores;
     private ObservableList<Exemplar> listaExemplares;
-    private ObservableList<String> listaPalavrasChave;
-    private IdentificadorModel consultar;
+    private ObservableList<PalavraChave> listaPalavrasChave;
     
     public CadastroLivroController(CadastroLivroView view, LivroModel model) {
         this.view = view;
         this.model = model;
-        
-        consultar = new IdentificadorModel();
         
         listaAutores = FXCollections.observableArrayList();
         listaExemplares = FXCollections.observableArrayList();
@@ -46,17 +48,16 @@ public class CadastroLivroController implements GenericController{
         view.acaoBtnCadastrar(event -> cadastrarLivro());
         view.acaoBtnLimpar(event -> limparCampos());
         view.acaoBtnSugerir(event -> sugerirTombo());
-        view.acaoPesquisarLivro((observable, oldValue, newValue) -> pesquisarLivro(newValue));
+        view.acaoPesquisarLivro(event -> pesquisarLivro());
         
-        view.setListaSugestoesEditoras(model.getListaEditoras());
-        view.setListaSugestoesLivros(model.getListaLivros());
+        view.setAutoCompleteEditora(new EditoraModel());
+        view.setAutoCompleteLivro(model);
     }
     
     public void adicionarAutores() {
-        DialogoListaItens dialogoAdicionarAutor = new DialogoListaItens(listaAutores);
-        dialogoAdicionarAutor.setListaSugestoes(model.getListaAutores());
+        ListViewDialog<Autor> dialogoAdicionarAutor = new ListViewDialog<>(new AutorModel(), listaAutores);
         
-        Optional<List<String>> resultado = dialogoAdicionarAutor.showAndWait();
+        Optional<List<Autor>> resultado = dialogoAdicionarAutor.showAndWait();
         if(resultado.isPresent()) {
             listaAutores.setAll(resultado.get());
             view.quantidadeAutores(listaAutores.size());
@@ -73,10 +74,9 @@ public class CadastroLivroController implements GenericController{
     }
     
     public void adicionarPalavrasChave() {
-        DialogoListaItens dialogoAdicionarAssunto = new DialogoListaItens(listaPalavrasChave);
-        dialogoAdicionarAssunto.setListaSugestoes(model.getListaPalavras());
+        ListViewDialog<PalavraChave> dialogoAdicionarAssunto = new ListViewDialog<>(new PalavraChaveModel(), listaPalavrasChave);
         
-        Optional<List<String>> resultado = dialogoAdicionarAssunto.showAndWait();
+        Optional<List<PalavraChave>> resultado = dialogoAdicionarAssunto.showAndWait();
         if(resultado.isPresent()) {
             listaPalavrasChave.setAll(resultado.get());
             view.quantidadePalavrasChave(listaPalavrasChave.size());
@@ -86,31 +86,29 @@ public class CadastroLivroController implements GenericController{
     public int alterarLivro() {
         String titulo = view.getTituloLivro();
         String tombo = view.getTomboLivro();
-        String editora = view.getEditora();
+        Editora editora = view.getEditora();
 
-        if (livroAtual != null && editora != null && !titulo.isEmpty() && !tombo.isEmpty()) {
-            livroAtual.setTitulo(titulo);
-            livroAtual.setTombo(tombo);
-            livroAtual.setEditora(editora);
+        Livro livro = getLivroAtual();
+        
+		if (livro != null && editora != null && !titulo.isEmpty() && !tombo.isEmpty()) {
+            livro.setTitulo(titulo);
+            livro.setTombo(tombo);
+            livro.setEditora(editora);
             
             Task<Void> atualizandoLivro = new Task<Void>() {
 
                 @Override
                 protected Void call() throws Exception {
-                    int ideditora = consultar.idEditora(editora);
-                    
                     updateMessage("Atualizando as informações do livro.");
                     
-                    if(model.atualizar(livroAtual, ideditora) == 0) {
-                        int idlivro = livroAtual.getId();
+                    if(model.atualizar(livro) == 0) {
+                        int idlivro = livro.getId();
                         updateMessage("Atualizando lista de autores.");
                         model.atualizarListaAutores(idlivro, listaAutores);
                         updateMessage("Atualizando lista de exemplares.");
                         model.atualizarListaExemplares(idlivro, listaExemplares);
                         updateMessage("Atualizando lista de palavras-chave.");
                         model.atualizarListaPalavrasChave(idlivro, listaPalavrasChave);
-                        updateMessage("Atualizando lista de livros.");
-                        model.atualizarListaLivros();
                         updateMessage("Livro atualizado com sucesso.");
                     } else {
                         updateMessage("Livro não foi atualizado. Verifique os dados e tente novamente.");
@@ -133,10 +131,11 @@ public class CadastroLivroController implements GenericController{
     public int cadastrarLivro() {
         String titulo = view.getTituloLivro();
         String tombo = view.getTomboLivro();
-        String editora = view.getEditora();
+        Editora editora = view.getEditora();
 
         if (!titulo.isEmpty() && !tombo.isEmpty() && editora != null) {
-            Livro novoLivro = new Livro(0, tombo, titulo, editora);
+            Livro novoLivro = new Livro(0, tombo, titulo);
+            novoLivro.setEditora(editora);
             
             if (!listaAutores.isEmpty() ||
                 !listaExemplares.isEmpty() ||
@@ -146,10 +145,8 @@ public class CadastroLivroController implements GenericController{
 
                     @Override
                     protected Void call() throws Exception {
-                        int ideditora = consultar.idEditora(editora);
-
                         updateMessage("Cadastrando as informações do livro.");
-                        int idlivro = model.cadastrar(novoLivro, ideditora);
+                        int idlivro = model.cadastrar(novoLivro);
 
                         if(idlivro > 0) {
                             updateMessage("Cadastrando lista de autores.");
@@ -158,8 +155,6 @@ public class CadastroLivroController implements GenericController{
                             model.atualizarListaExemplares(idlivro, listaExemplares);
                             updateMessage("Cadastrando lista de palavras-chave.");
                             model.atualizarListaPalavrasChave(idlivro, listaPalavrasChave);
-                            updateMessage("Atualizando lista de livros.");
-                            model.atualizarListaLivros();
                             updateMessage("Livro cadastrado com sucesso.");
                         } else {
                             updateMessage("Livro não cadastrado. Verifique se o tombo já está em uso.");
@@ -183,39 +178,47 @@ public class CadastroLivroController implements GenericController{
     }
     
     public void limparCampos() {
-        livroAtual = null;
+        setLivroAtual(null);
         listaAutores.clear();
         listaExemplares.clear();
         listaPalavrasChave.clear();
         view.limparCampos();
     }
     
-    public void pesquisarLivro(String pesquisa) {
-        if(pesquisa!= null && !pesquisa.isEmpty()) {
-            livroAtual = model.consultar(pesquisa.substring(10));
+    public void pesquisarLivro() {
+    	Livro livro = view.getTermoPesquisado();
+    	
+        if(livro!= null) {
+        	setLivroAtual(livro);
+            
+            view.estaCadastrando(false);
 
-            if (livroAtual != null) {
-                view.estaCadastrando(false);
+            view.setTituloLivro(livro.getTitulo());
+            view.setTomboLivro(livro.getTombo());
+            view.setEditora(livro.getEditora());
 
-                view.setTituloLivro(livroAtual.getTitulo());
-                view.setTomboLivro(livroAtual.getTombo());
-                view.setEditora(livroAtual.getEditora());
+            int idlivro = livro.getId();
+            listaAutores.setAll(model.consultarAutores(idlivro));
+            listaExemplares.setAll(model.consultarExemplares(idlivro));
+            listaPalavrasChave.setAll(model.consultarPalavrasChave(idlivro));
 
-                int idlivro = livroAtual.getId();
-                listaAutores.setAll(model.consultarAutores(idlivro));
-                listaExemplares.setAll(model.consultarExemplares(idlivro));
-                listaPalavrasChave.setAll(model.consultarPalavrasChave(idlivro));
-
-                view.quantidadeAutores(listaAutores.size());
-                view.quantidadeExemplares(listaExemplares.size());
-                view.quantidadePalavrasChave(listaPalavrasChave.size());
-            } else {
-                view.mensagemInformativa("Livro não encontrado.");
-            }
+            view.quantidadeAutores(listaAutores.size());
+            view.quantidadeExemplares(listaExemplares.size());
+            view.quantidadePalavrasChave(listaPalavrasChave.size());
+        } else {
+        	view.mensagemInformativa("Livro não encontrado.");
         }
     }
     
     public void sugerirTombo() {
         view.setTomboLivro(model.consultarUltimoTombo());
     }
+
+	public Livro getLivroAtual() {
+		return livroAtual;
+	}
+
+	public void setLivroAtual(Livro livroAtual) {
+		this.livroAtual = livroAtual;
+	}
 }

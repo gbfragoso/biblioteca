@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -121,11 +119,11 @@ public class Main extends Application {
         editoraModel = new EditoraModel();
         graficoModel = new GraficoModel();
         leitorModel = new LeitorModel();
-        livroModel = new LivroModel(dataSource);
+        livroModel = new LivroModel();
         loginModel = new LoginModel();
         movimentacaoModel = new MovimentacaoModel(dataSource);
         palavraChaveModel = new PalavraChaveModel();
-        reservaModel = new ReservaModel(dataSource);
+        reservaModel = new ReservaModel();
         usuarioModel = new UsuarioModel(dataSource);
     }
     
@@ -247,51 +245,27 @@ public class Main extends Application {
                 event.consume();
             }
         });
+
+        initModels();
+        initViews();
+        initControllers();
         
-        Service<Void> carregandoTelas = new Service<Void>() {
-            
-            @Override
-            protected Task<Void> createTask() {
-                return new Task<Void>() {
-                    
-                    @Override
-                    protected Void call() throws Exception {
-                        updateMessage("Carregando modelos");
-                        initModels();
-                        updateMessage("Carregando telas");
-                        initViews();
-                        updateMessage("Carregando controladores");
-                        initControllers();
-                        
-                        updateMessage("Configurando interface");
-                        configurarMargensViews();
-                        configurarRedirecionamento();
-                        configurarMenuSuperior();
-                        
-                        updateMessage("Configurando tela inicial");
-                        telaPrincipal = new BorderPane();
-                        telaPrincipal.setTop(menuSuperior.getRoot());
-                        telaPrincipal.setLeft(menuLateral.getRoot());
-                        telaPrincipal.setRight(muralAvisos.getRoot());
-                        telaPrincipal.setCenter(movimentacaoView.getRoot());
-                        
-                        updateMessage("Configurando tela login");
-                        scene = new Scene(loginView.getRoot(), 1600, 900);
-                        scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-                        configurarLogin();
-                        return null;
-                    }
-                    
-                };
-            }
-        }; 
+        configurarMargensViews();
+        configurarRedirecionamento();
+        configurarMenuSuperior();
         
-        new Alerta().progresso(carregandoTelas);
-        carregandoTelas.start();
-        carregandoTelas.setOnSucceeded(event -> {
-            primaryStage.setScene(scene);
-            primaryStage.show();
-        });
+        telaPrincipal = new BorderPane();
+        telaPrincipal.setTop(menuSuperior.getRoot());
+        telaPrincipal.setLeft(menuLateral.getRoot());
+        telaPrincipal.setRight(muralAvisos.getRoot());
+        telaPrincipal.setCenter(movimentacaoView.getRoot());
+        
+        scene = new Scene(loginView.getRoot(), 1600, 900);
+        scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+        configurarLogin();
+       
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
     
     public static void main(String[] args) {

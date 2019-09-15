@@ -11,16 +11,15 @@ public class Livro{
     private int idlivro;
     private String tombo;
     private String titulo;
-    private String editora;
+    private Editora editora;
 
-    public Livro(int idlivro, String tombo, String titulo, String editora) {
+    public Livro(int idlivro, String tombo, String titulo) {
         this.idlivro = idlivro;
         this.tombo = tombo;
         this.titulo = titulo;
-        this.editora = editora;
     }
 
-    public String getEditora() {
+    public Editora getEditora() {
         return editora;
     }
 
@@ -36,7 +35,7 @@ public class Livro{
         return tombo;
     }
     
-    public void setEditora(String editora) {
+    public void setEditora(Editora editora) {
         this.editora = editora;
     }
 

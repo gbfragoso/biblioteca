@@ -3,14 +3,14 @@ package org.casadeguara.componentes;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.casadeguara.models.GenericModel;
-
 import javafx.collections.ObservableList;
 import javafx.geometry.Side;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+
+import org.casadeguara.models.GenericModel;
 
 public class AutoCompleteTextField<T> extends TextField {
 	
@@ -68,6 +68,11 @@ public class AutoCompleteTextField<T> extends TextField {
     public T getResult() {
 		return result;
 	}
+    
+    public void setResult(T t) {
+    	this.result = t;
+    	setText(result.toString());
+    }
 
 	public void setModel(GenericModel<T> model) {
 		this.model = model;
@@ -82,4 +87,5 @@ public class AutoCompleteTextField<T> extends TextField {
             }
         });
 	}
+
 }

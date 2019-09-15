@@ -1,7 +1,9 @@
 package org.casadeguara.dialogos;
 
 import java.util.List;
-import org.casadeguara.componentes.CustomComboBox;
+import org.casadeguara.componentes.AutoCompleteTextField;
+import org.casadeguara.models.GenericModel;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -15,13 +17,13 @@ import javafx.scene.layout.AnchorPane;
  * @author Gustavo
  * @since 4.0
  */
-public class DialogoListaItens extends Dialog<List<String>>{
+public class ListViewDialog<T> extends Dialog<List<T>>{
     
-    private CustomComboBox<String> pesquisar;
-    private ObservableList<String> listaOriginal;
-    private ObservableList<String> listaAtualizada;
+    private AutoCompleteTextField<T> pesquisar;
+    private ObservableList<T> listaOriginal;
+    private ObservableList<T> listaAtualizada;
 
-    public DialogoListaItens(ObservableList<String> items) {
+    public ListViewDialog(GenericModel<T> model, ObservableList<T> items) {
         listaOriginal = FXCollections.observableArrayList(items);
         listaAtualizada = FXCollections.observableArrayList(items);
         
@@ -35,10 +37,10 @@ public class DialogoListaItens extends Dialog<List<String>>{
     private AnchorPane createContent() {
         Button btnAdicionar = new Button("+");
         Button btnRemover = new Button("Remover");
-        ListView<String> listView = new ListView<>(listaAtualizada);
+        ListView<T> listView = new ListView<>(listaAtualizada);
         listView.setPrefSize(350.0, 350.0);
         
-        pesquisar = new CustomComboBox<>();
+        pesquisar = new AutoCompleteTextField<>();
         pesquisar.setPrefWidth(535);
         
         AnchorPane painel = new AnchorPane();
@@ -62,21 +64,17 @@ public class DialogoListaItens extends Dialog<List<String>>{
         return painel;
     }
     
-    private String getItemPesquisado() {
-        return pesquisar.getSelectionModel().getSelectedItem().toUpperCase();
+    private T getItemPesquisado() {
+        return pesquisar.getResult();
     }
     
-    private void adicionar(String item) {
+    private void adicionar(T item) {
         if(!listaAtualizada.contains(item)) {
             listaAtualizada.add(item);
         }
     }
     
-    private void remover(String item) {
+    private void remover(T item) {
         listaAtualizada.remove(item);
-    }
-    
-    public void setListaSugestoes(ObservableList<String> lista) {
-        pesquisar.setItems(lista);
     }
 }

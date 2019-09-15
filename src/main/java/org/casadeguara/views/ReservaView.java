@@ -14,7 +14,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.controlsfx.control.textfield.CustomTextField;
 import java.time.LocalDate;
-import org.casadeguara.componentes.CustomComboBox;
+import org.casadeguara.componentes.AutoCompleteTextField;
+import org.casadeguara.entidades.Leitor;
+import org.casadeguara.entidades.Livro;
+import org.casadeguara.models.GenericModel;
 import org.casadeguara.movimentacao.Reserva;
 import org.casadeguara.utilitarios.Formatador;
 
@@ -29,8 +32,8 @@ public class ReservaView implements GenericView{
     private Button btnCancelar;
     private Button btnLimpar;
     private Button btnReservar;
-    private CustomComboBox<String> pesquisarLeitores;
-    private CustomComboBox<String> pesquisarLivros;
+    private AutoCompleteTextField<Leitor> pesquisarLeitores;
+    private AutoCompleteTextField<Livro> pesquisarLivros;
     private CustomTextField pesquisarReservas;
     private TableView<Reserva> tabelaReserva;
 
@@ -48,11 +51,11 @@ public class ReservaView implements GenericView{
         Label lblReserva = new Label("Reserve um item para um leitor:");
         Label lblConsulta = new Label("Consulte uma reserva:");
 
-        pesquisarLeitores = new CustomComboBox<>();
+        pesquisarLeitores = new AutoCompleteTextField<>();
         pesquisarLeitores.setPromptText("Digite o nome de um leitor");
         pesquisarLeitores.setPrefWidth(535.0);
 
-        pesquisarLivros = new CustomComboBox<>();
+        pesquisarLivros = new AutoCompleteTextField<>();
         pesquisarLivros.setPromptText("Digite o nome de um livro");
         pesquisarLivros.setPrefWidth(535.0);
         
@@ -157,20 +160,12 @@ public class ReservaView implements GenericView{
         pesquisarReservas.setOnAction(event);
     }
     
-    public String getLeitor() {
-        return pesquisarLeitores.getSelectionModel().getSelectedItem();
+    public Leitor getLeitor() {
+        return pesquisarLeitores.getResult();
     }
     
-    public String getLivro() {
-        return pesquisarLivros.getSelectionModel().getSelectedItem();
-    }
-    
-    public void setListaLeitores(ObservableList<String> lista) {
-        pesquisarLeitores.setItems(lista);
-    }
-    
-    public void setListaLivros(ObservableList<String> lista) {
-        pesquisarLivros.setItems(lista);
+    public Livro getLivro() {
+        return pesquisarLivros.getResult();
     }
     
     public void setListaReservas(ObservableList<Reserva> lista) {
@@ -185,9 +180,17 @@ public class ReservaView implements GenericView{
         return tabelaReserva.getSelectionModel().getSelectedItem();
     }
     
+    public void setAutoCompleteLeitor(GenericModel<Leitor> model) {
+    	pesquisarLeitores.setModel(model);
+    }
+    
+    public void setAutoCompleteLivro(GenericModel<Livro> model) {
+    	pesquisarLivros.setModel(model);
+    }
+    
     public void limparCampos() {
-        pesquisarLeitores.getSelectionModel().clearSelection();
-        pesquisarLivros.getSelectionModel().clearSelection();
+        pesquisarLeitores.clear();
+        pesquisarLivros.clear();
     }
     
     public void removerReserva(Reserva reservaAtual) {

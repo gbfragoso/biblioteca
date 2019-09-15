@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.casadeguara.conexao.Conexao;
-import org.casadeguara.listas.DataSourceProvider;
 import org.casadeguara.movimentacao.Reserva;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,30 +18,7 @@ import javafx.collections.ObservableList;
 public class ReservaModel {
     
     private static final Logger logger = LogManager.getLogger(ReservaModel.class);
-    private IdentificadorModel consultar;
-    private final DataSourceProvider dataSource;
-    
-    public ReservaModel(DataSourceProvider dataSource) {
-        this.dataSource = dataSource;
-        consultar = new IdentificadorModel();
-    }
-    
-    public ObservableList<String> getListaLeitores() {
-        return dataSource.getListaLeitores();
-    }
-    
-    public ObservableList<String> getListaLivros() {
-        return dataSource.getListaLivros();
-    }
-    
-    public int consultarLeitor(String nome) {
-        return consultar.idLeitor(nome);
-    }
-    
-    public int consultarLivro(String titulo) {
-        return consultar.idLivro(titulo.substring(10));
-    }
-    
+   
     public ObservableList<Reserva> consultarReservas(String titulo) {
         ObservableList<Reserva> reservas = FXCollections.observableArrayList();
         
