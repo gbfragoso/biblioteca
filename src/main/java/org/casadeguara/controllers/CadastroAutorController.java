@@ -7,9 +7,9 @@ import javafx.concurrent.Task;
 
 public class CadastroAutorController implements GenericController{
     
+	private Autor autorAtual;
     private AutorModel model;
     private CadastroAutorView view;
-    private int currentID = 0;
     
     public CadastroAutorController(CadastroAutorView view, AutorModel model) {
         this.view = view;
@@ -24,17 +24,18 @@ public class CadastroAutorController implements GenericController{
             view.acaoBotaoAlterar(event -> atualizarAutor());
             view.acaoBotaoCadastrar(event -> cadastrarAutor());
             view.acaoBotaoLimpar(event -> limparCampos());
-            view.acaoPesquisarAutor((observable, oldValue, newValue) -> pesquisarAutor(newValue));
+            view.acaoPesquisarAutor(event -> pesquisarAutor());
             
-            view.setListaSugestoes(model.getListaAutores());
+            view.setAutoComplete(model);
         }
     }
     
     public int atualizarAutor() {
         String novoNome = view.getNomeAutor();
 
-        if (getCurrentID() > 0 && !novoNome.isEmpty() ) {
-            Autor novoAutor = new Autor(getCurrentID(), novoNome);
+        if (getAutorAtual() != null && !novoNome.isEmpty() ) {
+            Autor novoAutor = getAutorAtual();
+            novoAutor.setNome(novoNome);
             
             Task<Void> atualizarAutor = new Task<Void>() {
 
@@ -42,8 +43,6 @@ public class CadastroAutorController implements GenericController{
                 protected Void call() throws Exception {
                     updateMessage("Atualizando o autor " + novoNome);
                     if(model.atualizar(novoAutor) == 0) {
-                        updateMessage("Atualizando lista de autores.");
-                        model.atualizarListaAutores();
                         updateMessage("Autor atualizado com sucesso.");
                     } else {
                         updateMessage("Não foi possível atualizar o autor.");
@@ -73,8 +72,6 @@ public class CadastroAutorController implements GenericController{
                 protected Void call() throws Exception {
                     updateMessage("Cadastrando o autor " + nome);
                     if(model.cadastrar(new Autor(0, nome)) == 0) {
-                        updateMessage("Atualizando lista de autores.");
-                        model.atualizarListaAutores();
                         updateMessage("Autor cadastrado com sucesso.");
                     } else {
                         updateMessage("Autor não cadastrado. Verifique se ele já existe.");
@@ -95,30 +92,29 @@ public class CadastroAutorController implements GenericController{
     }
     
     public void limparCampos() {
-        setCurrentID(0);
+        setAutorAtual(null);
         view.limparCampos();
     }
     
-    public int pesquisarAutor(String nomeAutor) {
-        if(nomeAutor != null && !nomeAutor.isEmpty()) {
-            setCurrentID(model.consultarAutor(nomeAutor));
-
-            if(getCurrentID() > 0) {
-                view.estaCadastrando(false);
-                view.setNomeAutor(nomeAutor);
-                return 0;
-            } else {
-                view.mensagemInformativa("Autor não encontrado.");
-            }
+    public int pesquisarAutor() {
+        Autor autor = view.getTermoPesquisado();
+        
+    	if(autor != null) {
+            setAutorAtual(autor);
+            view.estaCadastrando(false);
+            view.setNomeAutor(autor.getNome());
+            return 0;
+        } else {
+            view.mensagemInformativa("Autor não encontrado.");
         }
         return 1;
     }
 
-    public int getCurrentID() {
-        return currentID;
+    public Autor getAutorAtual() {
+        return autorAtual;
     }
 
-    public void setCurrentID(int currentID) {
-        this.currentID = currentID;
+    public void setAutorAtual(Autor autorAtual) {
+        this.autorAtual = autorAtual;
     }
 }

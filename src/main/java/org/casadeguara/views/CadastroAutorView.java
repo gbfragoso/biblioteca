@@ -1,14 +1,15 @@
 package org.casadeguara.views;
 
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import org.casadeguara.componentes.CustomComboBox;
+
+import org.casadeguara.componentes.AutoCompleteTextField;
+import org.casadeguara.entidades.Autor;
+import org.casadeguara.models.GenericModel;
 
 /**
  * Controi a tela de cadastro de autores.
@@ -20,7 +21,7 @@ public class CadastroAutorView implements GenericView{
     private Button btnAlterar;
     private Button btnCadastrar;
     private Button btnLimpar;
-    private CustomComboBox<String> pesquisarAutores;
+    private AutoCompleteTextField<Autor> pesquisarAutores;
     private TextField txtNome;
     
     public CadastroAutorView() {
@@ -46,7 +47,7 @@ public class CadastroAutorView implements GenericView{
         txtNome.setPrefWidth(535);
         btnAlterar.setDisable(true);
 
-        pesquisarAutores = new CustomComboBox<>();
+        pesquisarAutores = new AutoCompleteTextField<>();
         pesquisarAutores.setPrefWidth(535);
         pesquisarAutores.setPromptText("Digite o nome do autor");
         
@@ -86,8 +87,8 @@ public class CadastroAutorView implements GenericView{
         btnLimpar.setOnAction(event);
     }
     
-    public void acaoPesquisarAutor(ChangeListener<String> listener) {
-        pesquisarAutores.valueProperty().addListener(listener);
+    public void acaoPesquisarAutor(EventHandler<ActionEvent> event) {
+        pesquisarAutores.setOnAction(event);
     }
     
     public void estaCadastrando(boolean resposta) {
@@ -100,7 +101,7 @@ public class CadastroAutorView implements GenericView{
         estaCadastrando(true);
         
         txtNome.clear();
-        pesquisarAutores.getSelectionModel().clearSelection();
+        pesquisarAutores.clear();
     }
 
     public String getNomeAutor() {
@@ -111,8 +112,12 @@ public class CadastroAutorView implements GenericView{
         txtNome.setText(nomeAutor);
     }
     
-    public void setListaSugestoes(ObservableList<String> listaAutores) {
-        pesquisarAutores.setItems(listaAutores);
+    public Autor getTermoPesquisado() {
+    	return pesquisarAutores.getResult();
+    }
+    
+    public void setAutoComplete(GenericModel<Autor> model) {
+    	pesquisarAutores.setModel(model);
     }
     
     @Override

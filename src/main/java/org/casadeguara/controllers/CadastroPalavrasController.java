@@ -101,7 +101,7 @@ public class CadastroPalavrasController implements GenericController{
     
     public int pesquisarPalavraChave(String novaPalavra) {
         if(novaPalavra != null && !novaPalavra.isEmpty()) {
-            setCurrentID(model.consultarPalavraChave(novaPalavra));
+            setAutorAtual(model.consultarPalavraChave(novaPalavra));
 
             if(getCurrentID() > 0) {
                 view.estaCadastrando(false);

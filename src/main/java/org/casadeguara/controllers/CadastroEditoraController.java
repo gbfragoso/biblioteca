@@ -100,7 +100,7 @@ public class CadastroEditoraController implements GenericController {
     
     public int pesquisarEditora(String nomeEditora) {
         if(nomeEditora != null && !nomeEditora.isEmpty()) {
-            setCurrentID(model.consultarEditora(nomeEditora));
+            setAutorAtual(model.consultarEditora(nomeEditora));
             
             if(getCurrentID() > 0) {
                 view.estaCadastrando(false);

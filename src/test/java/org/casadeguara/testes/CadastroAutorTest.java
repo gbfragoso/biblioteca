@@ -32,7 +32,7 @@ public class CadastroAutorTest {
     
     @Test
     public void atualizarAutor() {
-        cadastroAutorController.setCurrentID(1);
+        cadastroAutorController.setAutorAtual(1);
         
         Autor novo = new Autor(1, "GUSTAVO BONFIM FRAGOSO");
         when(view.getNomeAutor()).thenReturn("GUSTAVO BONFIM FRAGOSO");
@@ -47,7 +47,7 @@ public class CadastroAutorTest {
     
     @Test
     public void atualizarAutorIdZero() {
-        cadastroAutorController.setCurrentID(0);
+        cadastroAutorController.setAutorAtual(0);
         
         when(view.getNomeAutor()).thenReturn("GUSTAVO BONFIM FRAGOSO");
         
@@ -60,7 +60,7 @@ public class CadastroAutorTest {
     
     @Test
     public void atualizarAutorNomeVazio() {
-        cadastroAutorController.setCurrentID(1);
+        cadastroAutorController.setAutorAtual(1);
         
         when(view.getNomeAutor()).thenReturn("");
         
@@ -106,7 +106,7 @@ public class CadastroAutorTest {
         verify(model, Mockito.atLeast(1)).consultarAutor(value);
         
         assertEquals(0, exitStatus);
-        assertEquals(3, cadastroAutorController.getCurrentID());
+        assertEquals(3, cadastroAutorController.getAutorAtual());
     }
     
     @Test

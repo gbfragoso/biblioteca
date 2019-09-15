@@ -59,6 +59,12 @@ public class AutoCompleteTextField<T> extends TextField {
         suggestions.getItems().setAll(menuItems);
     }
     
+    @Override
+    public void clear() {
+    	super.clear();
+    	result = null;
+    }
+    
     public T getResult() {
 		return result;
 	}

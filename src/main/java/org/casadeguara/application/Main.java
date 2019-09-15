@@ -118,16 +118,16 @@ public class Main extends Application {
     private void initModels() {
         DataSourceProvider dataSource = new DataSourceProvider();
         administracaoModel = new AdministracaoModel(dataSource);
-        autorModel = new AutorModel(dataSource);
+        autorModel = new AutorModel();
         consultaModel = new ConsultaModel();
-        editoraModel = new EditoraModel(dataSource);
+        editoraModel = new EditoraModel();
         graficoModel = new GraficoModel();
         impressosModel = new ImpressosModel(dataSource);
-        leitorModel = new LeitorModel(dataSource);
+        leitorModel = new LeitorModel();
         livroModel = new LivroModel(dataSource);
         loginModel = new LoginModel();
         movimentacaoModel = new MovimentacaoModel(dataSource);
-        palavraChaveModel = new PalavraChaveModel(dataSource);
+        palavraChaveModel = new PalavraChaveModel();
         reservaModel = new ReservaModel(dataSource);
         usuarioModel = new UsuarioModel(dataSource);
     }
