@@ -124,7 +124,7 @@ public class Main extends Application {
         movimentacaoModel = new MovimentacaoModel(dataSource);
         palavraChaveModel = new PalavraChaveModel();
         reservaModel = new ReservaModel();
-        usuarioModel = new UsuarioModel(dataSource);
+        usuarioModel = new UsuarioModel();
     }
     
     private void initViews() {

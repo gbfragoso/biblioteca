@@ -10,21 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.casadeguara.application.Main;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.entidades.Usuario;
-import org.casadeguara.listas.DataSourceProvider;
 import org.casadeguara.utilitarios.Criptografia;
+
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class UsuarioModel{
+public class UsuarioModel implements GenericModel<Usuario>{
     
     private static final Logger logger = LogManager.getLogger(UsuarioModel.class);
-    private DataSourceProvider dataSource;
     
-    public UsuarioModel(DataSourceProvider dataSource) {
-        this.dataSource = dataSource;
-    }
-    
+    @Override
     public int atualizar(Usuario usuario) {
         String nome = usuario.getNome();
         
@@ -46,6 +44,7 @@ public class UsuarioModel{
         return 1;
     }
     
+    @Override
     public int cadastrar(Usuario novoUsuario) {
         String nome = novoUsuario.getNome();
         
@@ -66,31 +65,47 @@ public class UsuarioModel{
         }
         return 1;
     }
-
-    public Usuario consultar(String nome) {
+    
+    @Override
+    public ObservableList<Usuario> consultar(String nome, int resultados) {
         logger.trace("Iniciando a consulta do usuário " + nome);
+        
+        Usuario usuario = Main.getUsuario();
+        String tipo = usuario.getTipo();
+        int id = usuario.getId();
+        
+        List<String> tiposPermitidos = new ArrayList<>();
+        if(tipo.equals("Root")) {
+        	tiposPermitidos.add("Admin");
+        }
+        tiposPermitidos.add("Comum");
         
         StringBuilder query = new StringBuilder();
         query.append("select idusuario, nome, tipo, status from usuario ");
-        query.append("where nome like ?");
-
+        query.append("where unaccent(upper(nome)) like unaccent(?) ");
+        query.append("and idusuario not in (?,?) and tipo = ANY(?)");
+        
+        ObservableList<Usuario> usuarios = FXCollections.observableArrayList();
         try (Connection con = Conexao.abrir();
              PreparedStatement ps = con.prepareStatement(query.toString())) {
 
-            ps.setString(1, nome);
-
+            ps.setString(1, "%" + nome + "%");
+            ps.setInt(2, 1); // Root
+            ps.setInt(3, id);
+            ps.setArray(4, con.createArrayOf("varchar", tiposPermitidos.toArray(new String[tiposPermitidos.size()])));
+            
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                     Usuario usuario = new Usuario(rs.getInt(1), rs.getString(2));
-                     usuario.setTipo(rs.getString(3));
-                     usuario.setStatus(rs.getBoolean(4));
-                     return usuario;
+                     Usuario u = new Usuario(rs.getInt(1), rs.getString(2));
+                     u.setTipo(rs.getString(3));
+                     u.setStatus(rs.getBoolean(4));
+                     usuarios.add(u);
                 }
             }
         } catch (SQLException ex) {
             logger.fatal("Não foi possível consultar as informações do usuário", ex);
         }
-        return null;
+        return usuarios;
     }
     
     public List<Integer> consultarAcessosUsuario(int idusuario) {
@@ -112,14 +127,6 @@ public class UsuarioModel{
             logger.fatal("Não foi possível consultar os acessos do usuário", ex);
         }
         return acessos;
-    }
-    
-    public ObservableList<String> getListaUsuarios() {
-        return dataSource.getListaUsuarios();
-    }
-    
-    public void atualizarListaUsuarios() {
-        dataSource.atualizarListaUsuarios();
     }
     
     public int trocarSenha(String novaSenha, int idusuario) {

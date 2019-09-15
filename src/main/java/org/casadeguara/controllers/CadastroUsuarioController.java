@@ -25,9 +25,9 @@ public class CadastroUsuarioController implements GenericController{
         view.acaoBotaoCadastrar(event -> cadastrarUsuario());
         view.acaoBotaoLimpar(event -> limparCampos());
         view.acaoBtnResetar(event -> resetarSenha());
-        view.acaoPesquisarUsuario((observable, oldValue, newValue) -> pesquisarUsuario(newValue));
+        view.acaoPesquisarUsuario(event -> pesquisarUsuario());
         
-        view.setListaSugestoes(model.getListaUsuarios());
+        view.setAutoComplete(model);
     }
 
     public void alterarUsuario() {
@@ -44,8 +44,6 @@ public class CadastroUsuarioController implements GenericController{
                 protected Void call() throws Exception {
                     updateMessage("Iniciando a atualização do usuário " + nomeUsuario);
                     if(model.atualizar(usuarioAtual) == 0) {
-                        updateMessage("Atualizando lista de usuários.");
-                        model.atualizarListaUsuarios();
                         updateMessage("Usuário atualizado com sucesso.");
                     } else {
                         updateMessage("Não foi possível atualizar o usuário");
@@ -78,8 +76,6 @@ public class CadastroUsuarioController implements GenericController{
                 protected Void call() throws Exception {
                     updateMessage("Iniciando o cadastro do usuário " + nome);
                     if(model.cadastrar(novoUsuario) == 0) {
-                        updateMessage("Atualizando a lista de usuários");
-                        model.atualizarListaUsuarios();
                         updateMessage("Usuário cadastrado com sucesso.");
                     } else {
                         updateMessage("Não foi possível cadastrar o usuário");
@@ -107,20 +103,20 @@ public class CadastroUsuarioController implements GenericController{
         view.limparCampos();
     }
     
-    public int pesquisarUsuario(String usuario) {
-        if(usuario != null && !usuario.isEmpty()) {
-            setUsuarioAtual(model.consultar(usuario));
-
-            if(getUsuarioAtual() != null) {
-                usuarioAtual.setListaAcessos(model.consultarAcessosUsuario(usuarioAtual.getId()));
-                int[] acessos = usuarioAtual.getListaAcessos().stream().mapToInt(i -> i).toArray();
-                
-                view.estaCadastrando(false);
-                view.setNomeUsuario(usuarioAtual.getNome());
-                view.setListaAcessos(acessos);
-                
-                return 0;
-            }
+    public int pesquisarUsuario() {
+    	Usuario usuario = view.getTermoPesquisado();
+    	
+        if(usuario != null) {
+            usuario.setListaAcessos(model.consultarAcessosUsuario(usuario.getId()));
+            int[] acessos = usuario.getListaAcessos().stream().mapToInt(i -> i).toArray();
+            
+            view.estaCadastrando(false);
+            view.setNomeUsuario(usuario.getNome());
+            view.setListaAcessos(acessos);
+            view.isAdmin(!usuario.getTipo().equals("Comum"));
+            view.isInativo(!usuario.getStatus());
+            setUsuarioAtual(usuario);
+            return 0;
         }
         return 1;
     }

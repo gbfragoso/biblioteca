@@ -70,7 +70,7 @@ public class MenuSuperior {
                 String s2 = senha2.getText();
                 
                 if (s1.equals(s2)) {
-                    new UsuarioModel(null).trocarSenha(s1, Main.getUsuario().getId());
+                    new UsuarioModel().trocarSenha(s1, Main.getUsuario().getId());
                 }
             }
         });

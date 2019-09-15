@@ -27,20 +27,20 @@ public class ListViewDialog<T> extends Dialog<List<T>>{
         listaOriginal = FXCollections.observableArrayList(items);
         listaAtualizada = FXCollections.observableArrayList(items);
         
-        getDialogPane().setContent(createContent());
+        getDialogPane().setContent(createContent(model));
         getDialogPane().getButtonTypes().addAll(ButtonType.FINISH, ButtonType.CANCEL);
         setResultConverter(button -> {
             return (button.equals(ButtonType.FINISH)) ? listaAtualizada : listaOriginal;
         });
     }
     
-    private AnchorPane createContent() {
+    private AnchorPane createContent(GenericModel<T> model) {
         Button btnAdicionar = new Button("+");
         Button btnRemover = new Button("Remover");
         ListView<T> listView = new ListView<>(listaAtualizada);
         listView.setPrefSize(350.0, 350.0);
         
-        pesquisar = new AutoCompleteTextField<>();
+        pesquisar = new AutoCompleteTextField<>(model, 5);
         pesquisar.setPrefWidth(535);
         
         AnchorPane painel = new AnchorPane();

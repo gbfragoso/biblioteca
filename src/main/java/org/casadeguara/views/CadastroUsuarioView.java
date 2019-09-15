@@ -1,6 +1,5 @@
 package org.casadeguara.views;
 
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,7 +9,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import org.casadeguara.componentes.CustomComboBox;
+
+import org.casadeguara.componentes.AutoCompleteTextField;
+import org.casadeguara.entidades.Usuario;
+import org.casadeguara.models.GenericModel;
 import org.controlsfx.control.CheckListView;
 
 /**
@@ -27,7 +29,7 @@ public class CadastroUsuarioView implements GenericView {
 	private CheckBox chbAdmin;
 	private CheckBox chbAtivo;
 	private CheckListView<String> clvAcessos;
-	private CustomComboBox<String> pesquisarUsuarios;
+	private AutoCompleteTextField<Usuario> pesquisarUsuarios;
 	private TextField txtLogin;
 	private TextField txtNome;
     
@@ -56,7 +58,7 @@ public class CadastroUsuarioView implements GenericView {
         txtNome.setPrefWidth(480);
         txtLogin.setPrefWidth(480);
         
-        pesquisarUsuarios = new CustomComboBox<>();
+        pesquisarUsuarios = new AutoCompleteTextField<>();
         pesquisarUsuarios.setPrefWidth(535);
         pesquisarUsuarios.setPromptText("Digite o nome do usuário");
 
@@ -137,8 +139,8 @@ public class CadastroUsuarioView implements GenericView {
 		btnLimpar.setOnAction(event);
 	}
 	
-	public void acaoPesquisarUsuario(ChangeListener<String> listener) {
-	    pesquisarUsuarios.getSelectionModel().selectedItemProperty().addListener(listener);
+	public void acaoPesquisarUsuario(EventHandler<ActionEvent> event) {
+	    pesquisarUsuarios.setOnAction(event);
 	}
 	
 	public void estaCadastrando(boolean resposta) {
@@ -152,7 +154,7 @@ public class CadastroUsuarioView implements GenericView {
 	public void limparCampos() {
 	    estaCadastrando(true);
 	    
-	    pesquisarUsuarios.getSelectionModel().clearSelection();
+	    pesquisarUsuarios.clear();
         txtNome.clear();
         txtLogin.clear();
         chbAdmin.setSelected(false);
@@ -192,13 +194,24 @@ public class CadastroUsuarioView implements GenericView {
         clvAcessos.getCheckModel().checkIndices(acessos);
 	}
 	
-	public void setListaSugestoes(ObservableList<String> lista) {
-	    pesquisarUsuarios.setItems(lista);
+	public Usuario getTermoPesquisado() {
+		return pesquisarUsuarios.getResult();
+	}
+	
+	public void setAutoComplete(GenericModel<Usuario> model) {
+		pesquisarUsuarios.setModel(model);
+	}
+	
+	public void isInativo(boolean value) {
+		chbAtivo.setSelected(value);
+	}
+	
+	public void isAdmin(boolean valor) {
+		chbAdmin.setSelected(valor);
 	}
 	
 	@Override
 	public AnchorPane getRoot() {
 		return painelUsuario;
 	}
-
 }
