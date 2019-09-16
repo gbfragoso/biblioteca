@@ -14,6 +14,7 @@ public class AdministracaoView implements GenericView{
 
     private TilePane painelAdmin;
     private Button btnConfiguracao;
+    private Button btnCobrancas;
     private Button btnEtiqueta;
     private Button btnRecuperar;
     private Button btnAlterarEmprestimo;
@@ -27,18 +28,20 @@ public class AdministracaoView implements GenericView{
 
         btnAlterarChaveMestra = new Button("Alterar chave mestra");
         btnConfiguracao = new Button("Configurações");
+        btnCobrancas = new Button("Cobranças");
         btnEtiqueta = new Button("Gerador de etiquetas");
         btnAlterarEmprestimo = new Button("Alterar empréstimo");
         btnRecuperar = new Button("Recuperar empréstimo");
         
         configurarTamanhoBotao(btnAlterarChaveMestra);
         configurarTamanhoBotao(btnConfiguracao);
+        configurarTamanhoBotao(btnCobrancas);
         configurarTamanhoBotao(btnEtiqueta);
         configurarTamanhoBotao(btnRecuperar);
         configurarTamanhoBotao(btnAlterarEmprestimo);
 
-        painelAdmin.getChildren().addAll(btnAlterarChaveMestra, btnConfiguracao, 
-                btnEtiqueta,btnAlterarEmprestimo, btnRecuperar);
+        painelAdmin.getChildren().addAll(btnAlterarChaveMestra, btnConfiguracao, btnCobrancas, 
+                btnEtiqueta, btnAlterarEmprestimo, btnRecuperar);
     }
     
     @Override
@@ -56,6 +59,10 @@ public class AdministracaoView implements GenericView{
     
     public void acaoBotaoConfiguracao(EventHandler<ActionEvent> event) {
         btnConfiguracao.setOnAction(event);
+    }
+    
+    public void acaoBotaoCobrancas(EventHandler<ActionEvent> event) {
+    	btnCobrancas.setOnAction(event);
     }
     
     public void acaoBotaoEtiqueta(EventHandler<ActionEvent> event) {

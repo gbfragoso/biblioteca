@@ -2,6 +2,7 @@ package org.casadeguara.controllers;
 
 import org.casadeguara.dialogos.DialogoAlterarChave;
 import org.casadeguara.dialogos.DialogoAlterarEmprestimo;
+import org.casadeguara.dialogos.DialogoEnviarEmail;
 import org.casadeguara.dialogos.DialogoMudancaRegras;
 import org.casadeguara.dialogos.DialogoRecuperarEmprestimo;
 import org.casadeguara.etiquetas.GeradorEtiqueta;
@@ -32,6 +33,7 @@ public class AdministracaoController implements GenericController{
             view.acaoBotaoAlterarChaveMestra(event -> alterarChaveMestra());
             view.acaoBotaoAlterarEmprestimo(event -> alterarExemplarEmprestimo());
             view.acaoBotaoConfiguracao(event -> alterarRegrasNegocio());
+            view.acaoBotaoCobrancas(event -> realizarCobrancas());
             view.acaoBotaoEtiqueta(event -> geradorEtiquetas());
             view.acaoBotaoRecuperarEmprestimo(event -> recuperarEmprestimoDevolvido());
         }
@@ -112,5 +114,11 @@ public class AdministracaoController implements GenericController{
             }
         });
         return 0;
+    }
+    
+    public int realizarCobrancas() {
+    	DialogoEnviarEmail dialogoEnviarEmail = new DialogoEnviarEmail(model);
+    	dialogoEnviarEmail.show();
+		return 0;
     }
 }

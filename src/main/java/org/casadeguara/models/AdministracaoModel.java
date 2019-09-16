@@ -4,6 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -91,4 +92,42 @@ public class AdministracaoModel {
         }
         return 1;
     }
+
+	public String getTextoCobranca() {
+		logger.trace("Iniciando consulta o texto de cobrança");
+        
+        if (usuarioPossuiPermissao()) {
+            try (Connection con = Conexao.abrir();
+                 PreparedStatement ps = con.prepareStatement("select cobranca from configuracao where idconf = 1")) {
+                
+            	try (ResultSet rs = ps.executeQuery()) {;
+	                if(rs.next()) {
+	                	return rs.getString(1);
+	                }
+            	}
+            } catch (SQLException ex) {
+                logger.fatal("Erro ao tentar consultar o texto de cobrança.", ex);
+            }
+        }
+        return "";
+	}
+	
+	public int setTextoCobranca(String texto) {
+		logger.trace("Iniciando a mudança do texto de cobrança");
+		
+        if (usuarioPossuiPermissao()) {
+            try (Connection con = Conexao.abrir();
+                 PreparedStatement ps = con.prepareStatement("update configuracao set cobranca = ? where idconf = 1")) {
+                
+            	ps.setString(1, texto);
+            	ps.executeUpdate();
+            	return 0;
+            } catch (SQLException ex) {
+                logger.fatal("Erro ao tentar mudar o texto de cobrança.", ex);
+            }
+        }
+        return 1;
+	}
+	
+	// TODO Criar função para consultar a view de empréstimos atrasados
 }
