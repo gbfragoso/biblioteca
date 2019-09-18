@@ -83,6 +83,6 @@ public class Livro{
     
     @Override
     public String toString() {
-        return String.format("%-7s : %s", tombo, titulo);
+        return String.format("%s - %s", tombo, titulo);
     }
 }

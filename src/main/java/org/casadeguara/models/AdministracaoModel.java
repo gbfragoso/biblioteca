@@ -10,10 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.casadeguara.application.Main;
 import org.casadeguara.conexao.Conexao;
-import org.casadeguara.listas.DataSourceProvider;
-import org.casadeguara.movimentacao.Item;
 import org.casadeguara.utilitarios.Criptografia;
-import javafx.collections.ObservableList;
 
 /**
  * Responsável por transações relacionadas à parte administrativa.
@@ -22,22 +19,9 @@ import javafx.collections.ObservableList;
 public class AdministracaoModel {
     
     private static final Logger logger = LogManager.getLogger(AdministracaoModel.class);
-    private DataSourceProvider dataSource;
-    
-    public AdministracaoModel(DataSourceProvider dataSource) {
-        this.dataSource = dataSource;
-    }
     
     private boolean usuarioPossuiPermissao() {
         return !Main.getUsuario().getTipo().equals("Comum");
-    }
-    
-    public void atualizarListaExemplares() {
-        dataSource.atualizarListaExemplares();
-    }
-    
-    public ObservableList<Item> getListaExemplares() {
-        return dataSource.getListaExemplares();
     }
     
     public int recuperarEmprestimo(int idemp, int duracaoEmprestimo) {

@@ -11,7 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
  * @author Gustavo
  * @since 1.0
  */
-public class Item {
+public class Acervo {
 
     private final SimpleIntegerProperty id;
     private final SimpleIntegerProperty numero;
@@ -27,11 +27,11 @@ public class Item {
      * @param tombo Tombo do livro
      * @param titulo Título do livro
      */
-    public Item(int idexemplar, int numero, int tombo, String titulo) {
+    public Acervo(int idexemplar, int numero, int tombo, String titulo) {
         this(idexemplar, numero, tombo, titulo, LocalDate.now().plusDays(new Regra().getDuracaoEmprestimo()));
     }
     
-    public Item(int idexemplar, int numero, int tombo, String titulo, LocalDate dataDevolucao) {
+    public Acervo(int idexemplar, int numero, int tombo, String titulo, LocalDate dataDevolucao) {
         this.id = new SimpleIntegerProperty(this, "id", idexemplar);
         this.numero = new SimpleIntegerProperty(this, "numero", numero);
         this.tombo = new SimpleIntegerProperty(this, "tombo", tombo);
@@ -77,7 +77,7 @@ public class Item {
     
     @Override
     public String toString() {
-        return String.format("%-7s | %s | Ex: %d", getTombo(), getTitulo(), getNumero());
+        return String.format("%s - %s - Ex: %d", getTombo(), getTitulo(), getNumero());
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Item {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Item other = (Item) obj;
+        Acervo other = (Acervo) obj;
         if (numero == null) {
             if (other.numero != null) {
                 return false;

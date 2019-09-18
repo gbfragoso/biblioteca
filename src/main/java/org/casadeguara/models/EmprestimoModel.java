@@ -12,7 +12,7 @@ import org.casadeguara.alertas.Alerta;
 import org.casadeguara.application.Main;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.movimentacao.Emprestimo;
-import org.casadeguara.movimentacao.Item;
+import org.casadeguara.movimentacao.Acervo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -64,14 +64,14 @@ public class EmprestimoModel {
         return listaEmprestimos;
     }
     
-    public int emprestar(int idleitor, String nomeLeitor, List<Item> exemplares, int quantidadeItens) {
+    public int emprestar(int idleitor, String nomeLeitor, List<Acervo> exemplares, int quantidadeItens) {
         logger.trace("Iniciando o empréstimo dos exemplares: " + exemplares + "\n ao leitor:" + nomeLeitor);
         
         if(validarEmprestimo(quantidadeItens)) {
             try (Connection con = Conexao.abrir(); 
                  CallableStatement cs = con.prepareCall("{call emprestar(?,?,?,?,?,?,?,?)}")) {
 
-                for (Item e : exemplares) {
+                for (Acervo e : exemplares) {
                     cs.setInt(1, idleitor);
                     cs.setString(2, nomeLeitor);
                     cs.setInt(3, e.getId());
@@ -91,7 +91,7 @@ public class EmprestimoModel {
         return 1;
     }
     
-    public ObservableList<Item> gerarRecibo(int idleitor) {
+    public ObservableList<Acervo> gerarRecibo(int idleitor) {
         StringBuilder query = new StringBuilder();
         query.append("select exemplar, a.numero, b.tombo, b.titulo, data_devolucao from emprestimo ");
         query.append("inner join exemplar a on (idexemplar = exemplar) ");
@@ -99,7 +99,7 @@ public class EmprestimoModel {
         query.append("where leitor = ?");
         
         logger.trace("Iniciando a geração do recibo de empréstimo");
-        ObservableList<Item> exp = FXCollections.observableArrayList();
+        ObservableList<Acervo> exp = FXCollections.observableArrayList();
         try (Connection con = Conexao.abrir();
              PreparedStatement ps = con.prepareStatement(query.toString())){
 
@@ -107,7 +107,7 @@ public class EmprestimoModel {
             
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Item e = new Item(
+                    Acervo e = new Acervo(
                             rs.getInt(1),
                             Integer.parseInt(rs.getString(2)),
                             rs.getInt(3),

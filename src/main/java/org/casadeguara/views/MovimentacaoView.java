@@ -1,7 +1,6 @@
 package org.casadeguara.views;
 
 import java.time.LocalDate;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,9 +19,11 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import org.casadeguara.alertas.Alerta;
-import org.casadeguara.componentes.CustomComboBox;
+import org.casadeguara.componentes.AutoCompleteTextField;
+import org.casadeguara.entidades.Leitor;
+import org.casadeguara.models.GenericModel;
 import org.casadeguara.movimentacao.Emprestimo;
-import org.casadeguara.movimentacao.Item;
+import org.casadeguara.movimentacao.Acervo;
 import org.casadeguara.utilitarios.Formatador;
 
 /**
@@ -34,7 +35,7 @@ public class MovimentacaoView implements GenericView{
 
     private final AnchorPane painelMovimentacao;
 
-    private ObservableList<Item> exemplaresParaEmprestimo;
+    private ObservableList<Acervo> exemplaresParaEmprestimo;
     private ObservableList<Emprestimo> emprestimosAtuais;
 
     private Button btnAdicionar;
@@ -43,9 +44,9 @@ public class MovimentacaoView implements GenericView{
     private Button btnRecibo;
     private Button btnRemover;
     private Button btnRenovar;
-    private CustomComboBox<String> pesquisarLeitores;
-    private CustomComboBox<Item> pesquisarExemplares;
-    private TableView<Item> tabelaItemsParaEmprestimo;
+    private AutoCompleteTextField<Leitor> pesquisarLeitores;
+    private AutoCompleteTextField<Acervo> pesquisarExemplares;
+    private TableView<Acervo> tabelaItemsParaEmprestimo;
     private TableView<Emprestimo> tabelaEmprestimosAtuais;
     
     private Formatador formatar;
@@ -81,8 +82,8 @@ public class MovimentacaoView implements GenericView{
         configurarTamanhoBotao(btnRemover);
         configurarTamanhoBotao(btnRenovar);
 
-        pesquisarExemplares = new CustomComboBox<>();
-        pesquisarLeitores = new CustomComboBox<>();
+        pesquisarExemplares = new AutoCompleteTextField<>();
+        pesquisarLeitores = new AutoCompleteTextField<>();
         
         tabelaItemsParaEmprestimo = new TableView<>();
         tabelaEmprestimosAtuais = new TableView<>();
@@ -172,10 +173,10 @@ public class MovimentacaoView implements GenericView{
     }
  
     private void configurarColunasTabelaItensParaEmprestimo() {
-        TableColumn<Item, String> tabelaItemsTitulo = new TableColumn<>("Título");
-        TableColumn<Item, Integer> tabelaItemsExemplar = new TableColumn<>("Exemplar");
-        TableColumn<Item, String> tabelaItemsStatus = new TableColumn<>("Status");
-        TableColumn<Item, LocalDate> tabelaItemsDevolucao = new TableColumn<>("Devolução");
+        TableColumn<Acervo, String> tabelaItemsTitulo = new TableColumn<>("Título");
+        TableColumn<Acervo, Integer> tabelaItemsExemplar = new TableColumn<>("Exemplar");
+        TableColumn<Acervo, String> tabelaItemsStatus = new TableColumn<>("Status");
+        TableColumn<Acervo, LocalDate> tabelaItemsDevolucao = new TableColumn<>("Devolução");
 
         vincularColunaAtributo(tabelaItemsTitulo, "titulo");
         vincularColunaAtributo(tabelaItemsExemplar, "numero");
@@ -188,7 +189,7 @@ public class MovimentacaoView implements GenericView{
         configurarTamanhoFixo(tabelaItemsDevolucao, tabelaItemsParaEmprestimo, 0.10);
 
         tabelaItemsDevolucao.setCellFactory(column -> {
-            return new TableCell<Item, LocalDate>(){
+            return new TableCell<Acervo, LocalDate>(){
                 @Override
                 protected void updateItem(LocalDate item, boolean empty) {
                     super.updateItem(item, empty);
@@ -203,7 +204,7 @@ public class MovimentacaoView implements GenericView{
         });
         
         tabelaItemsStatus.setCellFactory(column -> {
-            return new TableCell<Item, String>(){
+            return new TableCell<Acervo, String>(){
                 @Override
                 protected void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
@@ -269,23 +270,23 @@ public class MovimentacaoView implements GenericView{
         btnRenovar.setOnAction(event);
     }
     
-    public void acaoSelecionarLeitor(ChangeListener<String> listener) {
-        pesquisarLeitores.getSelectionModel().selectedItemProperty().addListener(listener);
+    public void acaoSelecionarLeitor(EventHandler<ActionEvent> event) {
+        pesquisarLeitores.setOnAction(event);
     }
     
-    public Item getExemplarSelecionado() {
-        return pesquisarExemplares.getSelectionModel().getSelectedItem();
+    public Acervo getExemplarSelecionado() {
+        return pesquisarExemplares.getResult();
     }
 
-    public String getLeitorSelecionado() {
-        return pesquisarLeitores.getSelectionModel().getSelectedItem();
+    public Leitor getLeitorSelecionado() {
+        return pesquisarLeitores.getResult();
     }
 
     public int getQuantidadeItens() {
         return exemplaresParaEmprestimo.size() + emprestimosAtuais.size();
     }
     
-    public ObservableList<Item> getExemplaresParaEmprestimo() {
+    public ObservableList<Acervo> getExemplaresParaEmprestimo() {
         return exemplaresParaEmprestimo;
     }
     
@@ -293,14 +294,22 @@ public class MovimentacaoView implements GenericView{
         return tabelaEmprestimosAtuais.getSelectionModel().getSelectedItems();
     }
     
-    public ObservableList<Item> getExemplaresSelecionados() {
+    public ObservableList<Acervo> getExemplaresSelecionados() {
         return tabelaItemsParaEmprestimo.getSelectionModel().getSelectedItems();
     }
-
-    public int adicionarExemplar(Item exemplar) {
+    
+    public void setAutoCompleteLeitor(GenericModel<Leitor> model) {
+    	pesquisarLeitores.setModel(model);
+    }
+    
+    public void setAutoCompleteAcervo(GenericModel<Acervo> model) {
+    	pesquisarExemplares.setModel(model);
+    }
+    
+    public int adicionarExemplar(Acervo exemplar) {
         if(!exemplaresParaEmprestimo.contains(exemplar)) {
             exemplaresParaEmprestimo.add(exemplar);
-            pesquisarExemplares.getSelectionModel().clearSelection();
+            pesquisarExemplares.clear();
             return 0;
         }
         return 1;
@@ -318,16 +327,6 @@ public class MovimentacaoView implements GenericView{
     
     public boolean mensagemAutorizacao(String mensagem) {
         return new Alerta().autorizacao(mensagem);
-    }
-    
-    public void setListaExemplares(ObservableList<Item> listaExemplares) {
-        pesquisarExemplares.setItems(null);
-        pesquisarExemplares.setItems(listaExemplares);
-    }
-    
-    public void setListaLeitores(ObservableList<String> listaLeitores) {
-        pesquisarLeitores.setItems(null);
-        pesquisarLeitores.setItems(listaLeitores);
     }
     
     public void setEmprestimosAtuais(ObservableList<Emprestimo> emprestimos) {

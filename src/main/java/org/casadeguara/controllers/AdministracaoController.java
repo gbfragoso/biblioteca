@@ -7,6 +7,7 @@ import org.casadeguara.dialogos.DialogoMudancaRegras;
 import org.casadeguara.dialogos.DialogoRecuperarEmprestimo;
 import org.casadeguara.etiquetas.GeradorEtiqueta;
 import org.casadeguara.impressora.Impressora;
+import org.casadeguara.models.AcervoModel;
 import org.casadeguara.models.AdministracaoModel;
 import org.casadeguara.models.RegraModel;
 import org.casadeguara.views.AdministracaoView;
@@ -50,7 +51,7 @@ public class AdministracaoController implements GenericController{
     }
     
     public int alterarExemplarEmprestimo() {
-        DialogoAlterarEmprestimo dialogoAlterarEmprestimo = new DialogoAlterarEmprestimo(model.getListaExemplares());
+        DialogoAlterarEmprestimo dialogoAlterarEmprestimo = new DialogoAlterarEmprestimo(new AcervoModel());
         dialogoAlterarEmprestimo.showAndWait().ifPresent(dadosEmprestimo -> {
             if(!dadosEmprestimo.isEmpty()) {
                 Task<Void> trocarExemplar = new Task<Void>() {
@@ -59,8 +60,6 @@ public class AdministracaoController implements GenericController{
                     protected Void call() throws Exception {
                         updateMessage("Trocando o exemplar.");
                         model.trocarExemplar(dadosEmprestimo.get(0), dadosEmprestimo.get(1));
-                        updateMessage("Atualizando lista de exemplares.");
-                        model.atualizarListaExemplares();
                         return null;
                     }
                 };
@@ -103,8 +102,6 @@ public class AdministracaoController implements GenericController{
                         int duracaoEmprestimo = regraModel.consultarRegrasNegocio().getDuracaoEmprestimo();
                         updateMessage("Recuperando empréstimo.");
                         model.recuperarEmprestimo(idmovimentacao, duracaoEmprestimo);
-                        updateMessage("Atualizando lista de exemplares.");
-                        model.atualizarListaExemplares();
                         return null;
                     }
                 };

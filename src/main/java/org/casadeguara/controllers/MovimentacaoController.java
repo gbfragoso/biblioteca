@@ -2,12 +2,14 @@ package org.casadeguara.controllers;
 
 import java.time.LocalDate;
 import org.casadeguara.alertas.Alerta;
+import org.casadeguara.entidades.Leitor;
 import org.casadeguara.impressora.Impressora;
-import org.casadeguara.models.IdentificadorModel;
+import org.casadeguara.models.AcervoModel;
+import org.casadeguara.models.LeitorModel;
 import org.casadeguara.models.MovimentacaoModel;
 import org.casadeguara.models.RegraModel;
 import org.casadeguara.movimentacao.Emprestimo;
-import org.casadeguara.movimentacao.Item;
+import org.casadeguara.movimentacao.Acervo;
 import org.casadeguara.negocio.Regra;
 import org.casadeguara.views.MovimentacaoView;
 import javafx.collections.ObservableList;
@@ -15,14 +17,12 @@ import javafx.concurrent.Task;
 
 public class MovimentacaoController implements GenericController{
     
-    private IdentificadorModel consultar;
     private MovimentacaoView view;
     private MovimentacaoModel model;
     private Impressora impressora;
     
     private LocalDate dataDevolucao;
-    private int idleitor;
-    private String nomeLeitor;
+    private Leitor leitorSelecionado;
 
     public MovimentacaoController(MovimentacaoView view, MovimentacaoModel model) {
         this.view = view;
@@ -31,7 +31,6 @@ public class MovimentacaoController implements GenericController{
         Regra regrasNegocio = new RegraModel().consultarRegrasNegocio();
         dataDevolucao = LocalDate.now().plusDays(regrasNegocio.getDuracaoEmprestimo());
         
-        consultar = new IdentificadorModel();
         impressora = new Impressora();
         
         configureView();
@@ -45,18 +44,17 @@ public class MovimentacaoController implements GenericController{
         view.acaoBtnRecibo(event -> gerarReciboLeitor());
         view.acaoBtnRemover(event -> removerExemplarParaEmprestimo());
         view.acaoBtnRenovar(event -> renovarEmprestimo());
-        view.acaoSelecionarLeitor((listener, oldValue, newValue) -> pesquisarLeitor(newValue));
+        view.acaoSelecionarLeitor(event -> pesquisarLeitor());
         
-        view.setListaLeitores(model.getListaLeitores());
-        view.setListaExemplares(model.getListaExemplares());
+        view.setAutoCompleteLeitor(new LeitorModel());
+        view.setAutoCompleteAcervo(new AcervoModel());
     }
     
     public int adicionarExemplarParaEmprestimo() {
-        Item exemplar = view.getExemplarSelecionado();
-        String leitor = view.getLeitorSelecionado();
+        Acervo exemplar = view.getExemplarSelecionado();
 
-        if (exemplar != null && leitor != null) {
-            if (model.validarAdicaoExemplar(exemplar, leitor)) {
+        if (exemplar != null && leitorSelecionado != null) {
+            if (model.validarAdicaoExemplar(exemplar, leitorSelecionado)) {
                 return adicionarExemplar(exemplar);
             }
         } else {
@@ -65,7 +63,7 @@ public class MovimentacaoController implements GenericController{
         return 1;
     }
     
-    private int adicionarExemplar(Item exemplar) {
+    private int adicionarExemplar(Acervo exemplar) {
         exemplar.setDataDevolucao(dataDevolucao);
 
         if (view.adicionarExemplar(exemplar) == 1) {
@@ -85,8 +83,6 @@ public class MovimentacaoController implements GenericController{
                     protected Void call() throws Exception {
                         updateMessage("Devolvendo os empréstimos.");
                         if (model.devolver(emprestimos) == 0) {
-                            updateMessage("Atualizando lista de exemplares disponíveis.");
-                            model.atualizarListaExemplares();
                             updateMessage("Devolução efetuada com sucesso.");
                         } else {
                             updateMessage("Não foi possível concluir a devolução.");
@@ -109,15 +105,17 @@ public class MovimentacaoController implements GenericController{
     }
     
     public int emprestarExemplares() {
-        ObservableList<Item> exemplaresParaEmprestimo = view.getExemplaresParaEmprestimo();
+        ObservableList<Acervo> exemplaresParaEmprestimo = view.getExemplaresParaEmprestimo();
         int quantidadeItens = view.getQuantidadeItens();
         
-        if (!exemplaresParaEmprestimo.isEmpty()) {
-            if(model.emprestar(idleitor, nomeLeitor, exemplaresParaEmprestimo, quantidadeItens) == 0) {
-                model.removerExemplares(exemplaresParaEmprestimo);
-                impressora.reciboEmprestimo(nomeLeitor, exemplaresParaEmprestimo);
+        if (!exemplaresParaEmprestimo.isEmpty() && leitorSelecionado != null) {
+        	int id = leitorSelecionado.getId();
+            String nome = leitorSelecionado.getNome();
+			
+            if(model.emprestar(id, nome, exemplaresParaEmprestimo, quantidadeItens) == 0) {
+                impressora.reciboEmprestimo(nome, exemplaresParaEmprestimo);
                 
-                view.setEmprestimosAtuais(model.consultarEmprestimos(idleitor));
+                view.setEmprestimosAtuais(model.consultarEmprestimos(id));
                 view.limparExemplaresParaEmprestimo();
             } else {
                 view.mensagemInformativa("Empréstimo não pôde ser concluído");
@@ -132,9 +130,9 @@ public class MovimentacaoController implements GenericController{
     public int renovarEmprestimo() {
         ObservableList<Emprestimo> emprestimos = view.getEmprestimosSelecionados();
         
-        if (!emprestimos.isEmpty()) {
+        if (!emprestimos.isEmpty() && leitorSelecionado != null) {
             model.renovar(emprestimos);
-            view.setEmprestimosAtuais(model.consultarEmprestimos(idleitor));
+            view.setEmprestimosAtuais(model.consultarEmprestimos(leitorSelecionado.getId()));
             return 0;
         } else {
             view.mensagemInformativa("Você esqueceu de selecionar um item para renovação.");
@@ -143,7 +141,7 @@ public class MovimentacaoController implements GenericController{
     }
     
     public int removerExemplarParaEmprestimo() {
-        ObservableList<Item> exemplaresParaRemover = view.getExemplaresSelecionados();
+        ObservableList<Acervo> exemplaresParaRemover = view.getExemplaresSelecionados();
 
         if (!exemplaresParaRemover.isEmpty()) {
             view.removerExemplaresSelecionados();
@@ -156,9 +154,10 @@ public class MovimentacaoController implements GenericController{
     
     
     public int gerarReciboLeitor() {
-        ObservableList<Item> emprestimos = model.gerarReciboEmprestimo(idleitor);
+    	
+        ObservableList<Acervo> emprestimos = model.gerarReciboEmprestimo(leitorSelecionado.getId());
         if(!emprestimos.isEmpty()) {
-            impressora.reciboEmprestimo(view.getLeitorSelecionado(), emprestimos);
+            impressora.reciboEmprestimo(leitorSelecionado.getNome(), emprestimos);
         } else {
             view.mensagemInformativa("Este leitor não possui empréstimos.");
         }
@@ -166,15 +165,13 @@ public class MovimentacaoController implements GenericController{
         return 0;
     }
     
-    public int pesquisarLeitor(String nomeLeitor) {
-        if(nomeLeitor != null && !nomeLeitor.isEmpty()) {
-            this.nomeLeitor = nomeLeitor;
-            idleitor = consultar.idLeitor(nomeLeitor);
-
-            if(idleitor > 0) {
-                view.setEmprestimosAtuais(model.consultarEmprestimos(idleitor));
-                return 0;
-            }
+    public int pesquisarLeitor() {
+    	Leitor leitor = view.getLeitorSelecionado();
+    	
+        if(leitor != null) {
+            this.leitorSelecionado = leitor;
+            view.setEmprestimosAtuais(model.consultarEmprestimos(leitor.getId()));
+            return 0;
         }
         return 1;
     }

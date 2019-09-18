@@ -101,7 +101,7 @@ public class LivroModel implements GenericModel<Livro>{
     	StringBuilder query = new StringBuilder();
         query.append("select idlivro, tombo, titulo, editora.ideditora, editora.nome from livro ");
         query.append("left join editora on (editora = ideditora) " );
-        query.append("where tombo || ' : ' || unaccent(titulo) like unaccent(?) limit ?");
+        query.append("where tombo || ' - ' || unaccent(titulo) like unaccent(?) limit ?");
         ObservableList<Livro> livros = FXCollections.observableArrayList();
         
         logger.trace("Iniciando a consulta do livro: " + titulo);

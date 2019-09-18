@@ -25,7 +25,6 @@ import org.casadeguara.controllers.LoginController;
 import org.casadeguara.controllers.MovimentacaoController;
 import org.casadeguara.controllers.ReservaController;
 import org.casadeguara.entidades.Usuario;
-import org.casadeguara.listas.DataSourceProvider;
 import org.casadeguara.models.AdministracaoModel;
 import org.casadeguara.models.AutorModel;
 import org.casadeguara.models.ConsultaModel;
@@ -112,8 +111,7 @@ public class Main extends Application {
     }
     
     private void initModels() {
-        DataSourceProvider dataSource = new DataSourceProvider();
-        administracaoModel = new AdministracaoModel(dataSource);
+        administracaoModel = new AdministracaoModel();
         autorModel = new AutorModel();
         consultaModel = new ConsultaModel();
         editoraModel = new EditoraModel();
@@ -121,7 +119,7 @@ public class Main extends Application {
         leitorModel = new LeitorModel();
         livroModel = new LivroModel();
         loginModel = new LoginModel();
-        movimentacaoModel = new MovimentacaoModel(dataSource);
+        movimentacaoModel = new MovimentacaoModel();
         palavraChaveModel = new PalavraChaveModel();
         reservaModel = new ReservaModel();
         usuarioModel = new UsuarioModel();

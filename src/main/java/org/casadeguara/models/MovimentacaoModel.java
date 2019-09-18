@@ -1,9 +1,10 @@
 package org.casadeguara.models;
 
 import java.util.List;
-import org.casadeguara.listas.DataSourceProvider;
+
+import org.casadeguara.entidades.Leitor;
 import org.casadeguara.movimentacao.Emprestimo;
-import org.casadeguara.movimentacao.Item;
+import org.casadeguara.movimentacao.Acervo;
 import org.casadeguara.negocio.Regra;
 import javafx.collections.ObservableList;
 
@@ -14,14 +15,12 @@ import javafx.collections.ObservableList;
  */
 public class MovimentacaoModel {
     
-    private DataSourceProvider dataSource;
     private AdicaoExemplarModel adicaoExemplar;
     private DevolucaoModel devolucao;
     private EmprestimoModel emprestimo;
     private RenovacaoModel renovacao;
 
-    public MovimentacaoModel(DataSourceProvider dataSource) {
-        this.dataSource = dataSource;
+    public MovimentacaoModel() {
         Regra regras = new RegraModel().consultarRegrasNegocio();
         
         int duracaoEmprestimo = regras.getDuracaoEmprestimo();
@@ -35,24 +34,12 @@ public class MovimentacaoModel {
         emprestimo = new EmprestimoModel(duracaoEmprestimo, limiteEmprestimosPorPessoa);
         renovacao = new RenovacaoModel(duracaoEmprestimo, duracaoRenovacao, limiteRenovacoes);
     }
-    
-    public void atualizarListaExemplares() {
-        dataSource.atualizarListaExemplares();
-    }
-    
-    public ObservableList<String> getListaLeitores() {
-        return dataSource.getListaLeitores();
-    }
-    
-    public ObservableList<Item> getListaExemplares() {
-        return dataSource.getListaExemplares();
-    }
 
     public ObservableList<Emprestimo> consultarEmprestimos(int idleitor) {
         return emprestimo.consultar(idleitor);
     }
     
-    public ObservableList<Item> gerarReciboEmprestimo(int idleitor) {
+    public ObservableList<Acervo> gerarReciboEmprestimo(int idleitor) {
         return emprestimo.gerarRecibo(idleitor);
     }
     
@@ -60,7 +47,7 @@ public class MovimentacaoModel {
         return devolucao.devolver(emprestimos);
     }
 
-    public int emprestar(int idleitor, String nomeLeitor, List<Item> exemplares, int quantidadeItens) {
+    public int emprestar(int idleitor, String nomeLeitor, List<Acervo> exemplares, int quantidadeItens) {
         return emprestimo.emprestar(idleitor, nomeLeitor, exemplares, quantidadeItens);
     }
 
@@ -68,11 +55,7 @@ public class MovimentacaoModel {
         return renovacao.renovar(emprestimos);
     }
     
-    public boolean validarAdicaoExemplar(Item exemplar, String leitor) {
+    public boolean validarAdicaoExemplar(Acervo exemplar, Leitor leitor) {
         return adicaoExemplar.validar(exemplar, leitor);
-    }
-
-    public void removerExemplares(ObservableList<Item> exemplaresParaEmprestimo) {
-        dataSource.removerExemplares(exemplaresParaEmprestimo);
     }
 }

@@ -11,7 +11,7 @@ import org.casadeguara.componentes.JasperViewerFX;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.entidades.Leitor;
 import org.casadeguara.etiquetas.Etiqueta;
-import org.casadeguara.movimentacao.Item;
+import org.casadeguara.movimentacao.Acervo;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -67,7 +67,7 @@ public class Impressora {
      * @param leitor Leitor
      * @param exemplares Lista de exemplares
      */
-    public void reciboEmprestimo(String leitor, List<Item> exemplares) {
+    public void reciboEmprestimo(String leitor, List<Acervo> exemplares) {
         Map<String, Object> params = new HashMap<>();
         params.put("leitor", leitor);
 
