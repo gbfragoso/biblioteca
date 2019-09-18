@@ -11,9 +11,9 @@ public class ConsultaController implements GenericController{
     private ConsultaView view;
     private ConsultaModel model;
     
-    public ConsultaController(ConsultaView view, ConsultaModel model) {
+    public ConsultaController(ConsultaView view) {
         this.view = view;
-        this.model = model;
+        this.model = new ConsultaModel();
         
         configureView();
     }

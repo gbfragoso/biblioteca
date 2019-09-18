@@ -25,18 +25,6 @@ import org.casadeguara.controllers.LoginController;
 import org.casadeguara.controllers.MovimentacaoController;
 import org.casadeguara.controllers.ReservaController;
 import org.casadeguara.entidades.Usuario;
-import org.casadeguara.models.AdministracaoModel;
-import org.casadeguara.models.AutorModel;
-import org.casadeguara.models.ConsultaModel;
-import org.casadeguara.models.EditoraModel;
-import org.casadeguara.models.GraficoModel;
-import org.casadeguara.models.LeitorModel;
-import org.casadeguara.models.LivroModel;
-import org.casadeguara.models.LoginModel;
-import org.casadeguara.models.MovimentacaoModel;
-import org.casadeguara.models.PalavraChaveModel;
-import org.casadeguara.models.ReservaModel;
-import org.casadeguara.models.UsuarioModel;
 import org.casadeguara.utilitarios.Backup;
 import org.casadeguara.utilitarios.Formatador;
 import org.casadeguara.views.AdministracaoView;
@@ -89,19 +77,6 @@ public class Main extends Application {
     private MovimentacaoView movimentacaoView;
     private ReservaView reservaView;
     
-    private AdministracaoModel administracaoModel;
-    private AutorModel autorModel;
-    private EditoraModel editoraModel;
-    private LeitorModel leitorModel;
-    private LivroModel livroModel;
-    private PalavraChaveModel palavraChaveModel;
-    private ConsultaModel consultaModel;
-    private GraficoModel graficoModel;
-    private LoginModel loginModel;
-    private MovimentacaoModel movimentacaoModel;
-    private ReservaModel reservaModel;
-    private UsuarioModel usuarioModel;
-
     private ConsultaController consultaController;
     private LoginController loginController;
 
@@ -109,22 +84,7 @@ public class Main extends Application {
     public void init() {
         this.conexao = new Conexao();
     }
-    
-    private void initModels() {
-        administracaoModel = new AdministracaoModel();
-        autorModel = new AutorModel();
-        consultaModel = new ConsultaModel();
-        editoraModel = new EditoraModel();
-        graficoModel = new GraficoModel();
-        leitorModel = new LeitorModel();
-        livroModel = new LivroModel();
-        loginModel = new LoginModel();
-        movimentacaoModel = new MovimentacaoModel();
-        palavraChaveModel = new PalavraChaveModel();
-        reservaModel = new ReservaModel();
-        usuarioModel = new UsuarioModel();
-    }
-    
+       
     private void initViews() {
         administracaoView = new AdministracaoView();
         cadastroAutorView = new CadastroAutorView();
@@ -145,19 +105,19 @@ public class Main extends Application {
     }
     
     private void initControllers() {
-        new AdministracaoController(administracaoView, administracaoModel);
-        new CadastroAutorController(cadastroAutorView, autorModel);
-        new CadastroEditoraController(cadastroEditoraView, editoraModel);
-        new CadastroLeitorController(cadastroLeitorView, leitorModel);
-        new CadastroLivroController(cadastroLivroView, livroModel);
-        new CadastroPalavrasController(cadastroPalavrasView, palavraChaveModel);
-        new CadastroUsuarioController(cadastroUsuarioView, usuarioModel);
-        consultaController = new ConsultaController(consultaView, consultaModel);
-        new GraficoController(graficoView, graficoModel);
+        new AdministracaoController(administracaoView);
+        new CadastroAutorController(cadastroAutorView);
+        new CadastroEditoraController(cadastroEditoraView);
+        new CadastroLeitorController(cadastroLeitorView);
+        new CadastroLivroController(cadastroLivroView);
+        new CadastroPalavrasController(cadastroPalavrasView);
+        new CadastroUsuarioController(cadastroUsuarioView);
+        consultaController = new ConsultaController(consultaView);
+        new GraficoController(graficoView);
         new ImpressosController(impressosView);
-        loginController = new LoginController(loginView, loginModel);
-        new MovimentacaoController(movimentacaoView, movimentacaoModel);
-        new ReservaController(reservaView, reservaModel);
+        loginController = new LoginController(loginView);
+        new MovimentacaoController(movimentacaoView);
+        new ReservaController(reservaView);
     }
     
     private void configurarLogin() {
@@ -244,7 +204,6 @@ public class Main extends Application {
             }
         });
 
-        initModels();
         initViews();
         initControllers();
         

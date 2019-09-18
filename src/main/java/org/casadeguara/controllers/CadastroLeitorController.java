@@ -15,9 +15,9 @@ public class CadastroLeitorController implements GenericController {
     private LeitorModel model;
     private Leitor leitorSelecionado;
     
-    public CadastroLeitorController(CadastroLeitorView view, LeitorModel model) {
+    public CadastroLeitorController(CadastroLeitorView view) {
         this.view = view;
-        this.model = model;
+        this.model = new LeitorModel();
         
         configureView();
     }

@@ -18,9 +18,9 @@ public class LoginController implements GenericController{
     private BorderPane telaPrincipal;
     private Scene scene;
     
-    public LoginController(LoginView view, LoginModel model) {
+    public LoginController(LoginView view) {
         this.view = view;
-        this.model = model;
+        this.model = new LoginModel();
         
         configureView();
     }

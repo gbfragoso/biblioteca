@@ -12,9 +12,9 @@ public class CadastroUsuarioController implements GenericController{
     private UsuarioModel model;
     private Usuario usuarioAtual;
     
-    public CadastroUsuarioController(CadastroUsuarioView view, UsuarioModel model) {
+    public CadastroUsuarioController(CadastroUsuarioView view) {
         this.view = view;
-        this.model = model;
+        this.model = new UsuarioModel();
         
         configureView();
     }

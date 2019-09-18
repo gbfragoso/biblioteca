@@ -11,9 +11,9 @@ public class GraficoController implements GenericController {
     private GraficoView view;
     private GraficoModel model;
     
-    public GraficoController(GraficoView view, GraficoModel model) {
+    public GraficoController(GraficoView view) {
         this.view = view;
-        this.model = model;
+        this.model = new GraficoModel();
         
         configureView();
     }

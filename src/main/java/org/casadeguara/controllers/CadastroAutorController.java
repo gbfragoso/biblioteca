@@ -11,9 +11,9 @@ public class CadastroAutorController implements GenericController{
     private AutorModel model;
     private CadastroAutorView view;
     
-    public CadastroAutorController(CadastroAutorView view, AutorModel model) {
+    public CadastroAutorController(CadastroAutorView view) {
         this.view = view;
-        this.model = model;
+        this.model = new AutorModel();
         
         configureView();
     }

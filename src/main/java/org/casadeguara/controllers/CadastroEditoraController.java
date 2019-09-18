@@ -11,9 +11,9 @@ public class CadastroEditoraController implements GenericController {
     private EditoraModel model;
     private CadastroEditoraView view;
     
-    public CadastroEditoraController(CadastroEditoraView view, EditoraModel model) {
+    public CadastroEditoraController(CadastroEditoraView view) {
         this.view = view;
-        this.model = model;
+        this.model = new EditoraModel();
         
         configureView();
     }

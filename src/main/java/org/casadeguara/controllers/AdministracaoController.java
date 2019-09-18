@@ -19,9 +19,9 @@ public class AdministracaoController implements GenericController{
     private AdministracaoModel model;
     private RegraModel regraModel;
 
-    public AdministracaoController(AdministracaoView view, AdministracaoModel model) {
+    public AdministracaoController(AdministracaoView view) {
         this.view = view;
-        this.model = model;
+        this.model = new AdministracaoModel();
         
         regraModel = new RegraModel();
         

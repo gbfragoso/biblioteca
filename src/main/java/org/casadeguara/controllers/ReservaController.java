@@ -14,9 +14,9 @@ public class ReservaController implements GenericController {
     private ReservaView view;
     private ReservaModel model;
     
-    public ReservaController(ReservaView view, ReservaModel model) {
+    public ReservaController(ReservaView view) {
         this.view = view;
-        this.model = model;
+        this.model = new ReservaModel();
         
         configureView();
     }

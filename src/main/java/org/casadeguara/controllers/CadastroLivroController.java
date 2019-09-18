@@ -28,9 +28,9 @@ public class CadastroLivroController implements GenericController{
     private ObservableList<Exemplar> listaExemplares;
     private ObservableList<PalavraChave> listaPalavrasChave;
     
-    public CadastroLivroController(CadastroLivroView view, LivroModel model) {
+    public CadastroLivroController(CadastroLivroView view) {
         this.view = view;
-        this.model = model;
+        this.model = new LivroModel();
         
         listaAutores = FXCollections.observableArrayList();
         listaExemplares = FXCollections.observableArrayList();

@@ -24,9 +24,9 @@ public class MovimentacaoController implements GenericController{
     private LocalDate dataDevolucao;
     private Leitor leitorSelecionado;
 
-    public MovimentacaoController(MovimentacaoView view, MovimentacaoModel model) {
+    public MovimentacaoController(MovimentacaoView view) {
         this.view = view;
-        this.model = model;
+        this.model = new MovimentacaoModel();
         
         Regra regrasNegocio = new RegraModel().consultarRegrasNegocio();
         dataDevolucao = LocalDate.now().plusDays(regrasNegocio.getDuracaoEmprestimo());

@@ -11,9 +11,9 @@ public class CadastroPalavrasController implements GenericController{
     private PalavraChaveModel model;
     private CadastroPalavrasView view;
     
-    public CadastroPalavrasController(CadastroPalavrasView view, PalavraChaveModel model) {
+    public CadastroPalavrasController(CadastroPalavrasView view) {
         this.view = view;
-        this.model = model;
+        this.model = new PalavraChaveModel();
         
         configureView();
     }
