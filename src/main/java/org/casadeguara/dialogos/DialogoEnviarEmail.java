@@ -1,24 +1,26 @@
 package org.casadeguara.dialogos;
 
-import java.util.Properties;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-
+import org.casadeguara.alertas.Alerta;
 import org.casadeguara.models.AdministracaoModel;
+import org.casadeguara.negocio.Cobranca;
+import org.simplejavamail.email.Email;
+import org.simplejavamail.email.EmailBuilder;
+import org.simplejavamail.mailer.Mailer;
+import org.simplejavamail.mailer.MailerBuilder;
+import org.simplejavamail.mailer.config.TransportStrategy;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -34,10 +36,9 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 	private TextField txtEmail;
 	private PasswordField txtSenha;
 	private TextField txtAssunto;
-	private CheckBox chkRepetir;
 	private TextArea texto;
 
-	public DialogoEnviarEmail(AdministracaoModel model) {
+	public DialogoEnviarEmail(AdministracaoModel model, ObservableList<Cobranca> listaCobrancas) {
 		DialogPane dialogPane = getDialogPane();
 		
 		ButtonType enviar = new ButtonType("Enviar", ButtonData.OK_DONE);
@@ -46,7 +47,37 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 		
 		setResultConverter(button -> {
 			if(button != null && button.equals(enviar)) {
-				System.out.println("Enviado com sucesso");
+				String provedor = txtProvedor.getText();
+				String porta = txtPorta.getText();
+				String email = txtEmail.getText();
+				String senha = txtSenha.getText();
+				
+				if(provedor != null && porta != null && email != null && senha != null) {
+					Mailer mailer = MailerBuilder
+				          .withSMTPServer(provedor, Integer.valueOf(porta), email, senha)
+				          .withTransportStrategy(TransportStrategy.SMTP_TLS)
+				          .withSessionTimeout(10 * 1000)
+				          .clearEmailAddressCriteria()
+				          .withDebugLogging(true)
+				          .buildMailer();
+					
+					ObservableList<Email> emails = construirListaEmail(listaCobrancas, texto.getText());
+					Task<Void> enviarEmails = new Task<Void>() {
+	
+						@Override
+						protected Void call() throws Exception {
+							int size = emails.size();
+							updateMessage("Enviando emails");
+							for(int i = 0; i < size; i++) {
+								mailer.sendMail(emails.get(i), true);
+								updateProgress(i+1, size);
+							}
+							return null;
+						}
+					};
+					new Alerta().progresso(enviarEmails);
+					new Thread(enviarEmails).start();
+				}
 			}
 			return true;
 		});
@@ -58,13 +89,12 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 		Label email = new Label("Email:");
 		Label senha = new Label("Senha:");
 		Label assunto = new Label("Assunto:");
-		Label tags = new Label("Tags disponívels: <leitor>,<listalivros>,<quantidade>");
+		Label tags = new Label("Tags disponívels: <leitor> <listalivros> <quantidade>");
 		txtProvedor = new TextField();
 		txtPorta = new TextField();
 		txtEmail = new TextField();
 		txtSenha = new PasswordField();
 		txtAssunto = new TextField();
-		chkRepetir = new CheckBox("Repetir cobranças");
 		
 		texto = new TextArea();
 		texto.setWrapText(true);
@@ -83,7 +113,6 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 		AnchorPane.setLeftAnchor(txtEmail, 60.0);
 		AnchorPane.setLeftAnchor(txtSenha, 60.0);
 		AnchorPane.setLeftAnchor(txtAssunto, 60.0);
-		AnchorPane.setLeftAnchor(chkRepetir, 5.0);
 		AnchorPane.setRightAnchor(provedor, 5.0);
 		AnchorPane.setRightAnchor(porta, 5.0);
 		AnchorPane.setRightAnchor(email, 5.0);
@@ -104,53 +133,64 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 		AnchorPane.setTopAnchor(txtSenha, 95.0);
 		AnchorPane.setTopAnchor(assunto, 125.0);
 		AnchorPane.setTopAnchor(txtAssunto, 125.0);
-		AnchorPane.setTopAnchor(chkRepetir, 155.0);
 		AnchorPane.setTopAnchor(tags, 175.0);
 		AnchorPane.setTopAnchor(texto, 195.0);
 		
-		content.getChildren().addAll(provedor, porta, email, senha, assunto, chkRepetir,
+		content.getChildren().addAll(provedor, porta, email, senha, assunto,
 				txtProvedor, txtPorta, txtEmail, txtSenha, txtAssunto, texto, tags);
 		
 		return content;
 	}
 	
-	private Session configurarEmail() {
-		Properties prop = new Properties();
-		prop.put("mail.smtp.auth", true);
-		prop.put("mail.smtp.starttls.enable", "true");
-		prop.put("mail.smtp.host", "smtp.mailtrap.io");
-		prop.put("mail.smtp.port", "25");
-		prop.put("mail.smtp.ssl.trust", "smtp.mailtrap.io");
+	private ObservableList<Email> construirListaEmail(ObservableList<Cobranca> listaCobrancas, String texto) {
+		ObservableList<Email> listaEmails = FXCollections.observableArrayList();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Map<String, List<Cobranca>> map = new HashMap<>();
 		
-		Session session = Session.getInstance(prop, new Authenticator() {
-			@Override
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(txtEmail.getText(), txtSenha.getText());
+		for(Cobranca c : listaCobrancas) {
+			String leitor = c.getLeitor();
+
+			if (!map.containsKey(leitor)) {
+			    List<Cobranca> list = new ArrayList<>();
+			    list.add(c);
+			    map.put(leitor, list);
+			} else {
+			    map.get(leitor).add(c);
 			}
-		});
-		return session;
-	}
-	
-	private int enviarMensagem(Session session, String from, String to, String assunto, String msg) {
-		try {
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(from));
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-			message.setSubject(assunto);
-			 
-			MimeBodyPart mimeBodyPart = new MimeBodyPart();
-			mimeBodyPart.setContent(msg, "text/html");
-			 
-			Multipart multipart = new MimeMultipart();
-			multipart.addBodyPart(mimeBodyPart);
-			 
-			message.setContent(multipart);
-		 
-			Transport.send(message);
-		} catch (MessagingException e) {
-			e.printStackTrace();
 		}
-		return 0;
+		Set<String> listaLeitores = map.keySet();
+		
+		for(String leitor : listaLeitores) {
+			List<Cobranca> debitos = map.get(leitor);
+			String email = debitos.get(0).getEmail();
+			
+			StringBuilder lista = new StringBuilder();
+			for(Cobranca c : debitos) {
+				lista.append(c.getTombo());
+				lista.append(" ");
+				lista.append(c.getTitulo());
+				lista.append(" Ex: ");
+				lista.append(c.getNumero());
+				lista.append(" com data para devolução para: ");
+				lista.append(simpleDateFormat.format(c.getDataDevolucao()));
+				lista.append("\n");
+			}
+			String resultado = texto;
+			resultado = resultado.replace("<leitor>", leitor);
+			resultado = resultado.replace("<quantidade>", Integer.toString(debitos.size()));
+			resultado = resultado.replace("<listalivros>", lista.toString());
+			
+			listaEmails.add(
+				EmailBuilder.startingBlank()
+					.to(leitor, email)
+					.withSubject("hey")
+					.withPlainText(texto)
+					.withHeader("X-Priority", 5)
+					.buildEmail()
+			);
+		}
+		
+		return listaEmails;
 	}
 
 }

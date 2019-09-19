@@ -10,7 +10,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.casadeguara.application.Main;
 import org.casadeguara.conexao.Conexao;
+import org.casadeguara.negocio.Cobranca;
 import org.casadeguara.utilitarios.Criptografia;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * Responsável por transações relacionadas à parte administrativa.
@@ -113,5 +117,37 @@ public class AdministracaoModel {
         return 1;
 	}
 	
-	// TODO Criar função para consultar a view de empréstimos atrasados
+	public ObservableList<Cobranca> getListaEmprestimosAtrasados() {
+		logger.trace("Iniciando a consulta dos empréstimos em atraso para efetuar cobrança");
+		
+		StringBuilder query = new StringBuilder();
+		query.append("select idemp, leitor, email, tombo, titulo, numero, data_emprestimo, data_devolucao, cobranca ");
+		query.append("from vw_cobrancas");
+		
+		ObservableList<Cobranca> listaPossiveisCobrancas = FXCollections.observableArrayList();
+        if (usuarioPossuiPermissao()) {
+			try (Connection con = Conexao.abrir();
+                 PreparedStatement ps = con.prepareStatement(query.toString());
+				 ResultSet rs = ps.executeQuery()) {
+                
+            	while(rs.next()) {
+            		Cobranca cobranca = new Cobranca();
+            		cobranca.setIdemprestimo(rs.getInt(1));
+            		cobranca.setLeitor(rs.getString(2));
+            		cobranca.setEmail(rs.getString(3));
+            		cobranca.setTombo(rs.getString(4));
+            		cobranca.setTitulo(rs.getString(5));
+            		cobranca.setNumero(rs.getInt(6));
+            		cobranca.setDataEmprestimo(rs.getDate(7));
+            		cobranca.setDataDevolucao(rs.getDate(8));
+            		cobranca.setCobranca(rs.getTimestamp(9));
+            		
+            		listaPossiveisCobrancas.add(cobranca);
+            	}
+            } catch (SQLException ex) {
+                logger.fatal("Erro ao tentar mudar o texto de cobrança.", ex);
+            }
+        }
+        return listaPossiveisCobrancas;
+	}
 }
