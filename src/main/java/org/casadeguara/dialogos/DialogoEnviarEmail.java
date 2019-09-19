@@ -183,7 +183,7 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 			listaEmails.add(
 				EmailBuilder.startingBlank()
 					.to(leitor, email)
-					.withSubject("hey")
+					.withSubject(txtAssunto.getText())
 					.withPlainText(texto)
 					.withHeader("X-Priority", 5)
 					.buildEmail()

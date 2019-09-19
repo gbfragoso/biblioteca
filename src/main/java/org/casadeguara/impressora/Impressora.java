@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.casadeguara.componentes.JasperViewerFX;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.entidades.Leitor;
 import org.casadeguara.etiquetas.Etiqueta;
@@ -18,6 +17,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * Classe responsável por tudo que é impresso.
@@ -31,7 +31,6 @@ public class Impressora {
 
     /**
      * Gera um PDF com etiquetas, contendo o tombo do livro e número do exemplar.
-     * 
      * @param etiquetas Lista de etiquetas.
      */
     public void etiquetas(List<Etiqueta> etiquetas) {
@@ -41,7 +40,6 @@ public class Impressora {
 
     /**
      * Gera uma ficha de cadastro com os dados do cadastro de leitor.
-     * 
      * @param ficha Um objeto ficha de cadastro.
      */
     public void fichaCadastro(List<Leitor> ficha) {
@@ -63,7 +61,6 @@ public class Impressora {
 
     /**
      * Gera um recibo de empréstimo com os exemplares em posse do leitor.
-     * 
      * @param leitor Leitor
      * @param exemplares Lista de exemplares
      */
@@ -77,7 +74,6 @@ public class Impressora {
 
     /**
      * Gera uma lista com empréstimos de acordo com determinada regra.
-     * 
      * @param tiporelacao Tipo de empréstimo a ser retornado
      */
     public void relacaoEmprestimos(String tiporelacao) {
@@ -115,7 +111,9 @@ public class Impressora {
         try (Connection con = Conexao.abrir()) {
             JasperReport jreport = (JasperReport) JRLoader.loadObject(getClass().getResource(modelo));
             JasperPrint jprint = JasperFillManager.fillReport(jreport, params, con);
-            new JasperViewerFX().viewReport(titulo, jprint);
+            JasperViewer viewer = new JasperViewer(jprint, false);
+            viewer.setTitle(titulo);
+            viewer.setVisible(true);
         } catch (JRException | SQLException ex) {
             logger.fatal("Erro ao visualizar este relatório", ex);
         }
@@ -126,7 +124,9 @@ public class Impressora {
         try {
             JasperReport jreport = (JasperReport) JRLoader.loadObject(getClass().getResource(modelo));
             JasperPrint jprint = JasperFillManager.fillReport(jreport, params, source);
-            new JasperViewerFX().viewReport(titulo, jprint);
+            JasperViewer viewer = new JasperViewer(jprint, false);
+            viewer.setTitle(titulo);
+            viewer.setVisible(true);
         } catch (JRException ex) {
             logger.fatal("Erro ao visualizar este relatório", ex);
         }
