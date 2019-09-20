@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.casadeguara.componentes.JasperViewerFX;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.entidades.Leitor;
 import org.casadeguara.etiquetas.Etiqueta;
@@ -17,7 +18,6 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * Classe responsável por tudo que é impresso.
@@ -111,9 +111,7 @@ public class Impressora {
         try (Connection con = Conexao.abrir()) {
             JasperReport jreport = (JasperReport) JRLoader.loadObject(getClass().getResource(modelo));
             JasperPrint jprint = JasperFillManager.fillReport(jreport, params, con);
-            JasperViewer viewer = new JasperViewer(jprint, false);
-            viewer.setTitle(titulo);
-            viewer.setVisible(true);
+            new JasperViewerFX().viewReport(titulo, jprint);
         } catch (JRException | SQLException ex) {
             logger.fatal("Erro ao visualizar este relatório", ex);
         }
@@ -124,9 +122,7 @@ public class Impressora {
         try {
             JasperReport jreport = (JasperReport) JRLoader.loadObject(getClass().getResource(modelo));
             JasperPrint jprint = JasperFillManager.fillReport(jreport, params, source);
-            JasperViewer viewer = new JasperViewer(jprint, false);
-            viewer.setTitle(titulo);
-            viewer.setVisible(true);
+            new JasperViewerFX().viewReport(titulo, jprint);
         } catch (JRException ex) {
             logger.fatal("Erro ao visualizar este relatório", ex);
         }
