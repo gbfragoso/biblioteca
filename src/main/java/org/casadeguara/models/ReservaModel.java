@@ -104,7 +104,7 @@ public class ReservaModel {
     }
 
     public int expirarReservas() {
-        String query = "delete from reserva where data_expira::timestamp::date = current_date";
+        String query = "delete from reserva where data_expira::date < current_date";
         
         try (Connection con = Conexao.abrir();
              PreparedStatement ps = con.prepareStatement(query)) {

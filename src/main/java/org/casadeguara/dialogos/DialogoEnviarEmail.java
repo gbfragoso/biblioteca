@@ -5,20 +5,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
-import org.casadeguara.alertas.Alerta;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
 import org.casadeguara.models.AdministracaoModel;
 import org.casadeguara.negocio.Cobranca;
-import org.simplejavamail.email.Email;
-import org.simplejavamail.email.EmailBuilder;
-import org.simplejavamail.mailer.Mailer;
-import org.simplejavamail.mailer.MailerBuilder;
-import org.simplejavamail.mailer.config.TransportStrategy;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -53,30 +59,25 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 				String senha = txtSenha.getText();
 				
 				if(provedor != null && porta != null && email != null && senha != null) {
-					Mailer mailer = MailerBuilder
-				          .withSMTPServer(provedor, Integer.valueOf(porta), email, senha)
-				          .withTransportStrategy(TransportStrategy.SMTP_TLS)
-				          .withSessionTimeout(10 * 1000)
-				          .clearEmailAddressCriteria()
-				          .withDebugLogging(true)
-				          .buildMailer();
+					Properties prop = new Properties();
+					prop.put("mail.smtp.auth", true);
+					prop.put("mail.smtp.starttls.enable", "true");
+					prop.put("mail.smtp.host", txtProvedor.getText());
+					prop.put("mail.smtp.port", txtPorta.getText());
+					prop.put("mail.smtp.ssl.trust", txtProvedor.getText());
 					
-					ObservableList<Email> emails = construirListaEmail(listaCobrancas, texto.getText());
-					Task<Void> enviarEmails = new Task<Void>() {
-	
-						@Override
-						protected Void call() throws Exception {
-							int size = emails.size();
-							updateMessage("Enviando emails");
-							for(int i = 0; i < size; i++) {
-								mailer.sendMail(emails.get(i), true);
-								updateProgress(i+1, size);
-							}
-							return null;
-						}
-					};
-					new Alerta().progresso(enviarEmails);
-					new Thread(enviarEmails).start();
+					Session session = Session.getInstance(prop, new Authenticator() {
+					    @Override
+					    protected PasswordAuthentication getPasswordAuthentication() {
+					        return new PasswordAuthentication(txtEmail.getText(), txtSenha.getText());
+					    }
+					});
+					
+					try {
+						enviarEmails(session, listaCobrancas, texto.getText());
+					} catch (MessagingException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			return true;
@@ -91,7 +92,9 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 		Label assunto = new Label("Assunto:");
 		Label tags = new Label("Tags disponívels: <leitor> <listalivros> <quantidade>");
 		txtProvedor = new TextField();
+		txtProvedor.setText("smtp.gmail.com");
 		txtPorta = new TextField();
+		txtPorta.setText("465");
 		txtEmail = new TextField();
 		txtSenha = new PasswordField();
 		txtAssunto = new TextField();
@@ -142,8 +145,7 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 		return content;
 	}
 	
-	private ObservableList<Email> construirListaEmail(ObservableList<Cobranca> listaCobrancas, String texto) {
-		ObservableList<Email> listaEmails = FXCollections.observableArrayList();
+	private boolean enviarEmails(Session session, ObservableList<Cobranca> listaCobrancas, String texto) throws AddressException, MessagingException {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Map<String, List<Cobranca>> map = new HashMap<>();
 		
@@ -180,17 +182,23 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 			resultado = resultado.replace("<quantidade>", Integer.toString(debitos.size()));
 			resultado = resultado.replace("<listalivros>", lista.toString());
 			
-			listaEmails.add(
-				EmailBuilder.startingBlank()
-					.to(leitor, email)
-					.withSubject(txtAssunto.getText())
-					.withPlainText(texto)
-					.withHeader("X-Priority", 5)
-					.buildEmail()
-			);
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(txtEmail.getText()));
+			message.setRecipients( Message.RecipientType.TO, InternetAddress.parse(email));
+			message.setSubject(txtAssunto.getText());
+			 
+			MimeBodyPart mimeBodyPart = new MimeBodyPart();
+			mimeBodyPart.setContent(resultado, "text/html");
+			 
+			Multipart multipart = new MimeMultipart();
+			multipart.addBodyPart(mimeBodyPart);
+			 
+			message.setContent(multipart);
+			 
+			Transport.send(message);
 		}
 		
-		return listaEmails;
+		return true;
 	}
 
 }

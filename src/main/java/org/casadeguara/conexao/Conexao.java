@@ -25,12 +25,14 @@ public class Conexao {
 			ds.setUser(USERNAME);
 			ds.setPassword(PASSWORD);
 			
-			ds.setInitialPoolSize(5);
-			ds.setMinPoolSize(5);                                     
-			ds.setAcquireIncrement(5);
-			ds.setMaxPoolSize(15);
+			ds.setMinPoolSize(3);                                     
+			ds.setMaxPoolSize(10);
+			ds.setAcquireIncrement(1);
 			ds.setMaxStatementsPerConnection(3);
-			ds.setIdleConnectionTestPeriod(3000);
+			ds.setIdleConnectionTestPeriod(300);
+			ds.setPreferredTestQuery("SELECT 1");
+			ds.setTestConnectionOnCheckin(true);
+			ds.setMaxIdleTimeExcessConnections(240);
 		} catch (PropertyVetoException e) {
 			e.printStackTrace();
 		}

@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 
 import org.casadeguara.models.GenericModel;
 
+
 public class AutoCompleteTextField<T> extends TextField {
 	
     private ContextMenu suggestions;
