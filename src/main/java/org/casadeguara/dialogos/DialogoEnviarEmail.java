@@ -62,6 +62,7 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 					Properties prop = new Properties();
 					prop.put("mail.smtp.auth", true);
 					prop.put("mail.smtp.starttls.enable", "true");
+					prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 					prop.put("mail.smtp.host", txtProvedor.getText());
 					prop.put("mail.smtp.port", txtPorta.getText());
 					prop.put("mail.smtp.ssl.trust", txtProvedor.getText());
