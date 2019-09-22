@@ -10,7 +10,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.casadeguara.alertas.Alerta;
-import org.casadeguara.conexao.Conexao;
 import org.casadeguara.controllers.AdministracaoController;
 import org.casadeguara.controllers.CadastroAutorController;
 import org.casadeguara.controllers.CadastroEditoraController;
@@ -55,7 +54,6 @@ public class Main extends Application {
     private static Usuario usuarioLogado = new Usuario();
     
     private Scene scene;
-    private Conexao conexao;
     
     // Tela Principal
     private BorderPane telaPrincipal;
@@ -80,11 +78,6 @@ public class Main extends Application {
     private ConsultaController consultaController;
     private LoginController loginController;
 
-    @Override
-    public void init() {
-        this.conexao = new Conexao();
-    }
-       
     private void initViews() {
         administracaoView = new AdministracaoView();
         cadastroAutorView = new CadastroAutorView();
@@ -192,18 +185,6 @@ public class Main extends Application {
         Locale.setDefault(new Locale("pt", "BR"));
         realizarBackup(LocalDateTime.now());
         
-        primaryStage.setTitle("Sistema Biblioteca Batuíra");
-        primaryStage.setMaximized(true);
-        primaryStage.getIcons().add(new Image(getClass().getResource("/images/logo.png").toExternalForm()));
-        primaryStage.setOnCloseRequest(event -> {
-            if (new Alerta().confirmacao("Deseja realmente sair?")) {
-                conexao.encerrar();
-                Platform.exit();
-            } else {
-                event.consume();
-            }
-        });
-
         initViews();
         initControllers();
         
@@ -222,6 +203,16 @@ public class Main extends Application {
         configurarLogin();
        
         primaryStage.setScene(scene);
+        primaryStage.setTitle("Sistema Biblioteca Batuíra");
+        primaryStage.setMaximized(true);
+        primaryStage.getIcons().add(new Image(getClass().getResource("/images/logo.png").toExternalForm()));
+        primaryStage.setOnCloseRequest(event -> {
+        	if (new Alerta().confirmacao("Deseja realmente sair?")) {
+        		Platform.exit();
+        	} else {
+        		event.consume();
+        	}
+        });
         primaryStage.show();
     }
     
