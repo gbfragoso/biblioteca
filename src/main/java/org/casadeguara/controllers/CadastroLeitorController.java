@@ -156,6 +156,7 @@ public class CadastroLeitorController implements GenericController {
             .rg(view.getRgLeitor())
             .sexo(view.getSexoLeitor())
             .isTrabalhador(view.isTrabalhador())
+            .isAtivo(!view.isInativo())
             .isIncompleto(view.isCadastroIncompleto())
             .build();
     }

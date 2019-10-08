@@ -112,13 +112,15 @@ public class MovimentacaoController implements GenericController{
         	int id = leitorSelecionado.getId();
             String nome = leitorSelecionado.getNome();
 			
-            if(model.emprestar(id, nome, exemplaresParaEmprestimo, quantidadeItens) == 0) {
-                impressora.reciboEmprestimo(nome, exemplaresParaEmprestimo);
-                
-                view.setEmprestimosAtuais(model.consultarEmprestimos(id));
-                view.limparExemplaresParaEmprestimo();
-            } else {
-                view.mensagemInformativa("Empréstimo não pôde ser concluído");
+            if(leitorSelecionado.isAtivo() || new Alerta().autorizacao("Digite a senha para autorizar o empréstimo")) {
+	            if(model.emprestar(id, nome, exemplaresParaEmprestimo, quantidadeItens) == 0) {
+	                impressora.reciboEmprestimo(nome, exemplaresParaEmprestimo);
+	                
+	                view.setEmprestimosAtuais(model.consultarEmprestimos(id));
+	                view.limparExemplaresParaEmprestimo();
+	            } else {
+	                view.mensagemInformativa("Empréstimo não pôde ser concluído");
+	            }
             }
             return 0;
         } else {
@@ -169,9 +171,16 @@ public class MovimentacaoController implements GenericController{
     	Leitor leitor = view.getLeitorSelecionado();
     	
         if(leitor != null) {
+        	if (!leitor.isAtivo()) {
+        		new Alerta().informacao("Este leitor foi inativado porque possui pendências.\nNovos empréstimos apenas sob autorização.");
+        	} 
+        	
             this.leitorSelecionado = leitor;
             view.setEmprestimosAtuais(model.consultarEmprestimos(leitor.getId()));
+            
             return 0;
+        } else {
+        	new Alerta().informacao("Leitor não encontrado, digite o texto corretamente.");
         }
         return 1;
     }

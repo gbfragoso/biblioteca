@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.casadeguara.application.Main;
@@ -149,5 +150,24 @@ public class AdministracaoModel {
             }
         }
         return listaPossiveisCobrancas;
+	}
+
+	public void atualizarDataCobranca(Object[] ids) {
+		logger.trace("Atualizando os empréstimos que foram cobrados");
+		
+		StringBuilder query = new StringBuilder();
+		query.append("update emprestimo set cobranca = localtimestamp where idemp = ANY (?) ");
+		
+        if (usuarioPossuiPermissao()) {
+			try (Connection con = Conexao.abrir();
+                 PreparedStatement ps = con.prepareStatement(query.toString())) {
+                
+				ps.setArray(1, con.createArrayOf("integer", ids));
+				ps.executeUpdate();
+				
+            } catch (SQLException ex) {
+                logger.fatal("Erro ao tentar mudar o texto de cobrança.", ex);
+            }
+        }
 	}
 }

@@ -5,7 +5,6 @@ import org.casadeguara.dialogos.DialogoAlterarEmprestimo;
 import org.casadeguara.dialogos.DialogoEnviarEmail;
 import org.casadeguara.dialogos.DialogoMudancaRegras;
 import org.casadeguara.dialogos.DialogoRecuperarEmprestimo;
-import org.casadeguara.dialogos.TableViewDialog;
 import org.casadeguara.etiquetas.GeradorEtiqueta;
 import org.casadeguara.impressora.Impressora;
 import org.casadeguara.models.AcervoModel;
@@ -14,7 +13,6 @@ import org.casadeguara.models.RegraModel;
 import org.casadeguara.negocio.Cobranca;
 import org.casadeguara.views.AdministracaoView;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
@@ -120,11 +118,8 @@ public class AdministracaoController implements GenericController{
     
     public int realizarCobrancas() {
     	ObservableList<Cobranca> listaEmprestimosAtrasados = model.getListaEmprestimosAtrasados();
-    	TableViewDialog selecionar = new TableViewDialog(listaEmprestimosAtrasados);
-    	selecionar.showAndWait().ifPresent(e -> {
-    		DialogoEnviarEmail dialogoEnviarEmail = new DialogoEnviarEmail(model, FXCollections.observableArrayList(e));
-    		dialogoEnviarEmail.show();
-    	});  	
+    	DialogoEnviarEmail selecionar = new DialogoEnviarEmail(model, listaEmprestimosAtrasados);
+    	selecionar.showAndWait();  	
 		
     	return 0;
     }
