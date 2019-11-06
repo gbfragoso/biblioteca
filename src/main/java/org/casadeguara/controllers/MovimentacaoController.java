@@ -176,8 +176,13 @@ public class MovimentacaoController implements GenericController{
         	} 
         	
             this.leitorSelecionado = leitor;
-            view.setEmprestimosAtuais(model.consultarEmprestimos(leitor.getId()));
             
+            ObservableList<Emprestimo> emprestimos = model.consultarEmprestimos(leitor.getId());
+            if(!emprestimos.isEmpty()) {
+            	view.setEmprestimosAtuais(emprestimos);
+            } else {
+            	new Alerta().informacao("Este leitor não possui empréstimos ativos.");
+            }
             return 0;
         } else {
         	new Alerta().informacao("Leitor não encontrado, digite o texto corretamente.");
