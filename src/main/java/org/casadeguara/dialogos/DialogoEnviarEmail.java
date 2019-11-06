@@ -67,7 +67,8 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 		txtPorta = new TextField("465");
 		txtEmail = new TextField("bibliotecabatuira@gmail.com");
 		txtSenha = new PasswordField();
-		txtAssunto = new TextField();
+		txtSenha.setText("guara123456");
+		txtAssunto = new TextField("Atraso na devolução de livros");
 		progressBar = new ProgressBar(0);
 		
 		texto = new TextArea();
@@ -175,15 +176,22 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 					prop.put("mail.imap.ssl.enable", "true"); // required for Gmail
 					prop.put("mail.imap.auth.mechanisms", "XOAUTH2");
 					
-					Session session = Session.getInstance(prop, new Authenticator() {
-					    @Override
-					    protected PasswordAuthentication getPasswordAuthentication() {
-					        return new PasswordAuthentication(txtEmail.getText(), txtSenha.getText());
-					    }
-					});
-					
-					model.atualizarDataCobranca(cobrancas.stream().map(Cobranca::getIdemprestimo).toArray());
-					enviarEmails(session, cobrancas, texto.getText());
+					try {
+						Session session = Session.getInstance(prop, new Authenticator() {
+						    @Override
+						    protected PasswordAuthentication getPasswordAuthentication() {
+						        return new PasswordAuthentication(txtEmail.getText(), txtSenha.getText());
+						    }
+						});
+						
+						if(session != null) {
+							model.atualizarDataCobranca(cobrancas.stream().map(Cobranca::getIdemprestimo).toArray());
+							model.setTextoCobranca(texto.getText());
+							enviarEmails(session, cobrancas, texto.getText());
+						}
+					} catch (Exception e) {
+						new Alerta().erro("Não conseguimos realizar login no email.");
+					}
 				}
 			}
 			return true;
@@ -199,6 +207,10 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 			@Override
 			protected Void call() {
 				try {
+					if (listaCobrancas == null || listaCobrancas.isEmpty()) {
+						cancel();
+					}
+					
 					Map<String, List<Cobranca>> map = new HashMap<>();
 					int count = 0;
 					
@@ -226,13 +238,16 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 						Transport.send(message);
 					}
 				} catch (MessagingException e) {
-					e.printStackTrace();
+					cancel();
 				}
 				return null;
 			}
 		};
 		progressBar.progressProperty().bind(enviartask.progressProperty());
 		new Thread(enviartask).start();
+		
+		enviartask.setOnSucceeded(e -> new Alerta().sucesso("Emails enviados com sucesso!"));
+		enviartask.setOnCancelled(e -> new Alerta().cuidado("Houve um erro ao tentar enviar os emails, confira os dados do envio."));
 	}
 
 	private Message montarCorpoMensagem(Session session, String texto, String leitor, 
