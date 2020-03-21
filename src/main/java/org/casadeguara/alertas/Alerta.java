@@ -80,6 +80,7 @@ public class Alerta {
         progressMessage.setWrapText(true);
         progressMessage.textProperty().bind(tarefa.messageProperty());
         ProgressBar progressBar = new ProgressBar();
+        progressBar.progressProperty().bind(tarefa.progressProperty());
 
         VBox content = new VBox(5);
         content.setAlignment(Pos.CENTER);
@@ -95,12 +96,12 @@ public class Alerta {
         progressDialog.show();
 
         tarefa.stateProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == State.SUCCEEDED) {
+            if (newValue.equals(State.SUCCEEDED)) {
                 progressDialog.setGraphic(new ImageView("/images/success.png"));
                 progressBar.setVisible(false);
             } 
             
-            if (newValue == State.CANCELLED){
+            if (newValue.equals(State.CANCELLED) || newValue.equals(State.FAILED)){
                 progressDialog.setAlertType(AlertType.ERROR);
                 progressBar.setVisible(false);
             }

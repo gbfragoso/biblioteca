@@ -275,4 +275,19 @@ public class LivroModel implements GenericModel<Livro>{
         }
         return 1;
     }
+
+	public boolean verificaTombo(String tombo) {
+    	logger.trace("Verificando a existência do tombo:" + tombo);
+        try(Connection con = Conexao.abrir();
+            PreparedStatement ps = con.prepareStatement("select 1 from livro where tombo = ?")) {
+
+            ps.setString(1, tombo);
+            try (ResultSet rs = ps.executeQuery()) {
+            	return rs.next();
+            }
+        }catch (SQLException ex) {
+            logger.fatal("Não foi possível atualizar a lista de palavras-chave", ex);
+        }
+		return false;
+	}
 }

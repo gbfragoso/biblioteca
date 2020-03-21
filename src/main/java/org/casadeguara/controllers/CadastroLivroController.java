@@ -2,6 +2,8 @@ package org.casadeguara.controllers;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.casadeguara.alertas.Alerta;
 import org.casadeguara.dialogos.DialogoAdicionarExemplar;
 import org.casadeguara.dialogos.ListViewDialog;
 import org.casadeguara.entidades.Autor;
@@ -17,6 +19,7 @@ import org.casadeguara.views.CadastroLivroView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.scene.control.Alert;
 
 public class CadastroLivroController implements GenericController{
     
@@ -132,6 +135,11 @@ public class CadastroLivroController implements GenericController{
         String titulo = view.getTituloLivro();
         String tombo = view.getTomboLivro();
         Editora editora = view.getEditora();
+        
+        if(model.verificaTombo(tombo)) {
+        	view.mensagemInformativa("Tombo em uso por outro livro");
+        	return 1;
+        }
 
         if (!titulo.isEmpty() && !tombo.isEmpty() && editora != null) {
             Livro novoLivro = new Livro(0, tombo, titulo);

@@ -122,8 +122,7 @@ public class AdministracaoModel {
 		logger.trace("Iniciando a consulta dos empréstimos em atraso para efetuar cobrança");
 		
 		StringBuilder query = new StringBuilder();
-		query.append("select idemp, leitor, email, tombo, titulo, numero, data_emprestimo, data_devolucao, cobranca ");
-		query.append("from vw_cobrancas");
+		query.append("select leitor, email, livros from vw_cobrancas");
 		
 		ObservableList<Cobranca> listaPossiveisCobrancas = FXCollections.observableArrayList();
         if (usuarioPossuiPermissao()) {
@@ -132,42 +131,14 @@ public class AdministracaoModel {
 				 ResultSet rs = ps.executeQuery()) {
                 
             	while(rs.next()) {
-            		Cobranca cobranca = new Cobranca();
-            		cobranca.setIdemprestimo(rs.getInt(1));
-            		cobranca.setLeitor(rs.getString(2));
-            		cobranca.setEmail(rs.getString(3));
-            		cobranca.setTombo(rs.getString(4));
-            		cobranca.setTitulo(rs.getString(5));
-            		cobranca.setNumero(rs.getInt(6));
-            		cobranca.setDataEmprestimo(rs.getDate(7));
-            		cobranca.setDataDevolucao(rs.getDate(8));
-            		cobranca.setCobranca(rs.getTimestamp(9));
-            		
-            		listaPossiveisCobrancas.add(cobranca);
+            		listaPossiveisCobrancas.add(
+            			new Cobranca(rs.getString(1), rs.getString(2), (String[])rs.getArray(3).getArray())
+            		);
             	}
             } catch (SQLException ex) {
                 logger.fatal("Erro ao tentar mudar o texto de cobrança.", ex);
             }
         }
         return listaPossiveisCobrancas;
-	}
-
-	public void atualizarDataCobranca(Object[] ids) {
-		logger.trace("Atualizando os empréstimos que foram cobrados");
-		
-		StringBuilder query = new StringBuilder();
-		query.append("update emprestimo set cobranca = localtimestamp where idemp = ANY (?) ");
-		
-        if (usuarioPossuiPermissao()) {
-			try (Connection con = Conexao.abrir();
-                 PreparedStatement ps = con.prepareStatement(query.toString())) {
-                
-				ps.setArray(1, con.createArrayOf("integer", ids));
-				ps.executeUpdate();
-				
-            } catch (SQLException ex) {
-                logger.fatal("Erro ao tentar mudar o texto de cobrança.", ex);
-            }
-        }
 	}
 }
