@@ -8,81 +8,82 @@ import javafx.scene.layout.TilePane;
 
 /**
  * Constroi a tela de impressos.
+ * 
  * @author Gustavo
  */
-public class ImpressosView implements GenericView{
+public class ImpressosView implements GenericView {
 
-    private TilePane painelImpressos;
-    private Button btnEmprestimo;
-    private Button btnInventario;
-    private Button btnHistorico;
-    private Button btnLeitor;
-    private Button btnEmprestimoData;
-    private Button btnEmprestimoLivro;
-    private Button btnEmprestimosAtrasados;
+	private TilePane painelImpressos;
+	private Button btnEmprestimo;
+	private Button btnInventario;
+	private Button btnHistorico;
+	private Button btnLeitor;
+	private Button btnEmprestimoData;
+	private Button btnEmprestimoLivro;
+	private Button btnEmprestimosAtrasados;
 
-    public ImpressosView() {
-        painelImpressos = new TilePane();
-        
-        painelImpressos.setHgap(5);
-        painelImpressos.setVgap(5);
-        painelImpressos.setAlignment(Pos.TOP_CENTER);
+	public ImpressosView() {
+		painelImpressos = new TilePane();
 
-        btnEmprestimo = new Button("Empréstimos");
-        btnEmprestimoData = new Button("Empréstimos por Data");
-        btnEmprestimoLivro = new Button("Empréstimos por Livro");
-        btnEmprestimosAtrasados = new Button("Empréstimos Atrasados");
-        btnHistorico = new Button("Histórico do leitor");
-        btnInventario = new Button("Inventário");
-        btnLeitor = new Button("Relação de Leitores");
+		painelImpressos.setHgap(5);
+		painelImpressos.setVgap(5);
+		painelImpressos.setAlignment(Pos.TOP_CENTER);
 
-        configurarTamanhoBotao(btnEmprestimo);
-        configurarTamanhoBotao(btnEmprestimoData);
-        configurarTamanhoBotao(btnEmprestimoLivro);
-        configurarTamanhoBotao(btnEmprestimosAtrasados);
-        configurarTamanhoBotao(btnHistorico);
-        configurarTamanhoBotao(btnInventario);
-        configurarTamanhoBotao(btnLeitor);
+		btnEmprestimo = new Button("Empréstimos");
+		btnEmprestimoData = new Button("Empréstimos por Data");
+		btnEmprestimoLivro = new Button("Empréstimos por Livro");
+		btnEmprestimosAtrasados = new Button("Empréstimos Atrasados");
+		btnHistorico = new Button("Histórico do leitor");
+		btnInventario = new Button("Inventário");
+		btnLeitor = new Button("Relação de Leitores");
 
-        painelImpressos.getChildren().addAll(btnEmprestimo, btnEmprestimoData, btnEmprestimoLivro,
-                btnEmprestimosAtrasados, btnHistorico, btnInventario, btnLeitor);
-    }
-    
-    @Override
-    public void configurarTamanhoBotao(Button button) {
-        button.setPrefSize(250, 80);
-    }
-    
-    public void acaoBtnEmprestimo(EventHandler<ActionEvent> event) {
-        btnEmprestimo.setOnAction(event);
-    }
-    
-    public void acaoBtnEmprestimoPorData(EventHandler<ActionEvent> event) {
-        btnEmprestimoData.setOnAction(event);
-    }
-    
-    public void acaoBtnEmprestimoPorLivro(EventHandler<ActionEvent> event) {
-        btnEmprestimoLivro.setOnAction(event);
-    }
-    
-    public void acaoBtnEmprestimosAtrasados(EventHandler<ActionEvent> event) {
-        btnEmprestimosAtrasados.setOnAction(event);
-    }
+		configurarTamanhoBotao(btnEmprestimo);
+		configurarTamanhoBotao(btnEmprestimoData);
+		configurarTamanhoBotao(btnEmprestimoLivro);
+		configurarTamanhoBotao(btnEmprestimosAtrasados);
+		configurarTamanhoBotao(btnHistorico);
+		configurarTamanhoBotao(btnInventario);
+		configurarTamanhoBotao(btnLeitor);
 
-    public void acaoBtnHistorico(EventHandler<ActionEvent> event) {
-        btnHistorico.setOnAction(event);
-    }
+		painelImpressos.getChildren().addAll(btnEmprestimo, btnEmprestimoData, btnEmprestimoLivro,
+				btnEmprestimosAtrasados, btnHistorico, btnInventario, btnLeitor);
+	}
 
-    public void acaoBtnInventario(EventHandler<ActionEvent> event) {
-        btnInventario.setOnAction(event);
-    }
-    
-    public void acaoBtnLeitor(EventHandler<ActionEvent> event) {
-        btnLeitor.setOnAction(event);
-    }
-    
-    @Override
-    public TilePane getRoot() {
-        return painelImpressos;
-    }
+	@Override
+	public void configurarTamanhoBotao(Button button) {
+		button.setPrefSize(250, 80);
+	}
+
+	public void acaoBtnEmprestimo(EventHandler<ActionEvent> event) {
+		btnEmprestimo.setOnAction(event);
+	}
+
+	public void acaoBtnEmprestimoPorData(EventHandler<ActionEvent> event) {
+		btnEmprestimoData.setOnAction(event);
+	}
+
+	public void acaoBtnEmprestimoPorLivro(EventHandler<ActionEvent> event) {
+		btnEmprestimoLivro.setOnAction(event);
+	}
+
+	public void acaoBtnEmprestimosAtrasados(EventHandler<ActionEvent> event) {
+		btnEmprestimosAtrasados.setOnAction(event);
+	}
+
+	public void acaoBtnHistorico(EventHandler<ActionEvent> event) {
+		btnHistorico.setOnAction(event);
+	}
+
+	public void acaoBtnInventario(EventHandler<ActionEvent> event) {
+		btnInventario.setOnAction(event);
+	}
+
+	public void acaoBtnLeitor(EventHandler<ActionEvent> event) {
+		btnLeitor.setOnAction(event);
+	}
+
+	@Override
+	public TilePane getRoot() {
+		return painelImpressos;
+	}
 }

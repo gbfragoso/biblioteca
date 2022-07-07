@@ -19,126 +19,128 @@ import javafx.collections.ObservableList;
 
 /**
  * Responsável por transações relacionadas à parte administrativa.
+ * 
  * @author Gustavo
  */
 public class AdministracaoModel {
-    
-    private static final Logger logger = LogManager.getLogger(AdministracaoModel.class);
-    
-    private boolean usuarioPossuiPermissao() {
-        return !Main.getUsuario().getTipo().equals("Comum");
-    }
-    
-    public int recuperarEmprestimo(int idemp, int duracaoEmprestimo) {
-        logger.trace("Iniciando recuperação do empréstimo com id: " + idemp);
-        
-        if (usuarioPossuiPermissao()) {
-            try (Connection con = Conexao.abrir();
-                 CallableStatement call = con.prepareCall("{call recuperar_emprestimo(?, ?)}")) {
 
-                call.setInt(1, idemp);
-                call.setInt(2, duracaoEmprestimo);
-                call.executeQuery();
-                return 0;
-            } catch (SQLException ex) {
-                logger.fatal("Erro ao tentar recuperar um empréstimo da base de dados.", ex);
-            }
-        }
-        return 1;
-    }
-     
-    public int alterarChaveMestra(String novaChave) {
-        logger.trace("Iniciando a alteração da chave mestra");
-        
-        if (usuarioPossuiPermissao()) {
-            try (Connection con = Conexao.abrir();
-                 PreparedStatement ps = con.prepareStatement("update configuracao set chave = ? where idconf = 1")) {
-                
-                ps.setString(1, new Criptografia().aplicar("SHA-512", novaChave));
-                ps.executeUpdate();
-                return 0;
-            } catch (SQLException | NoSuchAlgorithmException ex) {
-                logger.fatal("Erro ao tentar alterar a chave mestra.", ex);
-            }
-        }
-        return 1;
-    }
-    
-    public int trocarExemplar(int idemp, int expnovo) {
-        logger.trace("Iniciando a troca do exemplar do empréstimo com id: " + idemp);
-        
-        if (usuarioPossuiPermissao()) {
-            try (Connection con = Conexao.abrir();
-                 CallableStatement call = con.prepareCall("{call trocar_exemplar(?,?)}")) {
+	private static final Logger logger = LogManager.getLogger(AdministracaoModel.class);
 
-                call.setInt(1, idemp);
-                call.setInt(2, expnovo);
-                call.executeQuery();
-                return 0;
-            } catch (SQLException ex) {
-                logger.fatal("Erro ao tentar trocar o exemplar de um empréstimo", ex);
-            }
-        }
-        return 1;
-    }
+	private boolean usuarioPossuiPermissao() {
+		return !Main.getUsuario().getTipo().equals("Comum");
+	}
+
+	public int recuperarEmprestimo(int idemp, int duracaoEmprestimo) {
+		logger.trace("Iniciando recuperação do empréstimo com id: " + idemp);
+
+		if (usuarioPossuiPermissao()) {
+			try (Connection con = Conexao.abrir();
+					CallableStatement call = con.prepareCall("{call recuperar_emprestimo(?, ?)}")) {
+
+				call.setInt(1, idemp);
+				call.setInt(2, duracaoEmprestimo);
+				call.executeQuery();
+				return 0;
+			} catch (SQLException ex) {
+				logger.fatal("Erro ao tentar recuperar um empréstimo da base de dados.", ex);
+			}
+		}
+		return 1;
+	}
+
+	public int alterarChaveMestra(String novaChave) {
+		logger.trace("Iniciando a alteração da chave mestra");
+
+		if (usuarioPossuiPermissao()) {
+			try (Connection con = Conexao.abrir();
+					PreparedStatement ps = con.prepareStatement("update configuracao set chave = ? where idconf = 1")) {
+
+				ps.setString(1, new Criptografia().aplicar("SHA-512", novaChave));
+				ps.executeUpdate();
+				return 0;
+			} catch (SQLException | NoSuchAlgorithmException ex) {
+				logger.fatal("Erro ao tentar alterar a chave mestra.", ex);
+			}
+		}
+		return 1;
+	}
+
+	public int trocarExemplar(int idemp, int expnovo) {
+		logger.trace("Iniciando a troca do exemplar do empréstimo com id: " + idemp);
+
+		if (usuarioPossuiPermissao()) {
+			try (Connection con = Conexao.abrir();
+					CallableStatement call = con.prepareCall("{call trocar_exemplar(?,?)}")) {
+
+				call.setInt(1, idemp);
+				call.setInt(2, expnovo);
+				call.executeQuery();
+				return 0;
+			} catch (SQLException ex) {
+				logger.fatal("Erro ao tentar trocar o exemplar de um empréstimo", ex);
+			}
+		}
+		return 1;
+	}
 
 	public String getTextoCobranca() {
 		logger.trace("Iniciando consulta o texto de cobrança");
-        
-        if (usuarioPossuiPermissao()) {
-            try (Connection con = Conexao.abrir();
-                 PreparedStatement ps = con.prepareStatement("select cobranca from configuracao where idconf = 1")) {
-                
-            	try (ResultSet rs = ps.executeQuery()) {;
-	                if(rs.next()) {
-	                	return rs.getString(1);
-	                }
-            	}
-            } catch (SQLException ex) {
-                logger.fatal("Erro ao tentar consultar o texto de cobrança.", ex);
-            }
-        }
-        return "";
+
+		if (usuarioPossuiPermissao()) {
+			try (Connection con = Conexao.abrir();
+					PreparedStatement ps = con.prepareStatement("select cobranca from configuracao where idconf = 1")) {
+
+				try (ResultSet rs = ps.executeQuery()) {
+					;
+					if (rs.next()) {
+						return rs.getString(1);
+					}
+				}
+			} catch (SQLException ex) {
+				logger.fatal("Erro ao tentar consultar o texto de cobrança.", ex);
+			}
+		}
+		return "";
 	}
-	
+
 	public int setTextoCobranca(String texto) {
 		logger.trace("Iniciando a mudança do texto de cobrança");
-		
-        if (usuarioPossuiPermissao()) {
-            try (Connection con = Conexao.abrir();
-                 PreparedStatement ps = con.prepareStatement("update configuracao set cobranca = ? where idconf = 1")) {
-                
-            	ps.setString(1, texto);
-            	ps.executeUpdate();
-            	return 0;
-            } catch (SQLException ex) {
-                logger.fatal("Erro ao tentar mudar o texto de cobrança.", ex);
-            }
-        }
-        return 1;
+
+		if (usuarioPossuiPermissao()) {
+			try (Connection con = Conexao.abrir();
+					PreparedStatement ps = con
+							.prepareStatement("update configuracao set cobranca = ? where idconf = 1")) {
+
+				ps.setString(1, texto);
+				ps.executeUpdate();
+				return 0;
+			} catch (SQLException ex) {
+				logger.fatal("Erro ao tentar mudar o texto de cobrança.", ex);
+			}
+		}
+		return 1;
 	}
-	
+
 	public ObservableList<Cobranca> getListaEmprestimosAtrasados() {
 		logger.trace("Iniciando a consulta dos empréstimos em atraso para efetuar cobrança");
-		
+
 		StringBuilder query = new StringBuilder();
 		query.append("select leitor, email, livros from vw_cobrancas");
-		
+
 		ObservableList<Cobranca> listaPossiveisCobrancas = FXCollections.observableArrayList();
-        if (usuarioPossuiPermissao()) {
+		if (usuarioPossuiPermissao()) {
 			try (Connection con = Conexao.abrir();
-                 PreparedStatement ps = con.prepareStatement(query.toString());
-				 ResultSet rs = ps.executeQuery()) {
-                
-            	while(rs.next()) {
-            		listaPossiveisCobrancas.add(
-            			new Cobranca(rs.getString(1), rs.getString(2), (String[])rs.getArray(3).getArray())
-            		);
-            	}
-            } catch (SQLException ex) {
-                logger.fatal("Erro ao tentar mudar o texto de cobrança.", ex);
-            }
-        }
-        return listaPossiveisCobrancas;
+					PreparedStatement ps = con.prepareStatement(query.toString());
+					ResultSet rs = ps.executeQuery()) {
+
+				while (rs.next()) {
+					listaPossiveisCobrancas
+							.add(new Cobranca(rs.getString(1), rs.getString(2), (String[]) rs.getArray(3).getArray()));
+				}
+			} catch (SQLException ex) {
+				logger.fatal("Erro ao tentar mudar o texto de cobrança.", ex);
+			}
+		}
+		return listaPossiveisCobrancas;
 	}
 }

@@ -26,96 +26,95 @@ import org.casadeguara.componentes.RangeTextField;
  */
 public class GeradorEtiqueta extends Dialog<List<Etiqueta>> {
 
-    private Button btnAdicionar;
-    private Button btnExcluir;
-    private Button btnLimpar;
-    private TextField txtTombo;
-    private RangeTextField txtNumero;
-    private ObservableList<Etiqueta> etiquetas = FXCollections.observableArrayList();
+	private Button btnAdicionar;
+	private Button btnExcluir;
+	private Button btnLimpar;
+	private TextField txtTombo;
+	private RangeTextField txtNumero;
+	private ObservableList<Etiqueta> etiquetas = FXCollections.observableArrayList();
 
-    public GeradorEtiqueta() {
-        ButtonType imprimir = new ButtonType("Imprimir", ButtonData.FINISH);
-        initModality(Modality.WINDOW_MODAL);
-        setTitle("Gerador de etiquetas");
-        getDialogPane().setContent(createScene());
-        getDialogPane().getButtonTypes().addAll(imprimir, ButtonType.CLOSE);
+	public GeradorEtiqueta() {
+		ButtonType imprimir = new ButtonType("Imprimir", ButtonData.FINISH);
+		initModality(Modality.WINDOW_MODAL);
+		setTitle("Gerador de etiquetas");
+		getDialogPane().setContent(createScene());
+		getDialogPane().getButtonTypes().addAll(imprimir, ButtonType.CLOSE);
 
-        setResultConverter(button -> {
-            return (button.equals(imprimir)) ? etiquetas : FXCollections.emptyObservableList();
-        });
-    }
+		setResultConverter(button -> {
+			return (button.equals(imprimir)) ? etiquetas : FXCollections.emptyObservableList();
+		});
+	}
 
-    @SuppressWarnings("unchecked")
-    private AnchorPane createScene() {
-        AnchorPane pane = new AnchorPane();
+	@SuppressWarnings("unchecked")
+	private AnchorPane createScene() {
+		AnchorPane pane = new AnchorPane();
 
-        Label lb1 = new Label("Tombo:");
-        Label lb2 = new Label("Exemplar:");
-        txtTombo = new TextField();
-        txtTombo.setPrefWidth(150);
-        txtNumero = new RangeTextField();
-        txtNumero.setPrefWidth(150);
-        
-        TableColumn<Etiqueta, String> tombo = new TableColumn<>("Tombo");
-        TableColumn<Etiqueta, Integer> numero = new TableColumn<>("Número");
-        tombo.setCellValueFactory(new PropertyValueFactory<Etiqueta, String>("tombo"));
-        numero.setCellValueFactory(new PropertyValueFactory<Etiqueta, Integer>("numero"));
-        
-        TableView<Etiqueta> tabela = new TableView<>(etiquetas);
-        tabela.getColumns().addAll(tombo, numero);
-        tabela.setPrefWidth(300);
-        tabela.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		Label lb1 = new Label("Tombo:");
+		Label lb2 = new Label("Exemplar:");
+		txtTombo = new TextField();
+		txtTombo.setPrefWidth(150);
+		txtNumero = new RangeTextField();
+		txtNumero.setPrefWidth(150);
 
-        btnAdicionar = new Button("Adicionar");
-        btnExcluir = new Button("Excluir Selecionados");
-        btnLimpar = new Button("Limpar lista");
-        btnExcluir.setPrefWidth(150);
-        btnLimpar.setPrefWidth(150);
+		TableColumn<Etiqueta, String> tombo = new TableColumn<>("Tombo");
+		TableColumn<Etiqueta, Integer> numero = new TableColumn<>("Número");
+		tombo.setCellValueFactory(new PropertyValueFactory<Etiqueta, String>("tombo"));
+		numero.setCellValueFactory(new PropertyValueFactory<Etiqueta, Integer>("numero"));
 
-        btnAdicionar.setOnAction(event -> adicionarAvulso());
-        btnExcluir.setOnAction(event -> etiquetas.removeAll(tabela.getSelectionModel().getSelectedItems()));
-        btnLimpar.setOnAction(event -> etiquetas.clear());
-        btnAdicionar.setDefaultButton(true);
+		TableView<Etiqueta> tabela = new TableView<>(etiquetas);
+		tabela.getColumns().addAll(tombo, numero);
+		tabela.setPrefWidth(300);
+		tabela.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        AnchorPane.setTopAnchor(lb1, 3.0);
-        AnchorPane.setTopAnchor(lb2, 3.0);
-        AnchorPane.setTopAnchor(txtTombo, 0.0);
-        AnchorPane.setTopAnchor(txtNumero, 0.0);
-        AnchorPane.setTopAnchor(btnAdicionar, 0.0);
-        AnchorPane.setTopAnchor(tabela, 35.0);
-        AnchorPane.setLeftAnchor(lb1, 0.0);
-        AnchorPane.setLeftAnchor(lb2, 200.0);
-        AnchorPane.setLeftAnchor(txtTombo, 45.0);
-        AnchorPane.setLeftAnchor(txtNumero, 255.0);
-        AnchorPane.setLeftAnchor(btnAdicionar, 410.0);
-        AnchorPane.setLeftAnchor(tabela, 0.0);
-        AnchorPane.setRightAnchor(tabela, 0.0);
-        AnchorPane.setRightAnchor(btnExcluir, 155.0);
-        AnchorPane.setRightAnchor(btnLimpar, 0.0);
-        AnchorPane.setBottomAnchor(btnLimpar, 5.0);
-        AnchorPane.setBottomAnchor(btnExcluir, 5.0);
-        AnchorPane.setBottomAnchor(tabela, 35.0);
+		btnAdicionar = new Button("Adicionar");
+		btnExcluir = new Button("Excluir Selecionados");
+		btnLimpar = new Button("Limpar lista");
+		btnExcluir.setPrefWidth(150);
+		btnLimpar.setPrefWidth(150);
 
-        pane.getChildren().addAll(lb1, lb2, txtTombo, txtNumero, tabela, btnAdicionar,
-                btnExcluir, btnLimpar);
-        return pane;
-    }
+		btnAdicionar.setOnAction(event -> adicionarAvulso());
+		btnExcluir.setOnAction(event -> etiquetas.removeAll(tabela.getSelectionModel().getSelectedItems()));
+		btnLimpar.setOnAction(event -> etiquetas.clear());
+		btnAdicionar.setDefaultButton(true);
 
-    private void adicionarAvulso() {
-        String t = txtTombo.getText();
+		AnchorPane.setTopAnchor(lb1, 3.0);
+		AnchorPane.setTopAnchor(lb2, 3.0);
+		AnchorPane.setTopAnchor(txtTombo, 0.0);
+		AnchorPane.setTopAnchor(txtNumero, 0.0);
+		AnchorPane.setTopAnchor(btnAdicionar, 0.0);
+		AnchorPane.setTopAnchor(tabela, 35.0);
+		AnchorPane.setLeftAnchor(lb1, 0.0);
+		AnchorPane.setLeftAnchor(lb2, 200.0);
+		AnchorPane.setLeftAnchor(txtTombo, 45.0);
+		AnchorPane.setLeftAnchor(txtNumero, 255.0);
+		AnchorPane.setLeftAnchor(btnAdicionar, 410.0);
+		AnchorPane.setLeftAnchor(tabela, 0.0);
+		AnchorPane.setRightAnchor(tabela, 0.0);
+		AnchorPane.setRightAnchor(btnExcluir, 155.0);
+		AnchorPane.setRightAnchor(btnLimpar, 0.0);
+		AnchorPane.setBottomAnchor(btnLimpar, 5.0);
+		AnchorPane.setBottomAnchor(btnExcluir, 5.0);
+		AnchorPane.setBottomAnchor(tabela, 35.0);
 
-        if (!t.isEmpty() && !txtNumero.getText().isEmpty()) {
-            List<Integer> numeros = txtNumero.getRange();
+		pane.getChildren().addAll(lb1, lb2, txtTombo, txtNumero, tabela, btnAdicionar, btnExcluir, btnLimpar);
+		return pane;
+	}
 
-            for (Integer i : numeros) {
-                etiquetas.add(new Etiqueta(t, i));
-            }
+	private void adicionarAvulso() {
+		String t = txtTombo.getText();
 
-            txtTombo.clear();
-            txtNumero.clear();
-            txtTombo.requestFocus();
-        } else {
-            new Alerta().informacao("Preencha os campos.");
-        }
-    }
+		if (!t.isEmpty() && !txtNumero.getText().isEmpty()) {
+			List<Integer> numeros = txtNumero.getRange();
+
+			for (Integer i : numeros) {
+				etiquetas.add(new Etiqueta(t, i));
+			}
+
+			txtTombo.clear();
+			txtNumero.clear();
+			txtTombo.requestFocus();
+		} else {
+			new Alerta().informacao("Preencha os campos.");
+		}
+	}
 }

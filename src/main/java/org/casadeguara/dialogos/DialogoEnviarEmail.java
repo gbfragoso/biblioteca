@@ -2,15 +2,15 @@ package org.casadeguara.dialogos;
 
 import java.util.Properties;
 
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 import org.casadeguara.alertas.Alerta;
 import org.casadeguara.models.AdministracaoModel;
@@ -29,27 +29,27 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
 public class DialogoEnviarEmail extends Dialog<Boolean> {
-	
+
 	private TextField txtEmail;
 	private PasswordField txtSenha;
 	private TextField txtAssunto;
 	private TextArea texto;
-	
+
 	public DialogoEnviarEmail(AdministracaoModel model, ObservableList<Cobranca> lista) {
 		ButtonType enviar = new ButtonType("Enviar", ButtonData.OK_DONE);
 
 		DialogPane dialogPane = getDialogPane();
 		dialogPane.getButtonTypes().addAll(enviar, ButtonType.CANCEL);
 		dialogPane.setContent(createContent(model.getTextoCobranca()));
-		
+
 		setResizable(false);
-		
+
 		setResultConverter(button -> {
-			if(button != null && button.equals(enviar)) {
+			if (button != null && button.equals(enviar)) {
 				String temail = txtEmail.getText();
 				String senha = txtSenha.getText();
-				
-				if(temail != null && senha != null) {
+
+				if (temail != null && senha != null) {
 					Properties prop = new Properties();
 					prop.put("mail.smtp.auth", true);
 					prop.put("mail.smtp.starttls.enable", "true");
@@ -59,16 +59,16 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 					prop.put("mail.smtp.host", "smtp.gmail.com");
 					prop.put("mail.smtp.port", "465");
 					prop.put("mail.imap.auth.mechanisms", "XOAUTH2");
-					
+
 					try {
 						Session session = Session.getInstance(prop, new Authenticator() {
-						    @Override
-						    protected PasswordAuthentication getPasswordAuthentication() {
-						        return new PasswordAuthentication(txtEmail.getText(), txtSenha.getText());
-						    }
+							@Override
+							protected PasswordAuthentication getPasswordAuthentication() {
+								return new PasswordAuthentication(txtEmail.getText(), txtSenha.getText());
+							}
 						});
-						
-						if(session != null) {
+
+						if (session != null) {
 							model.setTextoCobranca(texto.getText());
 							enviarEmails(session, lista, texto.getText());
 						}
@@ -86,17 +86,17 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 		Label lblSenha = new Label("Senha:");
 		Label lblAssunto = new Label("Assunto:");
 		Label tags = new Label("Tags disponívels: <leitor> <listalivros> <quantidade>");
-		
+
 		txtEmail = new TextField("bibliotecabatuira@gmail.com");
 		txtSenha = new PasswordField();
 		txtSenha.setText("guara123456");
 		txtAssunto = new TextField("Atraso na devolução de livros");
-		
+
 		texto = new TextArea();
 		texto.setWrapText(true);
 		texto.setPrefHeight(200);
 		texto.setText(textoCobranca);
-		
+
 		AnchorPane content = new AnchorPane();
 		AnchorPane.setLeftAnchor(lblEmail, 5.0);
 		AnchorPane.setLeftAnchor(lblSenha, 5.0);
@@ -121,9 +121,8 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 		AnchorPane.setTopAnchor(tags, 95.0);
 		AnchorPane.setTopAnchor(texto, 125.0);
 		AnchorPane.setBottomAnchor(texto, 5.0);
-		
-		content.getChildren().addAll(lblEmail, lblSenha, lblAssunto,
-				txtEmail, txtSenha, txtAssunto, texto, tags);
+
+		content.getChildren().addAll(lblEmail, lblSenha, lblAssunto, txtEmail, txtSenha, txtAssunto, texto, tags);
 		return content;
 	}
 
@@ -133,11 +132,11 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 			protected Void call() {
 				try {
 					int listaCobrancasSize = listaCobrancas.size();
-					
-					for(int i = 0; i <= listaCobrancasSize; i++) {
+
+					for (int i = 0; i <= listaCobrancasSize; i++) {
 						Cobranca debito = listaCobrancas.get(i);
 						Message message = montarCorpoMensagem(session, texto, debito);
-						updateMessage("Enviando mensagens ("+(i+1)+" / "+listaCobrancasSize+")");
+						updateMessage("Enviando mensagens (" + (i + 1) + " / " + listaCobrancasSize + ")");
 						updateProgress(i, listaCobrancasSize);
 						Transport.send(message);
 						Thread.sleep(500);
@@ -161,12 +160,12 @@ public class DialogoEnviarEmail extends Dialog<Boolean> {
 		resultado = resultado.replace("<leitor>", debito.getLeitor());
 		resultado = resultado.replace("<quantidade>", Integer.toString(debito.getLivros().length));
 		resultado = resultado.replace("<listalivros>", String.join("\n", debito.getLivros()));
-		
+
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(txtEmail.getText()));
 		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(debito.getEmail()));
 		message.setSubject(txtAssunto.getText());
-		message.setText(resultado); 
+		message.setText(resultado);
 		return message;
 	}
 }

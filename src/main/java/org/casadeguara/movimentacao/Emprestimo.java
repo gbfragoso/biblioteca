@@ -11,46 +11,46 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class Emprestimo {
 
-    private final int idExemplar;
-    private final int idLeitor;
+	private final int idExemplar;
+	private final int idLeitor;
 
-    private final SimpleIntegerProperty idEmprestimo;
-    private SimpleStringProperty itemAcervo;
-    private SimpleIntegerProperty numeroItem;
-    private LocalDate dataDevolucao;
+	private final SimpleIntegerProperty idEmprestimo;
+	private SimpleStringProperty itemAcervo;
+	private SimpleIntegerProperty numeroItem;
+	private LocalDate dataDevolucao;
 
-    public Emprestimo(int idemp, int idexemplar, int idleitor, String nomeItem, int numero, LocalDate dataDevolucao) {
-        this.idExemplar = idexemplar;
-        this.idLeitor = idleitor;
-        
-        idEmprestimo = new SimpleIntegerProperty(this, "idEmprestimo", idemp);
-        itemAcervo = new SimpleStringProperty(this, "itemAcervo", nomeItem);
-        numeroItem = new SimpleIntegerProperty(this, "numeroItem", numero);
-        
-        this.dataDevolucao = dataDevolucao;
-    }
+	public Emprestimo(int idemp, int idexemplar, int idleitor, String nomeItem, int numero, LocalDate dataDevolucao) {
+		this.idExemplar = idexemplar;
+		this.idLeitor = idleitor;
 
-    public LocalDate getDataDevolucao() {
-        return dataDevolucao;
-    }
+		idEmprestimo = new SimpleIntegerProperty(this, "idEmprestimo", idemp);
+		itemAcervo = new SimpleStringProperty(this, "itemAcervo", nomeItem);
+		numeroItem = new SimpleIntegerProperty(this, "numeroItem", numero);
 
-    public int getIdEmprestimo() {
-        return idEmprestimo.get();
-    }
+		this.dataDevolucao = dataDevolucao;
+	}
 
-    public int getIdExemplar() {
-        return idExemplar;
-    }
+	public LocalDate getDataDevolucao() {
+		return dataDevolucao;
+	}
 
-    public int getIdLeitor() {
-        return idLeitor;
-    }
+	public int getIdEmprestimo() {
+		return idEmprestimo.get();
+	}
 
-    public String getItemAcervo() {
-        return itemAcervo.get();
-    }
-    
-    public int getNumeroItem() {
-        return numeroItem.get();
-    }
+	public int getIdExemplar() {
+		return idExemplar;
+	}
+
+	public int getIdLeitor() {
+		return idLeitor;
+	}
+
+	public String getItemAcervo() {
+		return itemAcervo.get();
+	}
+
+	public int getNumeroItem() {
+		return numeroItem.get();
+	}
 }

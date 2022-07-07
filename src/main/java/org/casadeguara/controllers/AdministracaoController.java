@@ -16,111 +16,111 @@ import org.casadeguara.views.AdministracaoView;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
-public class AdministracaoController implements GenericController{
-    
-    private AdministracaoView view;
-    private AdministracaoModel model;
-    private RegraModel regraModel;
+public class AdministracaoController implements GenericController {
 
-    public AdministracaoController(AdministracaoView view) {
-        this.view = view;
-        this.model = new AdministracaoModel();
-        
-        regraModel = new RegraModel();
-        
-        configureView();
-    }
-    
-    @Override
-    public void configureView() {
-        if(view != null) {
-            view.acaoBotaoAlterarChaveMestra(event -> alterarChaveMestra());
-            view.acaoBotaoAlterarEmprestimo(event -> alterarExemplarEmprestimo());
-            view.acaoBotaoConfiguracao(event -> alterarRegrasNegocio());
-            view.acaoBotaoCobrancas(event -> realizarCobrancas());
-            view.acaoBotaoEtiqueta(event -> geradorEtiquetas());
-            view.acaoBotaoRecuperarEmprestimo(event -> recuperarEmprestimoDevolvido());
-        }
-    }
-    
-    public int alterarChaveMestra() {
-        DialogoAlterarChave dialogoAlterarChave = new DialogoAlterarChave();
-        dialogoAlterarChave.showAndWait().ifPresent(novaChave -> {
-            if (novaChave != null && !novaChave.isEmpty()) {
-                model.alterarChaveMestra(novaChave);
-            }
-        });
-        return 0;
-    }
-    
-    public int alterarExemplarEmprestimo() {
-        DialogoAlterarEmprestimo dialogoAlterarEmprestimo = new DialogoAlterarEmprestimo(new AcervoModel());
-        dialogoAlterarEmprestimo.showAndWait().ifPresent(dadosEmprestimo -> {
-            if(!dadosEmprestimo.isEmpty()) {
-                Task<Void> trocarExemplar = new Task<Void>() {
+	private AdministracaoView view;
+	private AdministracaoModel model;
+	private RegraModel regraModel;
 
-                    @Override
-                    protected Void call() throws Exception {
-                        updateMessage("Trocando o exemplar.");
-                        model.trocarExemplar(dadosEmprestimo.get(0), dadosEmprestimo.get(1));
-                        return null;
-                    }
-                };
-                
-                view.mensagemProgresso(trocarExemplar);
-                new Thread(trocarExemplar).start();
-            }
-        });
-        return 0;
-    }
-    
-    public int alterarRegrasNegocio() {
-        DialogoMudancaRegras dialogoMudancaRegras = new DialogoMudancaRegras(regraModel.consultarRegrasNegocio());
-        dialogoMudancaRegras.showAndWait().ifPresent(listaRegras -> {
-            if(!listaRegras.isEmpty()) {
-                regraModel.atualizarRegrasNegocio(listaRegras);
-            }
-        });
-        return 0;
-    }
-    
-    public int geradorEtiquetas() {
-        GeradorEtiqueta gerador = new GeradorEtiqueta();
-        gerador.showAndWait().ifPresent(listaEtiquetas -> {
-            if(!listaEtiquetas.isEmpty()) {
-                new Impressora().etiquetas(listaEtiquetas);
-            }
-        });
-        return 0;
-    }
-    
-    public int recuperarEmprestimoDevolvido() {
-        DialogoRecuperarEmprestimo dialogoRecuperarEmprestimo = new DialogoRecuperarEmprestimo();
-        dialogoRecuperarEmprestimo.showAndWait().ifPresent(idmovimentacao -> {
-            if (idmovimentacao > 0) {
-                Task<Void> atualizarEmprestimos = new Task<Void>() {
+	public AdministracaoController(AdministracaoView view) {
+		this.view = view;
+		this.model = new AdministracaoModel();
 
-                    @Override
-                    protected Void call() throws Exception {
-                        int duracaoEmprestimo = regraModel.consultarRegrasNegocio().getDuracaoEmprestimo();
-                        updateMessage("Recuperando empréstimo.");
-                        model.recuperarEmprestimo(idmovimentacao, duracaoEmprestimo);
-                        return null;
-                    }
-                };
-                
-                view.mensagemProgresso(atualizarEmprestimos);
-                new Thread(atualizarEmprestimos).start();
-            }
-        });
-        return 0;
-    }
-    
-    public int realizarCobrancas() {
-    	ObservableList<Cobranca> listaEmprestimosAtrasados = model.getListaEmprestimosAtrasados();
-    	DialogoEnviarEmail selecionar = new DialogoEnviarEmail(model, listaEmprestimosAtrasados);
-    	selecionar.showAndWait();  	
-		
-    	return 0;
-    }
+		regraModel = new RegraModel();
+
+		configureView();
+	}
+
+	@Override
+	public void configureView() {
+		if (view != null) {
+			view.acaoBotaoAlterarChaveMestra(event -> alterarChaveMestra());
+			view.acaoBotaoAlterarEmprestimo(event -> alterarExemplarEmprestimo());
+			view.acaoBotaoConfiguracao(event -> alterarRegrasNegocio());
+			view.acaoBotaoCobrancas(event -> realizarCobrancas());
+			view.acaoBotaoEtiqueta(event -> geradorEtiquetas());
+			view.acaoBotaoRecuperarEmprestimo(event -> recuperarEmprestimoDevolvido());
+		}
+	}
+
+	public int alterarChaveMestra() {
+		DialogoAlterarChave dialogoAlterarChave = new DialogoAlterarChave();
+		dialogoAlterarChave.showAndWait().ifPresent(novaChave -> {
+			if (novaChave != null && !novaChave.isEmpty()) {
+				model.alterarChaveMestra(novaChave);
+			}
+		});
+		return 0;
+	}
+
+	public int alterarExemplarEmprestimo() {
+		DialogoAlterarEmprestimo dialogoAlterarEmprestimo = new DialogoAlterarEmprestimo(new AcervoModel());
+		dialogoAlterarEmprestimo.showAndWait().ifPresent(dadosEmprestimo -> {
+			if (!dadosEmprestimo.isEmpty()) {
+				Task<Void> trocarExemplar = new Task<Void>() {
+
+					@Override
+					protected Void call() throws Exception {
+						updateMessage("Trocando o exemplar.");
+						model.trocarExemplar(dadosEmprestimo.get(0), dadosEmprestimo.get(1));
+						return null;
+					}
+				};
+
+				view.mensagemProgresso(trocarExemplar);
+				new Thread(trocarExemplar).start();
+			}
+		});
+		return 0;
+	}
+
+	public int alterarRegrasNegocio() {
+		DialogoMudancaRegras dialogoMudancaRegras = new DialogoMudancaRegras(regraModel.consultarRegrasNegocio());
+		dialogoMudancaRegras.showAndWait().ifPresent(listaRegras -> {
+			if (!listaRegras.isEmpty()) {
+				regraModel.atualizarRegrasNegocio(listaRegras);
+			}
+		});
+		return 0;
+	}
+
+	public int geradorEtiquetas() {
+		GeradorEtiqueta gerador = new GeradorEtiqueta();
+		gerador.showAndWait().ifPresent(listaEtiquetas -> {
+			if (!listaEtiquetas.isEmpty()) {
+				new Impressora().etiquetas(listaEtiquetas);
+			}
+		});
+		return 0;
+	}
+
+	public int recuperarEmprestimoDevolvido() {
+		DialogoRecuperarEmprestimo dialogoRecuperarEmprestimo = new DialogoRecuperarEmprestimo();
+		dialogoRecuperarEmprestimo.showAndWait().ifPresent(idmovimentacao -> {
+			if (idmovimentacao > 0) {
+				Task<Void> atualizarEmprestimos = new Task<Void>() {
+
+					@Override
+					protected Void call() throws Exception {
+						int duracaoEmprestimo = regraModel.consultarRegrasNegocio().getDuracaoEmprestimo();
+						updateMessage("Recuperando empréstimo.");
+						model.recuperarEmprestimo(idmovimentacao, duracaoEmprestimo);
+						return null;
+					}
+				};
+
+				view.mensagemProgresso(atualizarEmprestimos);
+				new Thread(atualizarEmprestimos).start();
+			}
+		});
+		return 0;
+	}
+
+	public int realizarCobrancas() {
+		ObservableList<Cobranca> listaEmprestimosAtrasados = model.getListaEmprestimosAtrasados();
+		DialogoEnviarEmail selecionar = new DialogoEnviarEmail(model, listaEmprestimosAtrasados);
+		selecionar.showAndWait();
+
+		return 0;
+	}
 }

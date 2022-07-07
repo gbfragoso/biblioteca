@@ -24,127 +24,126 @@ import org.casadeguara.utilitarios.Formatador;
  * @since 2.0
  */
 @SuppressWarnings("unchecked")
-public class ConsultaView implements GenericView{
+public class ConsultaView implements GenericView {
 
-    private final AnchorPane painelConsulta;
+	private final AnchorPane painelConsulta;
 
-    private ComboBox<String> cbbTipo;
-    private CustomTextField pesquisar;
-    private ObservableList<Resultado> resultadoConsulta;
-    private TableView<Resultado> tabelaConsulta;
-    
-    private Formatador formatar;
+	private ComboBox<String> cbbTipo;
+	private CustomTextField pesquisar;
+	private ObservableList<Resultado> resultadoConsulta;
+	private TableView<Resultado> tabelaConsulta;
 
-    public ConsultaView() {
-        formatar = new Formatador();
-        resultadoConsulta = FXCollections.observableArrayList();
+	private Formatador formatar;
 
-        painelConsulta = new AnchorPane();
+	public ConsultaView() {
+		formatar = new Formatador();
+		resultadoConsulta = FXCollections.observableArrayList();
 
-        Label titulo = new Label("Consultas");
-        aplicarEstilo(titulo, "titulo");
-        
-        Label lblSelect = new Label("Pesquisar por: ");
-        pesquisar = new CustomTextField();
-        pesquisar.setPrefHeight(33);
-        pesquisar.setPromptText("O que você procura?");
-        pesquisar.setRight(new ImageView("/images/search.png"));
+		painelConsulta = new AnchorPane();
 
-        cbbTipo = new ComboBox<>();
-        cbbTipo.setPrefSize(150, 33);
-        cbbTipo.getItems().addAll("Autor", "Editora", "Palavra-chave", "Título", "Tombo");
-        cbbTipo.getSelectionModel().select("Título");
+		Label titulo = new Label("Consultas");
+		aplicarEstilo(titulo, "titulo");
 
-        tabelaConsulta = new TableView<>();
-        tabelaConsulta.setItems(resultadoConsulta);
+		Label lblSelect = new Label("Pesquisar por: ");
+		pesquisar = new CustomTextField();
+		pesquisar.setPrefHeight(33);
+		pesquisar.setPromptText("O que você procura?");
+		pesquisar.setRight(new ImageView("/images/search.png"));
 
-        TableColumn<Resultado, String> tabelaConsultaTombo = new TableColumn<>("Tombo");
-        TableColumn<Resultado, Integer> tabelaConsultaExemplar = new TableColumn<>("Ex.");
-        TableColumn<Resultado, String> tabelaConsultaTitulo = new TableColumn<>("Título");
-        TableColumn<Resultado, String> tabelaConsultaStatus = new TableColumn<>("Status");
-        TableColumn<Resultado, String> tabelaConsultaLeitor = new TableColumn<>("Leitor");
-        TableColumn<Resultado, LocalDate> tabelaConsultaDevolucao = new TableColumn<>("Devolução");
+		cbbTipo = new ComboBox<>();
+		cbbTipo.setPrefSize(150, 33);
+		cbbTipo.getItems().addAll("Autor", "Editora", "Palavra-chave", "Título", "Tombo");
+		cbbTipo.getSelectionModel().select("Título");
 
-        configurarTamanhoFixo(tabelaConsultaTombo, tabelaConsulta, 0.10);
-        configurarTamanhoFixo(tabelaConsultaExemplar, tabelaConsulta,0.05);
-        configurarTamanhoFixo(tabelaConsultaTitulo, tabelaConsulta,0.30);
-        configurarTamanhoFixo(tabelaConsultaStatus, tabelaConsulta,0.10);
-        configurarTamanhoFixo(tabelaConsultaDevolucao, tabelaConsulta,0.10);
-        configurarTamanhoFixo(tabelaConsultaLeitor, tabelaConsulta,0.30);
+		tabelaConsulta = new TableView<>();
+		tabelaConsulta.setItems(resultadoConsulta);
 
-        vincularColunaAtributo(tabelaConsultaTombo, "tombo");
-        vincularColunaAtributo(tabelaConsultaTitulo, "titulo");
-        vincularColunaAtributo(tabelaConsultaExemplar, "numero");
-        vincularColunaAtributo(tabelaConsultaStatus, "status");
-        vincularColunaAtributo(tabelaConsultaDevolucao, "devolucao");
-        vincularColunaAtributo(tabelaConsultaLeitor, "leitor");
+		TableColumn<Resultado, String> tabelaConsultaTombo = new TableColumn<>("Tombo");
+		TableColumn<Resultado, Integer> tabelaConsultaExemplar = new TableColumn<>("Ex.");
+		TableColumn<Resultado, String> tabelaConsultaTitulo = new TableColumn<>("Título");
+		TableColumn<Resultado, String> tabelaConsultaStatus = new TableColumn<>("Status");
+		TableColumn<Resultado, String> tabelaConsultaLeitor = new TableColumn<>("Leitor");
+		TableColumn<Resultado, LocalDate> tabelaConsultaDevolucao = new TableColumn<>("Devolução");
 
-        tabelaConsultaDevolucao.setCellFactory(coluna -> {
-            return new TableCell<Resultado, LocalDate>() {
-                @Override
-                protected void updateItem(LocalDate item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item != null && !empty && !item.equals(LocalDate.of(2100, 01, 01))) {
-                        setText(formatar.data(item));
-                    } else {
-                        setText("");
-                    }
-                }
-            };
-        });
+		configurarTamanhoFixo(tabelaConsultaTombo, tabelaConsulta, 0.10);
+		configurarTamanhoFixo(tabelaConsultaExemplar, tabelaConsulta, 0.05);
+		configurarTamanhoFixo(tabelaConsultaTitulo, tabelaConsulta, 0.30);
+		configurarTamanhoFixo(tabelaConsultaStatus, tabelaConsulta, 0.10);
+		configurarTamanhoFixo(tabelaConsultaDevolucao, tabelaConsulta, 0.10);
+		configurarTamanhoFixo(tabelaConsultaLeitor, tabelaConsulta, 0.30);
 
-        tabelaConsulta.getColumns().addAll(tabelaConsultaTombo, tabelaConsultaExemplar,
-                tabelaConsultaTitulo, tabelaConsultaLeitor, tabelaConsultaStatus,
-                tabelaConsultaDevolucao);
+		vincularColunaAtributo(tabelaConsultaTombo, "tombo");
+		vincularColunaAtributo(tabelaConsultaTitulo, "titulo");
+		vincularColunaAtributo(tabelaConsultaExemplar, "numero");
+		vincularColunaAtributo(tabelaConsultaStatus, "status");
+		vincularColunaAtributo(tabelaConsultaDevolucao, "devolucao");
+		vincularColunaAtributo(tabelaConsultaLeitor, "leitor");
 
-        AnchorPane.setTopAnchor(titulo, 0.0);
-        AnchorPane.setTopAnchor(lblSelect, 42.0);
-        AnchorPane.setTopAnchor(pesquisar, 38.0);
-        AnchorPane.setTopAnchor(cbbTipo, 38.0);
-        AnchorPane.setTopAnchor(tabelaConsulta, 77.0);
-        AnchorPane.setLeftAnchor(lblSelect, 0.0);
-        AnchorPane.setLeftAnchor(pesquisar, 260.0);
-        AnchorPane.setLeftAnchor(cbbTipo, 105.0);
-        AnchorPane.setLeftAnchor(tabelaConsulta, 0.0);
-        AnchorPane.setRightAnchor(pesquisar, 0.0);
-        AnchorPane.setRightAnchor(tabelaConsulta, 0.0);
-        AnchorPane.setBottomAnchor(tabelaConsulta, 0.0);
+		tabelaConsultaDevolucao.setCellFactory(coluna -> {
+			return new TableCell<Resultado, LocalDate>() {
+				@Override
+				protected void updateItem(LocalDate item, boolean empty) {
+					super.updateItem(item, empty);
+					if (item != null && !empty && !item.equals(LocalDate.of(2100, 01, 01))) {
+						setText(formatar.data(item));
+					} else {
+						setText("");
+					}
+				}
+			};
+		});
 
-        painelConsulta.getChildren().addAll(titulo, lblSelect, pesquisar, cbbTipo, tabelaConsulta);
-    }
-    
-    private void configurarTamanhoFixo(TableColumn<?,?> coluna, TableView<?> tabela, double percent) {
-        coluna.prefWidthProperty().bind(tabela.widthProperty().multiply(percent));
-        coluna.setResizable(false);
-    }
-    
-    private void vincularColunaAtributo(TableColumn<?, ?> coluna, String atributo) {
-        coluna.setCellValueFactory(new PropertyValueFactory<>(atributo));
-    }
-    
-    public void acaoPesquisar(EventHandler<ActionEvent> event) {
-        pesquisar.setOnAction(event);
-    }
-    
-    public String getTermoPesquisado() {
-        return pesquisar.getText();
-    }
-    
-    public void setTextoPesquisado(String termoPesquisado) {
-        pesquisar.setText(termoPesquisado);
-    }
-    
-    public String getTipoPesquisa() {
-        return cbbTipo.getSelectionModel().getSelectedItem();
-    }
+		tabelaConsulta.getColumns().addAll(tabelaConsultaTombo, tabelaConsultaExemplar, tabelaConsultaTitulo,
+				tabelaConsultaLeitor, tabelaConsultaStatus, tabelaConsultaDevolucao);
 
-    public void setResultadosConsulta(ObservableList<Resultado> resultados) {
-        resultadoConsulta.setAll(resultados);
-    }
+		AnchorPane.setTopAnchor(titulo, 0.0);
+		AnchorPane.setTopAnchor(lblSelect, 42.0);
+		AnchorPane.setTopAnchor(pesquisar, 38.0);
+		AnchorPane.setTopAnchor(cbbTipo, 38.0);
+		AnchorPane.setTopAnchor(tabelaConsulta, 77.0);
+		AnchorPane.setLeftAnchor(lblSelect, 0.0);
+		AnchorPane.setLeftAnchor(pesquisar, 260.0);
+		AnchorPane.setLeftAnchor(cbbTipo, 105.0);
+		AnchorPane.setLeftAnchor(tabelaConsulta, 0.0);
+		AnchorPane.setRightAnchor(pesquisar, 0.0);
+		AnchorPane.setRightAnchor(tabelaConsulta, 0.0);
+		AnchorPane.setBottomAnchor(tabelaConsulta, 0.0);
 
-    @Override
-    public AnchorPane getRoot() {
-        return painelConsulta;
-    }
+		painelConsulta.getChildren().addAll(titulo, lblSelect, pesquisar, cbbTipo, tabelaConsulta);
+	}
+
+	private void configurarTamanhoFixo(TableColumn<?, ?> coluna, TableView<?> tabela, double percent) {
+		coluna.prefWidthProperty().bind(tabela.widthProperty().multiply(percent));
+		coluna.setResizable(false);
+	}
+
+	private void vincularColunaAtributo(TableColumn<?, ?> coluna, String atributo) {
+		coluna.setCellValueFactory(new PropertyValueFactory<>(atributo));
+	}
+
+	public void acaoPesquisar(EventHandler<ActionEvent> event) {
+		pesquisar.setOnAction(event);
+	}
+
+	public String getTermoPesquisado() {
+		return pesquisar.getText();
+	}
+
+	public void setTextoPesquisado(String termoPesquisado) {
+		pesquisar.setText(termoPesquisado);
+	}
+
+	public String getTipoPesquisa() {
+		return cbbTipo.getSelectionModel().getSelectedItem();
+	}
+
+	public void setResultadosConsulta(ObservableList<Resultado> resultados) {
+		resultadoConsulta.setAll(resultados);
+	}
+
+	@Override
+	public AnchorPane getRoot() {
+		return painelConsulta;
+	}
 
 }

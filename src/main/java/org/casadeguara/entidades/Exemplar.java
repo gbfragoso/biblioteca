@@ -8,33 +8,33 @@ package org.casadeguara.entidades;
  */
 public class Exemplar {
 
-    private final int id;
-    private final int numero;
-    private String status;
-    
-    public Exemplar(int idexemplar, int numero) {
-        this(idexemplar, numero, "Disponível");
-    }
-    
-    public Exemplar(int idexemplar, int numero, String status) {
-        this.id = idexemplar;
-        this.numero = numero;
-        this.status = status;
-    }
+	private final int id;
+	private final int numero;
+	private String status;
 
-    public int getId() {
-        return id;
-    }
+	public Exemplar(int idexemplar, int numero) {
+		this(idexemplar, numero, "Disponível");
+	}
 
-    public int getNumero() {
-        return numero;
-    }
+	public Exemplar(int idexemplar, int numero, String status) {
+		this.id = idexemplar;
+		this.numero = numero;
+		this.status = status;
+	}
 
-    public String getStatus() {
-        return status;
-    }
-    
-    public void setStatus(String status) {
-        this.status = status; 
-    }
+	public int getId() {
+		return id;
+	}
+
+	public int getNumero() {
+		return numero;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }
