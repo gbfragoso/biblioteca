@@ -1,5 +1,6 @@
 package org.casadeguara.views;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -88,8 +89,8 @@ public class CadastroEditoraView implements GenericView {
 		btnLimpar.setOnAction(event);
 	}
 
-	public void acaoPesquisarEditora(EventHandler<ActionEvent> event) {
-		pesquisarEditoras.setOnAction(event);
+	public SimpleObjectProperty<Editora> acaoPesquisarEditora() {
+		return pesquisarEditoras.selectedValueProperty();
 	}
 
 	public void estaCadastrando(boolean resposta) {

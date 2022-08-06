@@ -24,7 +24,7 @@ public class CadastroAutorController implements GenericController {
 			view.acaoBotaoAlterar(event -> atualizarAutor());
 			view.acaoBotaoCadastrar(event -> cadastrarAutor());
 			view.acaoBotaoLimpar(event -> limparCampos());
-			view.acaoPesquisarAutor(event -> pesquisarAutor());
+			view.acaoPesquisarAutor().addListener((observable, oldValue, newValue) -> pesquisarAutor(newValue));
 
 			view.setAutoComplete(model);
 		}
@@ -96,9 +96,7 @@ public class CadastroAutorController implements GenericController {
 		view.limparCampos();
 	}
 
-	public int pesquisarAutor() {
-		Autor autor = view.getTermoPesquisado();
-
+	public int pesquisarAutor(Autor autor) {
 		if (autor != null) {
 			setAutorAtual(autor);
 			view.estaCadastrando(false);

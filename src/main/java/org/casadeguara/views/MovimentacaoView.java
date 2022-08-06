@@ -1,6 +1,16 @@
 package org.casadeguara.views;
 
 import java.time.LocalDate;
+
+import org.casadeguara.alertas.Alerta;
+import org.casadeguara.componentes.AutoCompleteTextField;
+import org.casadeguara.entidades.Leitor;
+import org.casadeguara.models.GenericModel;
+import org.casadeguara.movimentacao.Acervo;
+import org.casadeguara.movimentacao.Emprestimo;
+import org.casadeguara.utilitarios.Formatador;
+
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,13 +28,6 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
-import org.casadeguara.alertas.Alerta;
-import org.casadeguara.componentes.AutoCompleteTextField;
-import org.casadeguara.entidades.Leitor;
-import org.casadeguara.models.GenericModel;
-import org.casadeguara.movimentacao.Emprestimo;
-import org.casadeguara.movimentacao.Acervo;
-import org.casadeguara.utilitarios.Formatador;
 
 /**
  * Constroi a tela de movimentação.
@@ -271,8 +274,8 @@ public class MovimentacaoView implements GenericView {
 		btnRenovar.setOnAction(event);
 	}
 
-	public void acaoSelecionarLeitor(EventHandler<ActionEvent> event) {
-		pesquisarLeitores.setOnAction(event);
+	public SimpleObjectProperty<Leitor> acaoSelecionarLeitor() {
+		return pesquisarLeitores.selectedValueProperty();
 	}
 
 	public Acervo getExemplarSelecionado() {

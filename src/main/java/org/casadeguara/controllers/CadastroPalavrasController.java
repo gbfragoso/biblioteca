@@ -24,7 +24,8 @@ public class CadastroPalavrasController implements GenericController {
 			view.acaoBotaoAlterar(event -> atualizarPalavraChave());
 			view.acaoBotaoCadastrar(event -> cadastrarPalavraChave());
 			view.acaoBotaoLimpar(event -> limparCampos());
-			view.acaoPesquisarPalavraChave(event -> pesquisarPalavraChave());
+			view.acaoPesquisarPalavraChave()
+					.addListener((observable, oldValue, newValue) -> pesquisarPalavraChave(newValue));
 
 			view.setAutoComplete(model);
 		}
@@ -96,9 +97,7 @@ public class CadastroPalavrasController implements GenericController {
 		view.limparCampos();
 	}
 
-	public int pesquisarPalavraChave() {
-		PalavraChave palavraChave = view.getTermoPesquisado();
-
+	public int pesquisarPalavraChave(PalavraChave palavraChave) {
 		if (palavraChave != null) {
 			setPalavraChaveAtual(palavraChave);
 			view.estaCadastrando(false);

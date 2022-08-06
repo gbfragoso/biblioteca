@@ -25,7 +25,7 @@ public class CadastroUsuarioController implements GenericController {
 		view.acaoBotaoCadastrar(event -> cadastrarUsuario());
 		view.acaoBotaoLimpar(event -> limparCampos());
 		view.acaoBtnResetar(event -> resetarSenha());
-		view.acaoPesquisarUsuario(event -> pesquisarUsuario());
+		view.acaoPesquisarUsuario().addListener((observable, oldValue, newValue) -> pesquisarUsuario(newValue));
 
 		view.setAutoComplete(model);
 	}
@@ -103,9 +103,7 @@ public class CadastroUsuarioController implements GenericController {
 		view.limparCampos();
 	}
 
-	public int pesquisarUsuario() {
-		Usuario usuario = view.getTermoPesquisado();
-
+	public int pesquisarUsuario(Usuario usuario) {
 		if (usuario != null) {
 			usuario.setListaAcessos(model.consultarAcessosUsuario(usuario.getId()));
 			int[] acessos = usuario.getListaAcessos().stream().mapToInt(i -> i).toArray();

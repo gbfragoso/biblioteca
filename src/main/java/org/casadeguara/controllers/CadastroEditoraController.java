@@ -24,7 +24,7 @@ public class CadastroEditoraController implements GenericController {
 			view.acaoBotaoAlterar(event -> atualizarEditora());
 			view.acaoBotaoCadastrar(event -> cadastrarEditora());
 			view.acaoBotaoLimpar(event -> limparCampos());
-			view.acaoPesquisarEditora(event -> pesquisarEditora());
+			view.acaoPesquisarEditora().addListener((observable, oldValue, newValue) -> pesquisarEditora(newValue));
 
 			view.setAutoComplete(model);
 		}
@@ -96,8 +96,7 @@ public class CadastroEditoraController implements GenericController {
 		view.limparCampos();
 	}
 
-	public int pesquisarEditora() {
-		Editora editora = view.getTermoPesquisado();
+	public int pesquisarEditora(Editora editora) {
 		if (editora != null) {
 			setEditoraAtual(editora);
 			view.estaCadastrando(false);

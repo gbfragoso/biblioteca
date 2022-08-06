@@ -1,5 +1,6 @@
 package org.casadeguara.views;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -89,8 +90,8 @@ public class CadastroPalavrasView implements GenericView {
 		btnLimpar.setOnAction(event);
 	}
 
-	public void acaoPesquisarPalavraChave(EventHandler<ActionEvent> event) {
-		pesquisarPalavras.setOnAction(event);
+	public SimpleObjectProperty<PalavraChave> acaoPesquisarPalavraChave() {
+		return pesquisarPalavras.selectedValueProperty();
 	}
 
 	public void estaCadastrando(boolean resposta) {

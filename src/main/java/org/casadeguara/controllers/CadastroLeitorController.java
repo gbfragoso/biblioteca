@@ -28,7 +28,7 @@ public class CadastroLeitorController implements GenericController {
 		view.acaoBotaoCadastrar(event -> cadastrarLeitor());
 		view.acaoBotaoImprimirFicha(event -> imprimirFichaCadastro());
 		view.acaoBotaoLimpar(event -> limparCampos());
-		view.acaoPesquisarLeitor(event -> pesquisarLeitor());
+		view.acaoPesquisarLeitor().addListener((observable, oldValue, newValue) -> pesquisarLeitor(newValue));
 
 		view.setAutoComplete(model);
 	}
@@ -120,9 +120,7 @@ public class CadastroLeitorController implements GenericController {
 		view.limparCampos();
 	}
 
-	public int pesquisarLeitor() {
-		Leitor leitor = view.getTermoPesquisado();
-
+	public int pesquisarLeitor(Leitor leitor) {
 		if (leitor != null) {
 			setLeitorSelecionado(leitor);
 			view.estaCadastrando(false);

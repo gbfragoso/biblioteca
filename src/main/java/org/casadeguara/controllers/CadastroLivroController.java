@@ -50,7 +50,7 @@ public class CadastroLivroController implements GenericController {
 		view.acaoBtnCadastrar(event -> cadastrarLivro());
 		view.acaoBtnLimpar(event -> limparCampos());
 		view.acaoBtnSugerir(event -> sugerirTombo());
-		view.acaoPesquisarLivro(event -> pesquisarLivro());
+		view.acaoPesquisarLivro().addListener((observable, oldValue, newValue) -> pesquisarLivro(newValue));
 
 		view.setAutoCompleteEditora(new EditoraModel());
 		view.setAutoCompleteLivro(model);
@@ -191,9 +191,7 @@ public class CadastroLivroController implements GenericController {
 		view.limparCampos();
 	}
 
-	public void pesquisarLivro() {
-		Livro livro = view.getTermoPesquisado();
-
+	public void pesquisarLivro(Livro livro) {
 		if (livro != null) {
 			setLivroAtual(livro);
 

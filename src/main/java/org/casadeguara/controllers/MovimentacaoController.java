@@ -46,7 +46,7 @@ public class MovimentacaoController implements GenericController {
 		view.acaoBtnRecibo(event -> gerarReciboLeitor());
 		view.acaoBtnRemover(event -> removerExemplarParaEmprestimo());
 		view.acaoBtnRenovar(event -> renovarEmprestimo());
-		view.acaoSelecionarLeitor(event -> pesquisarLeitor());
+		view.acaoSelecionarLeitor().addListener((observable, oldValue, newValue) -> pesquisarLeitor(newValue));
 
 		view.setAutoCompleteLeitor(new LeitorModel());
 		view.setAutoCompleteAcervo(new AcervoModel());
@@ -168,9 +168,7 @@ public class MovimentacaoController implements GenericController {
 		return 0;
 	}
 
-	public int pesquisarLeitor() {
-		Leitor leitor = view.getLeitorSelecionado();
-
+	public int pesquisarLeitor(Leitor leitor) {
 		if (leitor != null) {
 			if (!leitor.isAtivo()) {
 				new Alerta().informacao(
