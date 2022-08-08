@@ -64,7 +64,7 @@ public class AutoCompleteTextField<T> extends TextField {
 	@Override
 	public void clear() {
 		super.clear();
-		result = null;
+		result = new SimpleObjectProperty<>();
 	}
 
 	public T getResult() {
