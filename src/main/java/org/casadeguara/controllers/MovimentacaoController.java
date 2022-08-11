@@ -84,9 +84,7 @@ public class MovimentacaoController implements GenericController {
 					@Override
 					protected Void call() throws Exception {
 						updateMessage("Devolvendo os empréstimos.");
-						if (model.devolver(emprestimos) == 0) {
-							updateMessage("Devolução efetuada com sucesso.");
-						} else {
+						if (model.devolver(emprestimos) != 0) {
 							updateMessage("Não foi possível concluir a devolução.");
 							cancel();
 						}

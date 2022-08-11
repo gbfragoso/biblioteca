@@ -11,9 +11,8 @@ import javafx.concurrent.Task;
 
 public class CadastroLeitorController implements GenericController {
 
-	private CadastroLeitorView view;
 	private LeitorModel model;
-	private Leitor leitorSelecionado;
+	private CadastroLeitorView view;
 
 	public CadastroLeitorController(CadastroLeitorView view) {
 		this.view = view;
@@ -33,28 +32,12 @@ public class CadastroLeitorController implements GenericController {
 		view.setAutoComplete(model);
 	}
 
-	private void updateView(Leitor leitor) {
-		view.setNomeLeitor(leitor.getNome());
-		view.setEmailLeitor(leitor.getEmail());
-		view.setTelefone1Leitor(leitor.getTelefone1());
-		view.setTelefone2Leitor(leitor.getTelefone2());
-		view.setLogradouro(leitor.getLogradouro());
-		view.setBairro(leitor.getBairro());
-		view.setComplemento(leitor.getComplemento());
-		view.setCep(leitor.getCep());
-		view.setRgLeitor(leitor.getRg());
-		view.setCpfLeitor(leitor.getCpf());
-		view.setTrabalhador(leitor.isTrab());
-		view.setInativo(!leitor.isAtivo());
-		view.cadastroIncompleto(leitor.isIncompleto());
-		view.setSexoLeitor(leitor.getSexo());
-	}
-
 	public int atualizarLeitor() {
+		Leitor leitor = view.getLeitorSelecionado();
 		String nome = view.getNomeLeitor();
 
-		if (!nome.isEmpty()) {
-			Leitor novoLeitor = construirLeitor(getLeitorSelecionado().getId(), nome);
+		if (leitor != null && nome != null && !nome.trim().isEmpty()) {
+			Leitor novoLeitor = construirLeitor(leitor.getId(), nome);
 
 			Task<Void> atualizarLeitor = new Task<Void>() {
 
@@ -75,7 +58,7 @@ public class CadastroLeitorController implements GenericController {
 
 			return 0;
 		} else {
-			view.mensagemInformativa("Campos obrigatórios vazios.");
+			view.mensagemInformativa("Campos obrigatórios sem preenchimento.");
 		}
 		return 1;
 	}
@@ -83,7 +66,7 @@ public class CadastroLeitorController implements GenericController {
 	public int cadastrarLeitor() {
 		String nome = view.getNomeLeitor();
 
-		if (!nome.isEmpty()) {
+		if (nome != null && !nome.trim().isEmpty()) {
 			Task<Void> cadastrarLeitor = new Task<Void>() {
 
 				@Override
@@ -111,33 +94,21 @@ public class CadastroLeitorController implements GenericController {
 
 	public void imprimirFichaCadastro() {
 		ObservableList<Leitor> cadastroLeitor = FXCollections.observableArrayList();
-		cadastroLeitor.add(getLeitorSelecionado());
+		cadastroLeitor.add(view.getLeitorSelecionado());
 		new Impressora().fichaCadastro(cadastroLeitor);
 	}
 
 	public void limparCampos() {
-		setLeitorSelecionado(null);
 		view.limparCampos();
 	}
 
 	public int pesquisarLeitor(Leitor leitor) {
 		if (leitor != null) {
-			setLeitorSelecionado(leitor);
 			view.estaCadastrando(false);
-			updateView(getLeitorSelecionado());
+			view.setLeitorSelecionado(leitor);
 			return 0;
-		} else {
-			view.mensagemInformativa("Leitor não encontrado");
 		}
 		return 1;
-	}
-
-	public Leitor getLeitorSelecionado() {
-		return leitorSelecionado;
-	}
-
-	public void setLeitorSelecionado(Leitor leitorSelecionado) {
-		this.leitorSelecionado = leitorSelecionado;
 	}
 
 	private Leitor construirLeitor(int idleitor, String nome) {
@@ -147,5 +118,4 @@ public class CadastroLeitorController implements GenericController {
 				.sexo(view.getSexoLeitor()).isTrabalhador(view.isTrabalhador()).isAtivo(!view.isInativo())
 				.isIncompleto(view.isCadastroIncompleto()).build();
 	}
-
 }

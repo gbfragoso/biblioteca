@@ -22,9 +22,8 @@ import javafx.concurrent.Task;
 
 public class CadastroLivroController implements GenericController {
 
-	private CadastroLivroView view;
 	private LivroModel model;
-	private Livro livroAtual;
+	private CadastroLivroView view;
 
 	private ObservableList<Autor> listaAutores;
 	private ObservableList<Exemplar> listaExemplares;
@@ -87,11 +86,10 @@ public class CadastroLivroController implements GenericController {
 	}
 
 	public int alterarLivro() {
+		Livro livro = view.getLivroSelecionado();
 		String titulo = view.getTituloLivro();
 		String tombo = view.getTomboLivro();
 		Editora editora = view.getEditora();
-
-		Livro livro = getLivroAtual();
 
 		if (livro != null && editora != null && !titulo.isEmpty() && !tombo.isEmpty()) {
 			livro.setTitulo(titulo);
@@ -184,7 +182,6 @@ public class CadastroLivroController implements GenericController {
 	}
 
 	public void limparCampos() {
-		setLivroAtual(null);
 		listaAutores.clear();
 		listaExemplares.clear();
 		listaPalavrasChave.clear();
@@ -193,8 +190,6 @@ public class CadastroLivroController implements GenericController {
 
 	public void pesquisarLivro(Livro livro) {
 		if (livro != null) {
-			setLivroAtual(livro);
-
 			view.estaCadastrando(false);
 
 			view.setTituloLivro(livro.getTitulo());
@@ -209,20 +204,10 @@ public class CadastroLivroController implements GenericController {
 			view.quantidadeAutores(listaAutores.size());
 			view.quantidadeExemplares(listaExemplares.size());
 			view.quantidadePalavrasChave(listaPalavrasChave.size());
-		} else {
-			view.mensagemInformativa("Livro não encontrado.");
 		}
 	}
 
 	public void sugerirTombo() {
 		view.setTomboLivro(model.consultarUltimoTombo());
-	}
-
-	public Livro getLivroAtual() {
-		return livroAtual;
-	}
-
-	public void setLivroAtual(Livro livroAtual) {
-		this.livroAtual = livroAtual;
 	}
 }

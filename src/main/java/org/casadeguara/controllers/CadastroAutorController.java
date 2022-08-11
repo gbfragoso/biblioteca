@@ -7,7 +7,6 @@ import javafx.concurrent.Task;
 
 public class CadastroAutorController implements GenericController {
 
-	private Autor autorAtual;
 	private AutorModel model;
 	private CadastroAutorView view;
 
@@ -31,18 +30,18 @@ public class CadastroAutorController implements GenericController {
 	}
 
 	public int atualizarAutor() {
+		Autor autor = view.getAutorSelecionado();
 		String novoNome = view.getNomeAutor();
 
-		if (getAutorAtual() != null && !novoNome.isEmpty()) {
-			Autor novoAutor = getAutorAtual();
-			novoAutor.setNome(novoNome);
+		if (autor != null && novoNome != null && !novoNome.trim().isEmpty()) {
+			autor.setNome(novoNome);
 
 			Task<Void> atualizarAutor = new Task<Void>() {
 
 				@Override
 				protected Void call() throws Exception {
 					updateMessage("Atualizando o autor " + novoNome);
-					if (model.atualizar(novoAutor) == 0) {
+					if (model.atualizar(autor) == 0) {
 						updateMessage("Autor atualizado com sucesso.");
 					} else {
 						updateMessage("Não foi possível atualizar o autor.");
@@ -57,7 +56,7 @@ public class CadastroAutorController implements GenericController {
 
 			return 0;
 		} else {
-			view.mensagemInformativa("Você esqueceu de selecionar um autor ou\nnão preencheu os campos necessários.");
+			view.mensagemInformativa("Campos obrigatórios sem preenchimento.");
 		}
 		return 1;
 	}
@@ -65,7 +64,7 @@ public class CadastroAutorController implements GenericController {
 	public int cadastrarAutor() {
 		String nome = view.getNomeAutor();
 
-		if (!nome.isEmpty()) {
+		if (nome != null && !nome.trim().isEmpty()) {
 			Task<Void> cadastrarAutor = new Task<Void>() {
 
 				@Override
@@ -92,27 +91,15 @@ public class CadastroAutorController implements GenericController {
 	}
 
 	public void limparCampos() {
-		setAutorAtual(null);
 		view.limparCampos();
 	}
 
 	public int pesquisarAutor(Autor autor) {
 		if (autor != null) {
-			setAutorAtual(autor);
 			view.estaCadastrando(false);
-			view.setNomeAutor(autor.getNome());
+			view.setAutorSelecionado(autor);
 			return 0;
-		} else {
-			view.mensagemInformativa("Autor não encontrado.");
 		}
 		return 1;
-	}
-
-	public Autor getAutorAtual() {
-		return autorAtual;
-	}
-
-	public void setAutorAtual(Autor autorAtual) {
-		this.autorAtual = autorAtual;
 	}
 }

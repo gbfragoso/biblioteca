@@ -7,7 +7,6 @@ import javafx.concurrent.Task;
 
 public class CadastroEditoraController implements GenericController {
 
-	private Editora editoraAtual;
 	private EditoraModel model;
 	private CadastroEditoraView view;
 
@@ -31,18 +30,18 @@ public class CadastroEditoraController implements GenericController {
 	}
 
 	public int atualizarEditora() {
+		Editora editora = view.getEditoraSelecionada();
 		String novoNome = view.getNomeEditora();
 
-		if (getEditoraAtual() != null && !novoNome.isEmpty()) {
-			Editora novaEditora = getEditoraAtual();
-			novaEditora.setNome(novoNome);
+		if (editora != null && novoNome != null && !novoNome.trim().isEmpty()) {
+			editora.setNome(novoNome);
 
 			Task<Void> atualizarEditora = new Task<Void>() {
 
 				@Override
 				protected Void call() throws Exception {
 					updateMessage("Atualizando a editora " + novoNome);
-					if (model.atualizar(novaEditora) == 0) {
+					if (model.atualizar(editora) == 0) {
 						updateMessage("Editora atualizada com sucesso.");
 					} else {
 						updateMessage("Não foi possível atualizar a editora.");
@@ -57,8 +56,7 @@ public class CadastroEditoraController implements GenericController {
 
 			return 0;
 		} else {
-			view.mensagemInformativa(
-					"Você esqueceu de selecionar uma editora ou não preencheu\nos campos necessários.");
+			view.mensagemInformativa("Campos obrigatórios sem preenchimento.");
 		}
 		return 1;
 	}
@@ -66,7 +64,7 @@ public class CadastroEditoraController implements GenericController {
 	public int cadastrarEditora() {
 		String nome = view.getNomeEditora();
 
-		if (!nome.isEmpty()) {
+		if (nome != null && !nome.trim().isEmpty()) {
 			Task<Void> cadastrarEditora = new Task<Void>() {
 
 				@Override
@@ -86,34 +84,22 @@ public class CadastroEditoraController implements GenericController {
 			new Thread(cadastrarEditora).start();
 			return 0;
 		} else {
-			view.mensagemInformativa("Campos obrigatórios sem preenchimento.");
+			view.mensagemInformativa("Você esqueceu de colocar o nome da editora");
 		}
 		return 1;
 	}
 
 	public void limparCampos() {
-		setEditoraAtual(null);
 		view.limparCampos();
 	}
 
 	public int pesquisarEditora(Editora editora) {
 		if (editora != null) {
-			setEditoraAtual(editora);
 			view.estaCadastrando(false);
-			view.setNomeEditora(editora.getNome());
+			view.setEditoraSelecionada(editora);
 
 			return 0;
-		} else {
-			view.mensagemInformativa("Editora não encontrada");
 		}
 		return 1;
-	}
-
-	public Editora getEditoraAtual() {
-		return editoraAtual;
-	}
-
-	public void setEditoraAtual(Editora editora) {
-		this.editoraAtual = editora;
 	}
 }

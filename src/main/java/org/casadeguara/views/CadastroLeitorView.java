@@ -350,7 +350,26 @@ public class CadastroLeitorView implements GenericView {
 		pesquisarLeitores.setModel(model);
 	}
 
-	public Leitor getTermoPesquisado() {
+	public void setLeitorSelecionado(Leitor leitor) {
+		if (leitor != null) {
+			setNomeLeitor(leitor.getNome());
+			setEmailLeitor(leitor.getEmail());
+			setTelefone1Leitor(leitor.getTelefone1());
+			setTelefone2Leitor(leitor.getTelefone2());
+			setLogradouro(leitor.getLogradouro());
+			setBairro(leitor.getBairro());
+			setComplemento(leitor.getComplemento());
+			setCep(leitor.getCep());
+			setRgLeitor(leitor.getRg());
+			setCpfLeitor(leitor.getCpf());
+			setTrabalhador(leitor.isTrab());
+			setInativo(!leitor.isAtivo());
+			cadastroIncompleto(leitor.isIncompleto());
+			setSexoLeitor(leitor.getSexo());
+		}
+	}
+
+	public Leitor getLeitorSelecionado() {
 		return pesquisarLeitores.getResult();
 	}
 

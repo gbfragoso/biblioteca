@@ -11,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
+import java.util.List;
+
 import org.casadeguara.componentes.AutoCompleteTextField;
 import org.casadeguara.entidades.Usuario;
 import org.casadeguara.models.GenericModel;
@@ -183,12 +185,22 @@ public class CadastroUsuarioView implements GenericView {
 		return clvAcessos.getCheckModel().getCheckedIndices();
 	}
 
-	public void setListaAcessos(int[] acessos) {
-		clvAcessos.getCheckModel().clearChecks();
-		clvAcessos.getCheckModel().checkIndices(acessos);
+	public void setListaAcessos(List<Integer> list) {
+		if (list != null) {
+			clvAcessos.getCheckModel().clearChecks();
+			clvAcessos.getCheckModel().checkIndices(list.stream().mapToInt(i -> i).toArray());
+		}
 	}
 
-	public Usuario getTermoPesquisado() {
+	public void setUsuarioSelecionado(Usuario usuario) {
+		if (usuario != null) {
+			setNomeUsuario(usuario.getNome());
+			isAdmin(!usuario.getTipo().equals("Comum"));
+			isInativo(!usuario.getStatus());
+		}
+	}
+
+	public Usuario getUsuarioSelecionado() {
 		return pesquisarUsuarios.getResult();
 	}
 

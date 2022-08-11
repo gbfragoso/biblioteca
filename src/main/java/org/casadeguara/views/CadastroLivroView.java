@@ -77,7 +77,7 @@ public class CadastroLivroView implements GenericView {
 
 		btnAlterar = new Button("Alterar");
 		btnCadastrar = new Button("Cadastrar");
-		btnLimpar = new Button("Limpar campos");
+		btnLimpar = new Button("Limpar");
 		btnSugerir = new Button("Último tombo");
 		btnAlterar.setPrefSize(130.0, 32);
 		btnCadastrar.setPrefSize(130.0, 32);
@@ -233,7 +233,7 @@ public class CadastroLivroView implements GenericView {
 		pesquisarLivros.setModel(model);
 	}
 
-	public Livro getTermoPesquisado() {
+	public Livro getLivroSelecionado() {
 		return pesquisarLivros.getResult();
 	}
 

@@ -7,7 +7,6 @@ import javafx.concurrent.Task;
 
 public class CadastroPalavrasController implements GenericController {
 
-	private PalavraChave palavraChave;
 	private PalavraChaveModel model;
 	private CadastroPalavrasView view;
 
@@ -32,10 +31,10 @@ public class CadastroPalavrasController implements GenericController {
 	}
 
 	public int atualizarPalavraChave() {
+		PalavraChave palavraChave = view.getPalavraChaveSelecionada();
 		String novoAssunto = view.getPalavraChave();
 
-		if (getPalavraChaveAtual() != null && !novoAssunto.isEmpty()) {
-			PalavraChave palavraChave = getPalavraChaveAtual();
+		if (palavraChave != null && novoAssunto != null && !novoAssunto.trim().isEmpty()) {
 			palavraChave.setAssunto(novoAssunto);
 
 			Task<Void> atualizarPalavraChave = new Task<Void>() {
@@ -66,7 +65,7 @@ public class CadastroPalavrasController implements GenericController {
 	public int cadastrarPalavraChave() {
 		String assunto = view.getPalavraChave();
 
-		if (!assunto.isEmpty()) {
+		if (assunto != null && !assunto.trim().isEmpty()) {
 			Task<Void> cadastrarPalavraChave = new Task<Void>() {
 
 				@Override
@@ -93,29 +92,16 @@ public class CadastroPalavrasController implements GenericController {
 	}
 
 	public void limparCampos() {
-		setPalavraChaveAtual(null);
 		view.limparCampos();
 	}
 
 	public int pesquisarPalavraChave(PalavraChave palavraChave) {
 		if (palavraChave != null) {
-			setPalavraChaveAtual(palavraChave);
 			view.estaCadastrando(false);
-			view.setPalavraChave(palavraChave.getAssunto());
+			view.setPalavraChaveSelecionada(palavraChave);
 
 			return 0;
-		} else {
-			view.mensagemInformativa("Palavra-chave não encontrada");
 		}
 		return 1;
 	}
-
-	public PalavraChave getPalavraChaveAtual() {
-		return palavraChave;
-	}
-
-	public void setPalavraChaveAtual(PalavraChave palavraChave) {
-		this.palavraChave = palavraChave;
-	}
-
 }

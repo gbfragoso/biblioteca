@@ -8,9 +8,8 @@ import javafx.concurrent.Task;
 
 public class CadastroUsuarioController implements GenericController {
 
-	private CadastroUsuarioView view;
 	private UsuarioModel model;
-	private Usuario usuarioAtual;
+	private CadastroUsuarioView view;
 
 	public CadastroUsuarioController(CadastroUsuarioView view) {
 		this.view = view;
@@ -31,9 +30,10 @@ public class CadastroUsuarioController implements GenericController {
 	}
 
 	public void alterarUsuario() {
-		if (getUsuarioAtual() != null) {
-			String nomeUsuario = view.getNomeUsuario();
-			usuarioAtual.setNome(nomeUsuario);
+		Usuario usuarioAtual = view.getUsuarioSelecionado();
+		
+		if (usuarioAtual != null) {
+			usuarioAtual.setNome(view.getNomeUsuario());
 			usuarioAtual.setTipo(view.getTipoUsuario());
 			usuarioAtual.setListaAcessos(view.getListaAcessos());
 			usuarioAtual.setStatus(view.usuarioAtivo());
@@ -42,7 +42,7 @@ public class CadastroUsuarioController implements GenericController {
 
 				@Override
 				protected Void call() throws Exception {
-					updateMessage("Iniciando a atualização do usuário " + nomeUsuario);
+					updateMessage("Iniciando a atualização do usuário " + usuarioAtual.getNome());
 					if (model.atualizar(usuarioAtual) == 0) {
 						updateMessage("Usuário atualizado com sucesso.");
 					} else {
@@ -93,37 +93,23 @@ public class CadastroUsuarioController implements GenericController {
 	}
 
 	public void resetarSenha() {
-		if (model.trocarSenha("123", getUsuarioAtual().getId()) == 0) {
+		Usuario usuario = view.getUsuarioSelecionado();
+		if (model.trocarSenha("123", usuario.getId()) == 0) {
 			view.mensagemSucesso("Senha resetada para 123");
 		}
 	}
 
 	public void limparCampos() {
-		setUsuarioAtual(null);
 		view.limparCampos();
 	}
 
 	public int pesquisarUsuario(Usuario usuario) {
 		if (usuario != null) {
-			usuario.setListaAcessos(model.consultarAcessosUsuario(usuario.getId()));
-			int[] acessos = usuario.getListaAcessos().stream().mapToInt(i -> i).toArray();
-
 			view.estaCadastrando(false);
-			view.setNomeUsuario(usuario.getNome());
-			view.setListaAcessos(acessos);
-			view.isAdmin(!usuario.getTipo().equals("Comum"));
-			view.isInativo(!usuario.getStatus());
-			setUsuarioAtual(usuario);
+			view.setUsuarioSelecionado(usuario);
+			view.setListaAcessos(model.consultarAcessosUsuario(usuario.getId()));
 			return 0;
 		}
 		return 1;
-	}
-
-	public Usuario getUsuarioAtual() {
-		return usuarioAtual;
-	}
-
-	public void setUsuarioAtual(Usuario usuarioAtual) {
-		this.usuarioAtual = usuarioAtual;
 	}
 }

@@ -118,7 +118,13 @@ public class CadastroEditoraView implements GenericView {
 		pesquisarEditoras.setModel(model);
 	}
 
-	public Editora getTermoPesquisado() {
+	public void setEditoraSelecionada(Editora editora) {
+		if (editora != null) {
+			setNomeEditora(editora.getNome());
+		}
+	}
+
+	public Editora getEditoraSelecionada() {
 		return pesquisarEditoras.getResult();
 	}
 

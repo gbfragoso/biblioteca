@@ -15,35 +15,65 @@ import org.casadeguara.models.GenericModel;
 
 public class AutoCompleteTextField<T> extends TextField {
 
+	private final int limit;
 	private ContextMenu suggestions;
 	private GenericModel<T> model;
-	private final int resultados;
-	private SimpleObjectProperty<T> result = new SimpleObjectProperty<>();
+	private SimpleObjectProperty<T> selectedValue = new SimpleObjectProperty<>();
 
 	public AutoCompleteTextField() {
 		this(null, 5);
 	}
 
-	public AutoCompleteTextField(GenericModel<T> model, int resultados) {
-		this.resultados = resultados;
+	public AutoCompleteTextField(GenericModel<T> model, int limit) {
+		this.limit = limit;
+		this.suggestions = new ContextMenu();
 
-		suggestions = new ContextMenu();
-		setContextMenu(suggestions);
+		setContextMenu(this.suggestions);
 		setEditable(true);
+		setModel(model);
+	}
 
-		if (model != null) {
-			setModel(model);
+	@Override
+	public void clear() {
+		super.clear();
+		this.selectedValue.set(null);
+	}
+
+	public T getResult() {
+		return selectedValue.get();
+	}
+
+	public void setResult(T t) {
+		this.selectedValue.set(t);
+		setText(selectedValue.get().toString());
+	}
+
+	public SimpleObjectProperty<T> selectedValueProperty() {
+		return this.selectedValue;
+	}
+
+	public void setModel(GenericModel<T> model) {
+		this.model = model;
+		configureTextProperty();
+	}
+
+	private void configureTextProperty() {
+		if (this.model != null) {
+			textProperty().addListener((value, oldValue, newValue) -> {
+				if (newValue.length() > 2) {
+					if (!this.suggestions.isShowing()) {
+						this.suggestions.show(AutoCompleteTextField.this, Side.BOTTOM, 0, 0);
+					}
+
+					populateContextMenu(newValue);
+				}
+			});
 		}
 	}
 
-	/**
-	 * Adiciona os resultados da busca ao menu de contexto.
-	 * 
-	 * @param text Texto para a busca
-	 */
 	private void populateContextMenu(String text) {
 		List<CustomMenuItem> menuItems = new LinkedList<>();
-		ObservableList<T> searchResults = model.consultar(text.toUpperCase(), resultados);
+		ObservableList<T> searchResults = this.model.consultar(text.toUpperCase(), limit);
 
 		for (T t : searchResults) {
 			String result = t.toString();
@@ -52,45 +82,12 @@ public class AutoCompleteTextField<T> extends TextField {
 			menuItem.setOnAction(event -> {
 				setText(result);
 				positionCaret(result.length());
-				this.result.set(t);
-				suggestions.hide();
+				this.selectedValue.set(t);
+				this.suggestions.hide();
 			});
 
 			menuItems.add(menuItem);
 		}
-		suggestions.getItems().setAll(menuItems);
-	}
-
-	@Override
-	public void clear() {
-		super.clear();
-		result = new SimpleObjectProperty<>();
-	}
-
-	public T getResult() {
-		return result.get();
-	}
-
-	public void setResult(T t) {
-		this.result = new SimpleObjectProperty<>(t);
-		setText(result.get().toString());
-	}
-
-	public SimpleObjectProperty<T> selectedValueProperty() {
-		return this.result;
-	}
-
-	public void setModel(GenericModel<T> model) {
-		this.model = model;
-
-		textProperty().addListener((value, oldValue, newValue) -> {
-			if (newValue.length() > 2) {
-				if (!suggestions.isShowing()) {
-					suggestions.show(AutoCompleteTextField.this, Side.BOTTOM, 0, 0);
-				}
-
-				populateContextMenu(newValue);
-			}
-		});
+		this.suggestions.getItems().setAll(menuItems);
 	}
 }

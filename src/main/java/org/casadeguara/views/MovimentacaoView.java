@@ -66,15 +66,15 @@ public class MovimentacaoView implements GenericView {
 		aplicarEstilo(titulo, "titulo");
 
 		Label lblLeitor = new Label("Selecione um leitor: ");
-		Label lblItems = new Label("Adicione itens para empréstimo");
+		Label lblItems = new Label("Adicione exemplares para empréstimo");
 		Label lblEmprestimos = new Label("Empréstimos ativos do leitor selecionado");
 
 		btnAdicionar = new Button("Adicionar");
-		btnDevolver = new Button("Devolver item");
-		btnEmprestar = new Button("Emprestar Itens");
+		btnDevolver = new Button("Devolver");
+		btnEmprestar = new Button("Emprestar");
 		btnRecibo = new Button("Gerar recibo");
-		btnRemover = new Button("Remover item");
-		btnRenovar = new Button("Renovar item");
+		btnRemover = new Button("Remover");
+		btnRenovar = new Button("Renovar");
 
 		aplicarEstilo(btnDevolver, "button-danger");
 		aplicarEstilo(btnRemover, "button-danger");
@@ -92,7 +92,7 @@ public class MovimentacaoView implements GenericView {
 		tabelaItemsParaEmprestimo = new TableView<>();
 		tabelaEmprestimosAtuais = new TableView<>();
 
-		configurarTabela(tabelaItemsParaEmprestimo, "Nenhum livro adicionado");
+		configurarTabela(tabelaItemsParaEmprestimo, "Nenhum exemplar adicionado");
 		configurarTabela(tabelaEmprestimosAtuais, "Este leitor não possui empréstimos ativos");
 		configurarColunasTabelaEmprestimosAtuais();
 		configurarColunasTabelaItensParaEmprestimo();

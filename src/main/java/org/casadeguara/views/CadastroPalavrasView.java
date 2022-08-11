@@ -119,7 +119,13 @@ public class CadastroPalavrasView implements GenericView {
 		pesquisarPalavras.setModel(model);
 	}
 
-	public PalavraChave getTermoPesquisado() {
+	public void setPalavraChaveSelecionada(PalavraChave palavraChave) {
+		if (palavraChave != null) {
+			setPalavraChave(palavraChave.getAssunto());
+		}
+	}
+
+	public PalavraChave getPalavraChaveSelecionada() {
 		return pesquisarPalavras.getResult();
 	}
 

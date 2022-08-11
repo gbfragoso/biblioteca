@@ -114,7 +114,13 @@ public class CadastroAutorView implements GenericView {
 		txtNome.setText(nomeAutor);
 	}
 
-	public Autor getTermoPesquisado() {
+	public void setAutorSelecionado(Autor autor) {
+		if (autor != null) {
+			setNomeAutor(autor.getNome());
+		}
+	}
+
+	public Autor getAutorSelecionado() {
 		return pesquisarAutores.getResult();
 	}
 
