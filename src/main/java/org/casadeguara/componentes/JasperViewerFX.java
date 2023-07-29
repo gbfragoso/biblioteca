@@ -1,11 +1,12 @@
 package org.casadeguara.componentes;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.io.File;
+import java.nio.IntBuffer;
 import java.util.List;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -18,14 +19,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelBuffer;
+import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.FileChooser.ExtensionFilter;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -80,14 +83,14 @@ public class JasperViewerFX extends Dialog<Void> {
 	// Scene and button actions
 	// ***********************************************
 	private BorderPane createContentPane() {
-		btnPrint = new Button(null, new ImageView("/images/printer.png"));
-		btnSave = new Button(null, new ImageView("/images/save.png"));
-		btnBackPage = new Button(null, new ImageView("/images/backimg.png"));
-		btnFirstPage = new Button(null, new ImageView("/images/firstimg.png"));
-		btnNextPage = new Button(null, new ImageView("/images/nextimg.png"));
-		btnLastPage = new Button(null, new ImageView("/images/lastimg.png"));
-		btnZoomIn = new Button(null, new ImageView("/images/zoomin.png"));
-		btnZoomOut = new Button(null, new ImageView("/images/zoomout.png"));
+		btnPrint = new Button(null, new ImageView(getClass().getResource("/images/printer.png").toExternalForm()));
+		btnSave = new Button(null, new ImageView(getClass().getResource("/images/save.png").toExternalForm()));
+		btnBackPage = new Button(null, new ImageView(getClass().getResource("/images/backimg.png").toExternalForm()));
+		btnFirstPage = new Button(null, new ImageView(getClass().getResource("/images/firstimg.png").toExternalForm()));
+		btnNextPage = new Button(null, new ImageView(getClass().getResource("/images/nextimg.png").toExternalForm()));
+		btnLastPage = new Button(null, new ImageView(getClass().getResource("/images/lastimg.png").toExternalForm()));
+		btnZoomIn = new Button(null, new ImageView(getClass().getResource("/images/zoomin.png").toExternalForm()));
+		btnZoomOut = new Button(null, new ImageView(getClass().getResource("/images/zoomout.png").toExternalForm()));
 
 		btnPrint.setPrefSize(30, 30);
 		btnSave.setPrefSize(30, 30);
@@ -341,11 +344,18 @@ public class JasperViewerFX extends Dialog<Void> {
 	private Image pageToImage(int pageNumber) {
 		try {
 			float zoom = (float) 1.33;
-			BufferedImage image = (BufferedImage) JasperPrintManager.printPageToImage(jasperPrint, pageNumber - 1,
-					zoom);
-			WritableImage fxImage = new WritableImage(imageHeight, imageWidth);
+			BufferedImage img = (BufferedImage) JasperPrintManager.printPageToImage(jasperPrint, pageNumber - 1, zoom);
 
-			return SwingFXUtils.toFXImage(image, fxImage);
+			BufferedImage newImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+			newImg.createGraphics().drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
+
+			int[] type_int_agrb = ((DataBufferInt) newImg.getRaster().getDataBuffer()).getData();
+			IntBuffer buffer = IntBuffer.wrap(type_int_agrb);
+
+			PixelFormat<IntBuffer> pixelFormat = PixelFormat.getIntArgbPreInstance();
+			PixelBuffer<IntBuffer> pixelBuffer = new PixelBuffer<>(newImg.getWidth(), newImg.getHeight(), buffer,
+					pixelFormat);
+			return new WritableImage(pixelBuffer);
 		} catch (JRException ex) {
 			ex.printStackTrace();
 		}
