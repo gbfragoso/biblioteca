@@ -200,7 +200,7 @@ public class Main extends Application {
 		telaPrincipal.setCenter(movimentacaoView.getRoot());
 
 		scene = new Scene(loginView.getRoot(), 1600, 900);
-		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
 		configurarLogin();
 
 		primaryStage.setScene(scene);
