@@ -1,21 +1,19 @@
 package org.casadeguara.views;
 
+import org.casadeguara.consultas.ConsultaExemplar;
+import org.controlsfx.control.textfield.CustomTextField;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import org.controlsfx.control.textfield.CustomTextField;
-import java.time.LocalDate;
-import org.casadeguara.consultas.Resultado;
-import org.casadeguara.utilitarios.Formatador;
 
 /**
  * Controi a tela de consulta.
@@ -24,19 +22,16 @@ import org.casadeguara.utilitarios.Formatador;
  * @since 2.0
  */
 @SuppressWarnings("unchecked")
-public class ConsultaView implements GenericView {
+public class ConsultaExemplarView implements GenericView {
 
 	private final AnchorPane painelConsulta;
 
 	private ComboBox<String> cbbTipo;
 	private CustomTextField pesquisar;
-	private ObservableList<Resultado> resultadoConsulta;
-	private TableView<Resultado> tabelaConsulta;
+	private ObservableList<ConsultaExemplar> resultadoConsulta;
+	private TableView<ConsultaExemplar> tabelaConsulta;
 
-	private Formatador formatar;
-
-	public ConsultaView() {
-		formatar = new Formatador();
+	public ConsultaExemplarView() {
 		resultadoConsulta = FXCollections.observableArrayList();
 
 		painelConsulta = new AnchorPane();
@@ -58,43 +53,23 @@ public class ConsultaView implements GenericView {
 		tabelaConsulta = new TableView<>();
 		tabelaConsulta.setItems(resultadoConsulta);
 
-		TableColumn<Resultado, String> tabelaConsultaTombo = new TableColumn<>("Tombo");
-		TableColumn<Resultado, Integer> tabelaConsultaExemplar = new TableColumn<>("Ex.");
-		TableColumn<Resultado, String> tabelaConsultaTitulo = new TableColumn<>("Título");
-		TableColumn<Resultado, String> tabelaConsultaStatus = new TableColumn<>("Status");
-		TableColumn<Resultado, String> tabelaConsultaLeitor = new TableColumn<>("Leitor");
-		TableColumn<Resultado, LocalDate> tabelaConsultaDevolucao = new TableColumn<>("Devolução");
+		TableColumn<ConsultaExemplar, String> tabelaConsultaTombo = new TableColumn<>("Tombo");
+		TableColumn<ConsultaExemplar, Integer> tabelaConsultaExemplar = new TableColumn<>("Ex.");
+		TableColumn<ConsultaExemplar, String> tabelaConsultaTitulo = new TableColumn<>("Título");
+		TableColumn<ConsultaExemplar, String> tabelaConsultaStatus = new TableColumn<>("Status");
 
-		configurarTamanhoFixo(tabelaConsultaTombo, tabelaConsulta, 0.10);
-		configurarTamanhoFixo(tabelaConsultaExemplar, tabelaConsulta, 0.05);
-		configurarTamanhoFixo(tabelaConsultaTitulo, tabelaConsulta, 0.30);
-		configurarTamanhoFixo(tabelaConsultaStatus, tabelaConsulta, 0.10);
-		configurarTamanhoFixo(tabelaConsultaDevolucao, tabelaConsulta, 0.10);
-		configurarTamanhoFixo(tabelaConsultaLeitor, tabelaConsulta, 0.30);
+		configurarTamanhoFixo(tabelaConsultaTombo, tabelaConsulta, 0.15);
+		configurarTamanhoFixo(tabelaConsultaExemplar, tabelaConsulta, 0.15);
+		configurarTamanhoFixo(tabelaConsultaTitulo, tabelaConsulta, 0.50);
+		configurarTamanhoFixo(tabelaConsultaStatus, tabelaConsulta, 0.20);
 
 		vincularColunaAtributo(tabelaConsultaTombo, "tombo");
 		vincularColunaAtributo(tabelaConsultaTitulo, "titulo");
 		vincularColunaAtributo(tabelaConsultaExemplar, "numero");
 		vincularColunaAtributo(tabelaConsultaStatus, "status");
-		vincularColunaAtributo(tabelaConsultaDevolucao, "devolucao");
-		vincularColunaAtributo(tabelaConsultaLeitor, "leitor");
 
-		tabelaConsultaDevolucao.setCellFactory(coluna -> {
-			return new TableCell<Resultado, LocalDate>() {
-				@Override
-				protected void updateItem(LocalDate item, boolean empty) {
-					super.updateItem(item, empty);
-					if (item != null && !empty && !item.equals(LocalDate.of(2100, 01, 01))) {
-						setText(formatar.data(item));
-					} else {
-						setText("");
-					}
-				}
-			};
-		});
-
-		tabelaConsulta.getColumns().addAll(tabelaConsultaTombo, tabelaConsultaExemplar, tabelaConsultaTitulo,
-				tabelaConsultaLeitor, tabelaConsultaStatus, tabelaConsultaDevolucao);
+		tabelaConsulta.getColumns().addAll(tabelaConsultaTombo, tabelaConsultaTitulo, tabelaConsultaExemplar,
+				tabelaConsultaStatus);
 
 		AnchorPane.setTopAnchor(titulo, 0.0);
 		AnchorPane.setTopAnchor(lblSelect, 42.0);
@@ -137,7 +112,7 @@ public class ConsultaView implements GenericView {
 		return cbbTipo.getSelectionModel().getSelectedItem();
 	}
 
-	public void setResultadosConsulta(ObservableList<Resultado> resultados) {
+	public void setResultadosConsulta(ObservableList<ConsultaExemplar> resultados) {
 		resultadoConsulta.setAll(resultados);
 	}
 

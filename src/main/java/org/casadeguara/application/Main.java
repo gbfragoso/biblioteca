@@ -17,7 +17,7 @@ import org.casadeguara.controllers.CadastroLeitorController;
 import org.casadeguara.controllers.CadastroLivroController;
 import org.casadeguara.controllers.CadastroPalavrasController;
 import org.casadeguara.controllers.CadastroUsuarioController;
-import org.casadeguara.controllers.ConsultaController;
+import org.casadeguara.controllers.ConsultaExemplarController;
 import org.casadeguara.controllers.GraficoController;
 import org.casadeguara.controllers.ImpressosController;
 import org.casadeguara.controllers.LoginController;
@@ -36,7 +36,7 @@ import org.casadeguara.views.CadastroLeitorView;
 import org.casadeguara.views.CadastroLivroView;
 import org.casadeguara.views.CadastroPalavrasView;
 import org.casadeguara.views.CadastroUsuarioView;
-import org.casadeguara.views.ConsultaView;
+import org.casadeguara.views.ConsultaExemplarView;
 import org.casadeguara.views.GenericView;
 import org.casadeguara.views.GraficoView;
 import org.casadeguara.views.ImpressosView;
@@ -69,14 +69,14 @@ public class Main extends Application {
 	private CadastroLivroView cadastroLivroView;
 	private CadastroPalavrasView cadastroPalavrasView;
 	private CadastroUsuarioView cadastroUsuarioView;
-	private ConsultaView consultaView;
+	private ConsultaExemplarView consultaView;
 	private GraficoView graficoView;
 	private ImpressosView impressosView;
 	private LoginView loginView;
 	private MovimentacaoView movimentacaoView;
 	private ReservaView reservaView;
 
-	private ConsultaController consultaController;
+	private ConsultaExemplarController consultaController;
 	private LoginController loginController;
 
 	private void initViews() {
@@ -87,7 +87,7 @@ public class Main extends Application {
 		cadastroLivroView = new CadastroLivroView();
 		cadastroPalavrasView = new CadastroPalavrasView();
 		cadastroUsuarioView = new CadastroUsuarioView();
-		consultaView = new ConsultaView();
+		consultaView = new ConsultaExemplarView();
 		graficoView = new GraficoView();
 		impressosView = new ImpressosView();
 		loginView = new LoginView();
@@ -106,7 +106,7 @@ public class Main extends Application {
 		new CadastroLivroController(cadastroLivroView);
 		new CadastroPalavrasController(cadastroPalavrasView);
 		new CadastroUsuarioController(cadastroUsuarioView);
-		consultaController = new ConsultaController(consultaView);
+		consultaController = new ConsultaExemplarController(consultaView);
 		new GraficoController(graficoView);
 		new ImpressosController(impressosView);
 		loginController = new LoginController(loginView);

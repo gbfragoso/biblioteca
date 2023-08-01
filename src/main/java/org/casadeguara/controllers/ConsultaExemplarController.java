@@ -1,19 +1,19 @@
 package org.casadeguara.controllers;
 
-import org.casadeguara.consultas.Resultado;
-import org.casadeguara.models.ConsultaModel;
-import org.casadeguara.views.ConsultaView;
+import org.casadeguara.consultas.ConsultaExemplar;
+import org.casadeguara.models.ConsultaExemplarModel;
+import org.casadeguara.views.ConsultaExemplarView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class ConsultaController implements GenericController {
+public class ConsultaExemplarController implements GenericController {
 
-	private ConsultaView view;
-	private ConsultaModel model;
+	private ConsultaExemplarView view;
+	private ConsultaExemplarModel model;
 
-	public ConsultaController(ConsultaView view) {
+	public ConsultaExemplarController(ConsultaExemplarView view) {
 		this.view = view;
-		this.model = new ConsultaModel();
+		this.model = new ConsultaExemplarModel();
 
 		configureView();
 	}
@@ -34,7 +34,7 @@ public class ConsultaController implements GenericController {
 		verificarResultados(pesquisar("Título", termoPesquisado));
 	}
 
-	private void verificarResultados(ObservableList<Resultado> resultados) {
+	private void verificarResultados(ObservableList<ConsultaExemplar> resultados) {
 		if (resultados.isEmpty()) {
 			view.mensagemInformativa("Nenhum livro encontrado para esta pesquisa.");
 		} else {
@@ -42,7 +42,7 @@ public class ConsultaController implements GenericController {
 		}
 	}
 
-	private ObservableList<Resultado> pesquisar(String tipoPesquisa, String termoPesquisado) {
+	private ObservableList<ConsultaExemplar> pesquisar(String tipoPesquisa, String termoPesquisado) {
 		String pesquisaGenerica = "%" + termoPesquisado + "%";
 		switch (tipoPesquisa) {
 		case "Autor":
