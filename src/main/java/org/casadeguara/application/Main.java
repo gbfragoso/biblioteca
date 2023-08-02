@@ -2,13 +2,7 @@ package org.casadeguara.application;
 
 import java.time.LocalDateTime;
 import java.util.Locale;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
+
 import org.casadeguara.alertas.Alerta;
 import org.casadeguara.controllers.AdministracaoController;
 import org.casadeguara.controllers.CadastroAutorController;
@@ -22,14 +16,10 @@ import org.casadeguara.controllers.GraficoController;
 import org.casadeguara.controllers.ImpressosController;
 import org.casadeguara.controllers.LoginController;
 import org.casadeguara.controllers.MovimentacaoController;
-import org.casadeguara.controllers.ReservaController;
 import org.casadeguara.entidades.Usuario;
 import org.casadeguara.utilitarios.Backup;
 import org.casadeguara.utilitarios.Formatador;
 import org.casadeguara.views.AdministracaoView;
-import org.casadeguara.views.MenuLateral;
-import org.casadeguara.views.MenuSuperior;
-import org.casadeguara.views.MuralAvisos;
 import org.casadeguara.views.CadastroAutorView;
 import org.casadeguara.views.CadastroEditoraView;
 import org.casadeguara.views.CadastroLeitorView;
@@ -41,8 +31,18 @@ import org.casadeguara.views.GenericView;
 import org.casadeguara.views.GraficoView;
 import org.casadeguara.views.ImpressosView;
 import org.casadeguara.views.LoginView;
+import org.casadeguara.views.MenuLateral;
+import org.casadeguara.views.MenuSuperior;
 import org.casadeguara.views.MovimentacaoView;
-import org.casadeguara.views.ReservaView;
+import org.casadeguara.views.MuralAvisos;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 /**
  * Essa classe é a classe principal da aplicação.
@@ -74,7 +74,6 @@ public class Main extends Application {
 	private ImpressosView impressosView;
 	private LoginView loginView;
 	private MovimentacaoView movimentacaoView;
-	private ReservaView reservaView;
 
 	private ConsultaExemplarController consultaController;
 	private LoginController loginController;
@@ -95,7 +94,6 @@ public class Main extends Application {
 		menuLateral = new MenuLateral();
 		menuSuperior = new MenuSuperior();
 		muralAvisos = new MuralAvisos();
-		reservaView = new ReservaView();
 	}
 
 	private void initControllers() {
@@ -111,7 +109,6 @@ public class Main extends Application {
 		new ImpressosController(impressosView);
 		loginController = new LoginController(loginView);
 		new MovimentacaoController(movimentacaoView);
-		new ReservaController(reservaView);
 	}
 
 	private void configurarLogin() {
@@ -134,13 +131,11 @@ public class Main extends Application {
 		configurarMargem(graficoView);
 		configurarMargem(movimentacaoView);
 		configurarMargem(impressosView);
-		configurarMargem(reservaView);
 	}
 
 	private void configurarRedirecionamento() {
 		menuLateral.acaoBotaoMovimentacao(event -> redirecionarPara(movimentacaoView));
 		menuLateral.acaoBotaoConsulta(event -> redirecionarPara(consultaView));
-		menuLateral.acaoBotaoReserva(event -> redirecionarPara(reservaView));
 		menuLateral.acaoBotaoCadastroAutor(event -> redirecionarPara(cadastroAutorView));
 		menuLateral.acaoBotaoCadastroEditora(event -> redirecionarPara(cadastroEditoraView));
 		menuLateral.acaoBotaoCadastroLeitor(event -> redirecionarPara(cadastroLeitorView));

@@ -1,10 +1,10 @@
 package org.casadeguara.models;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.casadeguara.alertas.Alerta;
@@ -27,7 +27,7 @@ public class AdicaoExemplarModel {
 	}
 
 	public boolean validar(Acervo exemplar, Leitor leitor) {
-		return obedeceIntervaloEmprestimos(exemplar, leitor) && obedeceFilaEspera(exemplar, leitor);
+		return obedeceIntervaloEmprestimos(exemplar, leitor);
 	}
 
 	private boolean obedeceIntervaloEmprestimos(Acervo exemplar, Leitor leitor) {
@@ -53,26 +53,6 @@ public class AdicaoExemplarModel {
 			}
 		} catch (SQLException e) {
 			logger.fatal("Não foi possível verificar se o empréstimo obdece a restrição", e);
-		}
-		return true;
-	}
-
-	private boolean obedeceFilaEspera(Acervo exemplar, Leitor leitor) {
-		try (Connection con = Conexao.abrir(); CallableStatement cs = con.prepareCall("{call fila_espera(?)}")) {
-
-			cs.setString(1, exemplar.getTitulo());
-
-			try (ResultSet rs = cs.executeQuery()) {
-				if (rs.next()) {
-					String nome = rs.getString(1);
-					if (nome != null && !nome.isEmpty() && !nome.equals(leitor.getNome())) {
-						new Alerta().informacao("Este livro está reservado para o leitor: " + nome);
-						return false;
-					}
-				}
-			}
-		} catch (SQLException e) {
-			logger.fatal("Não foi possível verificar se o empréstimo tem fila de espera", e);
 		}
 		return true;
 	}

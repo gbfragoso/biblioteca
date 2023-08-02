@@ -13,7 +13,6 @@ public class MenuLateral {
 	private VBox menuLateral;
 	private ToggleButton movimentacao;
 	private ToggleButton consulta;
-	private ToggleButton reserva;
 	private ToggleButton cadastroAutor;
 	private ToggleButton cadastroEditora;
 	private ToggleButton cadastroLeitor;
@@ -33,7 +32,6 @@ public class MenuLateral {
 
 		movimentacao = new ToggleButton("Movimentação");
 		consulta = new ToggleButton("Consultas");
-		reserva = new ToggleButton("Reservas");
 		cadastroAutor = new ToggleButton("Autor");
 		cadastroEditora = new ToggleButton("Editora");
 		cadastroLeitor = new ToggleButton("Leitor");
@@ -44,7 +42,6 @@ public class MenuLateral {
 
 		movimentacao.setPrefSize(250, 32);
 		consulta.setPrefSize(250, 32);
-		reserva.setPrefSize(250, 32);
 		cadastroAutor.setPrefSize(250, 32);
 		cadastroEditora.setPrefSize(250, 32);
 		cadastroLeitor.setPrefSize(250, 32);
@@ -55,7 +52,6 @@ public class MenuLateral {
 
 		movimentacao.setAlignment(Pos.BASELINE_LEFT);
 		consulta.setAlignment(Pos.BASELINE_LEFT);
-		reserva.setAlignment(Pos.BASELINE_LEFT);
 		cadastroAutor.setAlignment(Pos.BASELINE_LEFT);
 		cadastroEditora.setAlignment(Pos.BASELINE_LEFT);
 		cadastroLeitor.setAlignment(Pos.BASELINE_LEFT);
@@ -65,11 +61,11 @@ public class MenuLateral {
 		impressos.setAlignment(Pos.BASELINE_LEFT);
 
 		group = new ToggleGroup();
-		group.getToggles().addAll(movimentacao, consulta, reserva, cadastroAutor, cadastroEditora, cadastroLeitor,
+		group.getToggles().addAll(movimentacao, consulta, cadastroAutor, cadastroEditora, cadastroLeitor,
 				cadastroLivro, cadastroPalavra, graficos, impressos);
 		group.selectToggle(movimentacao);
 
-		menuLateral.getChildren().addAll(acervo, movimentacao, consulta, reserva, cadastro, cadastroAutor,
+		menuLateral.getChildren().addAll(acervo, movimentacao, consulta, cadastro, cadastroAutor,
 				cadastroEditora, cadastroLeitor, cadastroLivro, cadastroPalavra, estatisticas, graficos, impressos);
 	}
 
@@ -80,7 +76,6 @@ public class MenuLateral {
 	public void configurarAcesso(boolean[] acesso) {
 		movimentacao.setDisable(!acesso[0]);
 		consulta.setDisable(!acesso[1]);
-		reserva.setDisable(!acesso[2]);
 		cadastroAutor.setDisable(!acesso[3]);
 		cadastroEditora.setDisable(!acesso[4]);
 		cadastroLeitor.setDisable(!acesso[5]);
@@ -128,10 +123,6 @@ public class MenuLateral {
 
 	public void acaoBotaoMovimentacao(EventHandler<ActionEvent> event) {
 		acaoBotao(movimentacao, event);
-	}
-
-	public void acaoBotaoReserva(EventHandler<ActionEvent> event) {
-		acaoBotao(reserva, event);
 	}
 
 	public VBox getRoot() {

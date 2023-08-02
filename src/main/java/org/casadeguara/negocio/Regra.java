@@ -10,7 +10,6 @@ public class Regra {
 
 	private int duracaoEmprestimo;
 	private int duracaoRenovacao;
-	private int duracaoReserva = 7;
 	private int limiteRenovacoes;
 	private int limiteEmprestimosPorPessoa;
 	private int intervaloEntreEmprestimos;
@@ -21,10 +20,6 @@ public class Regra {
 
 	public int getDuracaoRenovacao() {
 		return duracaoRenovacao;
-	}
-
-	public int getDuracaoReserva() {
-		return duracaoReserva;
 	}
 
 	public int getIntervaloEntreEmprestimos() {
