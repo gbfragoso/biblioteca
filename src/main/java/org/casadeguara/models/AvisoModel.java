@@ -1,4 +1,4 @@
-package org.casadeguara.avisos;
+package org.casadeguara.models;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.casadeguara.avisos.Aviso;
 import org.casadeguara.conexao.Conexao;
 
 /**
@@ -15,9 +16,9 @@ import org.casadeguara.conexao.Conexao;
  * 
  * @author Gustavo
  */
-public class AvisoDAO {
+public class AvisoModel {
 
-	private static final Logger logger = LogManager.getLogger(AvisoDAO.class);
+	private static final Logger logger = LogManager.getLogger(AvisoModel.class);
 
 	public void atualizar(int id, String novoTexto) {
 		StringBuilder query = new StringBuilder();

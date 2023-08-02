@@ -3,7 +3,8 @@ package org.casadeguara.views;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.casadeguara.avisos.Aviso;
-import org.casadeguara.avisos.AvisoDAO;
+import org.casadeguara.models.AvisoModel;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -15,7 +16,7 @@ import javafx.scene.layout.AnchorPane;
 public class MuralAvisos {
 
 	private AnchorPane muralAvisos;
-	private AvisoDAO avisoDao;
+	private AvisoModel avisoDao;
 	private List<Aviso> avisos;
 	private Label data1;
 	private Label data2;
@@ -25,7 +26,7 @@ public class MuralAvisos {
 	private TextArea aviso3;
 
 	public MuralAvisos() {
-		this.avisoDao = new AvisoDAO();
+		this.avisoDao = new AvisoModel();
 
 		muralAvisos = new AnchorPane();
 		muralAvisos.setPrefWidth(350);
