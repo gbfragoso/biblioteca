@@ -1,4 +1,4 @@
-package org.casadeguara.avisos;
+package org.casadeguara.entidades;
 
 import java.time.LocalDate;
 

@@ -12,7 +12,6 @@ import org.casadeguara.controllers.CadastroLivroController;
 import org.casadeguara.controllers.CadastroPalavrasController;
 import org.casadeguara.controllers.CadastroUsuarioController;
 import org.casadeguara.controllers.ConsultaExemplarController;
-import org.casadeguara.controllers.GraficoController;
 import org.casadeguara.controllers.ImpressosController;
 import org.casadeguara.controllers.LoginController;
 import org.casadeguara.controllers.MovimentacaoController;
@@ -28,7 +27,6 @@ import org.casadeguara.views.CadastroPalavrasView;
 import org.casadeguara.views.CadastroUsuarioView;
 import org.casadeguara.views.ConsultaExemplarView;
 import org.casadeguara.views.GenericView;
-import org.casadeguara.views.GraficoView;
 import org.casadeguara.views.ImpressosView;
 import org.casadeguara.views.LoginView;
 import org.casadeguara.views.MenuLateral;
@@ -70,7 +68,6 @@ public class Main extends Application {
 	private CadastroPalavrasView cadastroPalavrasView;
 	private CadastroUsuarioView cadastroUsuarioView;
 	private ConsultaExemplarView consultaView;
-	private GraficoView graficoView;
 	private ImpressosView impressosView;
 	private LoginView loginView;
 	private MovimentacaoView movimentacaoView;
@@ -87,7 +84,6 @@ public class Main extends Application {
 		cadastroPalavrasView = new CadastroPalavrasView();
 		cadastroUsuarioView = new CadastroUsuarioView();
 		consultaView = new ConsultaExemplarView();
-		graficoView = new GraficoView();
 		impressosView = new ImpressosView();
 		loginView = new LoginView();
 		movimentacaoView = new MovimentacaoView();
@@ -105,7 +101,6 @@ public class Main extends Application {
 		new CadastroPalavrasController(cadastroPalavrasView);
 		new CadastroUsuarioController(cadastroUsuarioView);
 		consultaController = new ConsultaExemplarController(consultaView);
-		new GraficoController(graficoView);
 		new ImpressosController(impressosView);
 		loginController = new LoginController(loginView);
 		new MovimentacaoController(movimentacaoView);
@@ -128,7 +123,6 @@ public class Main extends Application {
 		configurarMargem(cadastroPalavrasView);
 		configurarMargem(cadastroUsuarioView);
 		configurarMargem(consultaView);
-		configurarMargem(graficoView);
 		configurarMargem(movimentacaoView);
 		configurarMargem(impressosView);
 	}
@@ -141,7 +135,6 @@ public class Main extends Application {
 		menuLateral.acaoBotaoCadastroLeitor(event -> redirecionarPara(cadastroLeitorView));
 		menuLateral.acaoBotaoCadastroLivro(event -> redirecionarPara(cadastroLivroView));
 		menuLateral.acaoBotaoCadastroPalavras(event -> redirecionarPara(cadastroPalavrasView));
-		menuLateral.acaoBotaoGraficos(event -> redirecionarPara(graficoView));
 		menuLateral.acaoBotaoImpressos(event -> redirecionarPara(impressosView));
 		menuSuperior.acaoMenuAdministracao(event -> redirecionarPara(administracaoView));
 		menuSuperior.acaoMenuCadastroUsuario(event -> redirecionarPara(cadastroUsuarioView));
