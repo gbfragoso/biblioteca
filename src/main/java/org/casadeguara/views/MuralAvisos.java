@@ -2,7 +2,8 @@ package org.casadeguara.views;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import org.casadeguara.avisos.Aviso;
+
+import org.casadeguara.entidades.Aviso;
 import org.casadeguara.models.AvisoModel;
 
 import javafx.scene.control.Button;

@@ -18,8 +18,7 @@ public class MenuLateral {
 	private ToggleButton cadastroLeitor;
 	private ToggleButton cadastroLivro;
 	private ToggleButton cadastroPalavra;
-	private ToggleButton graficos;
-	private ToggleButton impressos;
+	private ToggleButton relatorios;
 	private ToggleGroup group;
 
 	public MenuLateral() {
@@ -37,8 +36,7 @@ public class MenuLateral {
 		cadastroLeitor = new ToggleButton("Leitor");
 		cadastroLivro = new ToggleButton("Livro");
 		cadastroPalavra = new ToggleButton("Palavra-chave");
-		graficos = new ToggleButton("Gráficos");
-		impressos = new ToggleButton("Impressos");
+		relatorios = new ToggleButton("Relatórios");
 
 		movimentacao.setPrefSize(250, 32);
 		consulta.setPrefSize(250, 32);
@@ -47,8 +45,7 @@ public class MenuLateral {
 		cadastroLeitor.setPrefSize(250, 32);
 		cadastroLivro.setPrefSize(250, 32);
 		cadastroPalavra.setPrefSize(250, 32);
-		graficos.setPrefSize(250, 32);
-		impressos.setPrefSize(250, 32);
+		relatorios.setPrefSize(250, 32);
 
 		movimentacao.setAlignment(Pos.BASELINE_LEFT);
 		consulta.setAlignment(Pos.BASELINE_LEFT);
@@ -57,16 +54,15 @@ public class MenuLateral {
 		cadastroLeitor.setAlignment(Pos.BASELINE_LEFT);
 		cadastroLivro.setAlignment(Pos.BASELINE_LEFT);
 		cadastroPalavra.setAlignment(Pos.BASELINE_LEFT);
-		graficos.setAlignment(Pos.BASELINE_LEFT);
-		impressos.setAlignment(Pos.BASELINE_LEFT);
+		relatorios.setAlignment(Pos.BASELINE_LEFT);
 
 		group = new ToggleGroup();
 		group.getToggles().addAll(movimentacao, consulta, cadastroAutor, cadastroEditora, cadastroLeitor,
-				cadastroLivro, cadastroPalavra, graficos, impressos);
+				cadastroLivro, cadastroPalavra, relatorios);
 		group.selectToggle(movimentacao);
 
 		menuLateral.getChildren().addAll(acervo, movimentacao, consulta, cadastro, cadastroAutor,
-				cadastroEditora, cadastroLeitor, cadastroLivro, cadastroPalavra, estatisticas, graficos, impressos);
+				cadastroEditora, cadastroLeitor, cadastroLivro, cadastroPalavra, estatisticas, relatorios);
 	}
 
 	public void destacarMenuConsulta() {
@@ -81,8 +77,7 @@ public class MenuLateral {
 		cadastroLeitor.setDisable(!acesso[5]);
 		cadastroLivro.setDisable(!acesso[6]);
 		cadastroPalavra.setDisable(!acesso[7]);
-		graficos.setDisable(!acesso[8]);
-		impressos.setDisable(!acesso[9]);
+		relatorios.setDisable(!acesso[9]);
 	}
 
 	private void acaoBotao(ToggleButton button, EventHandler<ActionEvent> event) {
@@ -113,12 +108,8 @@ public class MenuLateral {
 		acaoBotao(consulta, event);
 	}
 
-	public void acaoBotaoGraficos(EventHandler<ActionEvent> event) {
-		acaoBotao(graficos, event);
-	}
-
 	public void acaoBotaoImpressos(EventHandler<ActionEvent> event) {
-		acaoBotao(impressos, event);
+		acaoBotao(relatorios, event);
 	}
 
 	public void acaoBotaoMovimentacao(EventHandler<ActionEvent> event) {

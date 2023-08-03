@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.casadeguara.avisos.Aviso;
 import org.casadeguara.conexao.Conexao;
+import org.casadeguara.entidades.Aviso;
 
 /**
  * Objeto que contém as consultas relacionadas aos avisos.
