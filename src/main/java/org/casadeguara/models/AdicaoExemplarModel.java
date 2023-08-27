@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.casadeguara.alertas.Alerta;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.entidades.Leitor;
@@ -19,7 +17,6 @@ import org.casadeguara.movimentacao.Acervo;
  */
 public class AdicaoExemplarModel {
 
-	private static final Logger logger = LogManager.getLogger(AdicaoExemplarModel.class);
 	private int intervaloEntreEmprestimos;
 
 	public AdicaoExemplarModel(int intervaloEntreEmprestimos) {
@@ -52,7 +49,7 @@ public class AdicaoExemplarModel {
 				}
 			}
 		} catch (SQLException e) {
-			logger.fatal("Não foi possível verificar se o empréstimo obdece a restrição", e);
+			new Alerta().erro("Não foi possível verificar se o empréstimo obdece a restrição");
 		}
 		return true;
 	}

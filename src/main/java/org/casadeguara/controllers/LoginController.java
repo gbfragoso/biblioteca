@@ -1,6 +1,6 @@
 package org.casadeguara.controllers;
 
-import org.casadeguara.application.Main;
+import org.casadeguara.application.App;
 import org.casadeguara.entidades.Usuario;
 import org.casadeguara.models.LoginModel;
 import org.casadeguara.views.LoginView;
@@ -40,7 +40,7 @@ public class LoginController implements GenericController {
 			String nome = usuario.getNome();
 			String tipo = usuario.getTipo();
 
-			Usuario usuarioLogado = Main.getUsuario();
+			Usuario usuarioLogado = App.getUsuario();
 			usuarioLogado.setId(id);
 			usuarioLogado.setNome(nome);
 			usuarioLogado.setTipo(tipo);

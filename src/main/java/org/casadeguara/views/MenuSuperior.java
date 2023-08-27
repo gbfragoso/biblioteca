@@ -1,6 +1,6 @@
 package org.casadeguara.views;
 
-import org.casadeguara.application.Main;
+import org.casadeguara.application.App;
 import org.casadeguara.models.UsuarioModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -70,7 +70,7 @@ public class MenuSuperior {
 				String s2 = senha2.getText();
 
 				if (s1.equals(s2)) {
-					new UsuarioModel().trocarSenha(s1, Main.getUsuario().getId());
+					new UsuarioModel().trocarSenha(s1, App.getUsuario().getId());
 				}
 			}
 		});

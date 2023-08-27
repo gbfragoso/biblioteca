@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.casadeguara.alertas.Alerta;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.entidades.Autor;
 
@@ -19,14 +19,11 @@ import javafx.collections.ObservableList;
  */
 public class AutorModel implements GenericModel<Autor> {
 
-	private static final Logger logger = LogManager.getLogger(AutorModel.class);
-
 	@Override
 	public int atualizar(Autor autor) {
 		String nome = autor.getNome();
 		String query = "update autor set nome = ? where idautor = ?";
 
-		logger.trace("Iniciando a atualização do autor:" + nome);
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query)) {
 
 			ps.setString(1, nome);
@@ -35,7 +32,7 @@ public class AutorModel implements GenericModel<Autor> {
 
 			return 0;
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível atualizar o autor", ex);
+			new Alerta().erro("Não foi possível atualizar o autor");
 		}
 		return 1;
 	}
@@ -45,14 +42,13 @@ public class AutorModel implements GenericModel<Autor> {
 		String nome = novoAutor.getNome();
 		String query = "insert into autor (nome, data_cadastro) values (?, current_date)";
 
-		logger.trace("Iniciando o cadastro do autor: " + nome);
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query)) {
-
 			ps.setString(1, nome);
 			ps.executeUpdate();
+			
 			return 0;
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível cadastrar o autor", ex);
+			new Alerta().erro("Não foi possível cadastrar o autor");
 		}
 		return 1;
 	}
@@ -62,9 +58,7 @@ public class AutorModel implements GenericModel<Autor> {
 		String query = "select idautor, nome from autor where unaccent(nome) like unaccent(?) limit ?";
 		ObservableList<Autor> autores = FXCollections.observableArrayList();
 
-		logger.trace("Iniciando a consulta do autor: " + nome);
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query)) {
-
 			ps.setString(1, "%" + nome + "%");
 			ps.setInt(2, resultados);
 
@@ -74,9 +68,8 @@ public class AutorModel implements GenericModel<Autor> {
 				}
 			}
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível consultar o autor", ex);
+			new Alerta().erro("Não foi possível consultar o autor");
 		}
 		return autores;
 	}
-
 }

@@ -48,7 +48,7 @@ import javafx.stage.Stage;
  * @author Gustavo
  * @version 4.0
  */
-public class Main extends Application {
+public class App extends Application {
 
 	private static Usuario usuarioLogado = new Usuario();
 

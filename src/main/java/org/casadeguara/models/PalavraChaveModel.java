@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.casadeguara.alertas.Alerta;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.entidades.PalavraChave;
 
@@ -21,23 +21,19 @@ import javafx.collections.ObservableList;
  */
 public class PalavraChaveModel implements GenericModel<PalavraChave> {
 
-	private static final Logger logger = LogManager.getLogger();
-
 	@Override
 	public int atualizar(PalavraChave chave) {
 		String query = "update keyword set chave = ? where idkeyword = ?";
 		String assunto = chave.getAssunto();
 
-		logger.trace("Iniciando a atualização da palavra-chave: " + assunto);
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query)) {
-
 			ps.setString(1, assunto);
 			ps.setInt(2, chave.getId());
 			ps.executeUpdate();
 
 			return 0;
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível atualizar a palavra-chave");
+			new Alerta().erro("Não foi possível atualizar a palavra-chave");
 		}
 		return 1;
 	}
@@ -47,7 +43,6 @@ public class PalavraChaveModel implements GenericModel<PalavraChave> {
 		String query = "insert into keyword (chave) values (?)";
 		String assunto = palavraChave.getAssunto();
 
-		logger.trace("Iniciando o cadastro da palavra-chave:", assunto);
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query)) {
 
 			ps.setString(1, assunto);
@@ -55,7 +50,7 @@ public class PalavraChaveModel implements GenericModel<PalavraChave> {
 
 			return 0;
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível cadastrar a palavra-chave", ex);
+			new Alerta().erro("Não foi possível cadastrar a palavra-chave");
 		}
 		return 1;
 	}
@@ -65,7 +60,6 @@ public class PalavraChaveModel implements GenericModel<PalavraChave> {
 		String query = "select idkeyword, chave from keyword where unaccent(chave) like unaccent(?) limit ?";
 		ObservableList<PalavraChave> palavras = FXCollections.observableArrayList();
 
-		logger.trace("Iniciando a consulta da palavra-chave: " + chave);
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query)) {
 
 			ps.setString(1, "%" + chave + "%");
@@ -77,7 +71,7 @@ public class PalavraChaveModel implements GenericModel<PalavraChave> {
 				}
 			}
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível consultar a palavra-chave", ex);
+			new Alerta().erro("Não foi possível consultar a palavra-chave");
 		}
 		return palavras;
 	}

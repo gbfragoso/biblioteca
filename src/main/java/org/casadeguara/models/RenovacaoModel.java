@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.casadeguara.alertas.Alerta;
-import org.casadeguara.application.Main;
+import org.casadeguara.application.App;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.movimentacao.Emprestimo;
 
@@ -56,7 +56,7 @@ public class RenovacaoModel {
 			cs.executeBatch();
 			return 0;
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível renovar os empréstimos");
+			new Alerta().erro("Não foi possível renovar os empréstimos");
 		}
 		return 1;
 	}
@@ -88,7 +88,7 @@ public class RenovacaoModel {
 				}
 			}
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível consultar as renovações");
+			new Alerta().erro("Não foi possível consultar as renovações");
 		}
 
 		return renovacoes;
@@ -110,7 +110,7 @@ public class RenovacaoModel {
 		mensagem.append(quantidadeRenovacoes);
 		mensagem.append(" vez(es).");
 
-		String tipoUsuario = Main.getUsuario().getTipo();
+		String tipoUsuario = App.getUsuario().getTipo();
 		if (tipoUsuario.equals("Comum")) {
 			mensagem.append("\nPara prosseguir com esta operação digite a chave-mestra:");
 			return new Alerta().autorizacao(mensagem.toString());
