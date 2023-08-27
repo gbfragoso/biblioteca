@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.casadeguara.alertas.Alerta;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.negocio.Regra;
 
@@ -17,15 +17,12 @@ import org.casadeguara.negocio.Regra;
  */
 public class RegraModel {
 
-	private static final Logger logger = LogManager.getLogger(RegraModel.class);
-
 	public Regra consultarRegrasNegocio() {
 		StringBuilder query = new StringBuilder();
 		query.append("select duracao_emprestimo, duracao_renovacao, ");
 		query.append("limite_emprestimo, limite_renovacao, intervalo_emprestimo ");
 		query.append("from configuracao");
 
-		logger.trace("Iniciando a consulta das regras de negócio da aplicação");
 		try (Connection con = Conexao.abrir();
 				PreparedStatement ps = con.prepareStatement(query.toString());
 				ResultSet rs = ps.executeQuery()) {
@@ -41,15 +38,13 @@ public class RegraModel {
 				return regra;
 			}
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível carregar as regras de negócio", ex);
+			new Alerta().erro("Não foi possível carregar as regras de negócio");
 		}
 
 		return null;
 	}
 
 	public int atualizarRegrasNegocio(List<Integer> regras) {
-		logger.trace("Iniciando atualização das regras de negócio");
-
 		StringBuilder query = new StringBuilder();
 		query.append("update configuracao set duracao_emprestimo = ?, ");
 		query.append("duracao_renovacao = ?, limite_emprestimo = ?, ");
@@ -57,7 +52,6 @@ public class RegraModel {
 		query.append("where idconf = 1");
 
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
-
 			ps.setInt(1, regras.get(0));
 			ps.setInt(2, regras.get(1));
 			ps.setInt(3, regras.get(2));
@@ -67,7 +61,7 @@ public class RegraModel {
 			ps.executeUpdate();
 			return 0;
 		} catch (SQLException ex) {
-			logger.fatal("Erro ao atualizar as regras de negócio.", ex);
+			new Alerta().erro("Erro ao atualizar as regras de negócio.");
 		}
 		return 1;
 	}

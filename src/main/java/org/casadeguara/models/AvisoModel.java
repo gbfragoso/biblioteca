@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.casadeguara.alertas.Alerta;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.entidades.Aviso;
 
@@ -18,31 +18,28 @@ import org.casadeguara.entidades.Aviso;
  */
 public class AvisoModel {
 
-	private static final Logger logger = LogManager.getLogger(AvisoModel.class);
-
 	public void atualizar(int id, String novoTexto) {
 		StringBuilder query = new StringBuilder();
 		query.append("update aviso set texto = ? where idaviso = ?");
 
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
-
 			ps.setString(1, novoTexto);
 			ps.setInt(2, id);
 			ps.executeUpdate();
-
 		} catch (SQLException ex) {
-			logger.fatal("Ocorreu ao alterar o aviso.", ex);
+			new Alerta().erro("Ocorreu ao alterar o aviso.");
 		}
 	}
 
 	public void cadastrar(String texto) {
 		StringBuilder query = new StringBuilder();
 		query.append("insert into aviso(texto) values (?);");
+
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
 			ps.setString(1, texto);
 			ps.executeUpdate();
 		} catch (SQLException ex) {
-			logger.fatal("Ocorreu ao adicionar o aviso.", ex);
+			new Alerta().erro("Ocorreu ao adicionar o aviso.");
 		}
 	}
 
@@ -60,7 +57,7 @@ public class AvisoModel {
 				avisos.add(new Aviso(rs.getInt(1), rs.getDate(2).toLocalDate(), rs.getString(3)));
 			}
 		} catch (SQLException ex) {
-			logger.fatal("Ocorreu ao consultar os avisos.", ex);
+			new Alerta().erro("Ocorreu ao consultar os avisos.");
 		}
 		return avisos;
 	}

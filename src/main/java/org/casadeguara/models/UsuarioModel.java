@@ -8,9 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.casadeguara.application.Main;
+
+import org.casadeguara.alertas.Alerta;
+import org.casadeguara.application.App;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.entidades.Usuario;
 import org.casadeguara.utilitarios.Criptografia;
@@ -20,13 +20,10 @@ import javafx.collections.ObservableList;
 
 public class UsuarioModel implements GenericModel<Usuario> {
 
-	private static final Logger logger = LogManager.getLogger(UsuarioModel.class);
-
 	@Override
 	public int atualizar(Usuario usuario) {
 		String nome = usuario.getNome();
 
-		logger.trace("Iniciando a atualização do usuário: " + nome);
 		try (Connection con = Conexao.abrir();
 				CallableStatement cs = con.prepareCall("{call atualizar_usuario(?,?,?,?,?)}")) {
 
@@ -39,7 +36,7 @@ public class UsuarioModel implements GenericModel<Usuario> {
 
 			return 0;
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível atualizar o usuário", ex);
+			new Alerta().erro("Não foi possível atualizar o usuário");
 		}
 		return 1;
 	}
@@ -48,7 +45,6 @@ public class UsuarioModel implements GenericModel<Usuario> {
 	public int cadastrar(Usuario novoUsuario) {
 		String nome = novoUsuario.getNome();
 
-		logger.trace("Iniciando o cadastro do usuário: " + nome);
 		try (Connection con = Conexao.abrir();
 				CallableStatement cs = con.prepareCall("{call cadastrar_usuario(?,?,?,?,?)}")) {
 
@@ -61,16 +57,14 @@ public class UsuarioModel implements GenericModel<Usuario> {
 
 			return 0;
 		} catch (SQLException | NoSuchAlgorithmException ex) {
-			logger.fatal("Não foi possível cadastrar o usuário", ex);
+			new Alerta().erro("Não foi possível cadastrar o usuário");
 		}
 		return 1;
 	}
 
 	@Override
 	public ObservableList<Usuario> consultar(String nome, int resultados) {
-		logger.trace("Iniciando a consulta do usuário " + nome);
-
-		Usuario usuario = Main.getUsuario();
+		Usuario usuario = App.getUsuario();
 		String tipo = usuario.getTipo();
 		int id = usuario.getId();
 
@@ -102,7 +96,7 @@ public class UsuarioModel implements GenericModel<Usuario> {
 				}
 			}
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível consultar as informações do usuário", ex);
+			new Alerta().erro("Não foi possível consultar as informações do usuário");
 		}
 		return usuarios;
 	}
@@ -111,9 +105,7 @@ public class UsuarioModel implements GenericModel<Usuario> {
 		String query = "select acesso from usuario_has_acesso where usuario = ?";
 		List<Integer> acessos = new ArrayList<>();
 
-		logger.trace("Iniciando a consulta de acessos do usuário com id: " + idusuario);
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query)) {
-
 			ps.setInt(1, idusuario);
 
 			try (ResultSet rs = ps.executeQuery()) {
@@ -122,7 +114,7 @@ public class UsuarioModel implements GenericModel<Usuario> {
 				}
 			}
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível consultar os acessos do usuário", ex);
+			new Alerta().erro("Não foi possível consultar os acessos do usuário");
 		}
 		return acessos;
 	}
@@ -137,7 +129,7 @@ public class UsuarioModel implements GenericModel<Usuario> {
 
 			return 0;
 		} catch (SQLException | NoSuchAlgorithmException ex) {
-			logger.fatal("Não foi possível trocar a senha do usuário");
+			new Alerta().erro("Não foi possível trocar a senha do usuário");
 		}
 		return 1;
 	}

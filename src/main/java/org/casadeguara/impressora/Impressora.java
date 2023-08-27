@@ -5,13 +5,14 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.casadeguara.alertas.Alerta;
 import org.casadeguara.componentes.JasperViewerFX;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.entidades.Leitor;
 import org.casadeguara.etiquetas.Etiqueta;
 import org.casadeguara.movimentacao.Acervo;
+
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -26,8 +27,6 @@ import net.sf.jasperreports.engine.util.JRLoader;
  * @since 3.0
  */
 public class Impressora {
-
-	private static final Logger logger = LogManager.getLogger(Impressora.class);
 
 	/**
 	 * Gera um PDF com etiquetas, contendo o tombo do livro e número do exemplar.
@@ -118,7 +117,7 @@ public class Impressora {
 			JasperPrint jprint = JasperFillManager.fillReport(jreport, params, con);
 			new JasperViewerFX().viewReport(titulo, jprint);
 		} catch (JRException | SQLException ex) {
-			logger.fatal("Erro ao visualizar este relatório", ex);
+			new Alerta().erro("Erro ao visualizar este relatório");
 		}
 	}
 
@@ -129,7 +128,7 @@ public class Impressora {
 			JasperPrint jprint = JasperFillManager.fillReport(jreport, params, source);
 			new JasperViewerFX().viewReport(titulo, jprint);
 		} catch (JRException ex) {
-			logger.fatal("Erro ao visualizar este relatório", ex);
+			new Alerta().erro("Erro ao visualizar este relatório");
 		}
 	}
 }

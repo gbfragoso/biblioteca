@@ -5,8 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.casadeguara.alertas.Alerta;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.consultas.ConsultaExemplar;
 
@@ -20,8 +19,6 @@ import javafx.collections.ObservableList;
  * @author Gustavo
  */
 public class ConsultaExemplarModel {
-
-	private static final Logger logger = LogManager.getLogger(ConsultaExemplarModel.class);
 
 	public ObservableList<ConsultaExemplar> porAutor(String autor) {
 
@@ -96,7 +93,7 @@ public class ConsultaExemplarModel {
 				}
 			}
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível concluir a consulta", ex);
+			new Alerta().erro("Não foi possível concluir a consulta");
 		}
 		return resultados;
 	}

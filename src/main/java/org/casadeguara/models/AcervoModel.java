@@ -5,8 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.casadeguara.alertas.Alerta;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.movimentacao.Acervo;
 
@@ -14,8 +13,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class AcervoModel implements GenericModel<Acervo> {
-
-	private static final Logger logger = LogManager.getLogger(AcervoModel.class);
 
 	@Override
 	public int atualizar(Acervo t) {
@@ -55,7 +52,7 @@ public class AcervoModel implements GenericModel<Acervo> {
 				}
 			}
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível consultar a lista de exemplares");
+			new Alerta().erro("Não foi possível consultar a lista de exemplares");
 		}
 		return lista;
 	}

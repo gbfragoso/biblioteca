@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.casadeguara.alertas.Alerta;
 import org.casadeguara.builder.LeitorBuilder;
 import org.casadeguara.conexao.Conexao;
 import org.casadeguara.entidades.Leitor;
@@ -19,8 +19,6 @@ import javafx.collections.ObservableList;
  * @author Gustavo
  */
 public class LeitorModel implements GenericModel<Leitor> {
-
-	private static final Logger logger = LogManager.getLogger(LeitorModel.class);
 
 	private void incluirParametros(PreparedStatement ps, Leitor leitor) throws SQLException {
 		ps.setString(1, leitor.getNome());
@@ -42,8 +40,6 @@ public class LeitorModel implements GenericModel<Leitor> {
 
 	@Override
 	public int atualizar(Leitor leitor) {
-		String nome = leitor.getNome();
-
 		StringBuilder query = new StringBuilder();
 		query.append("update leitor set ");
 		query.append("nome = ?, email = ?, telefone = ?, ");
@@ -53,24 +49,20 @@ public class LeitorModel implements GenericModel<Leitor> {
 		query.append("status = ?, trab = ?, incompleto = ? ");
 		query.append("where idleitor = ?");
 
-		logger.trace("Iniciando a atualização do leitor: " + nome);
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
-
 			incluirParametros(ps, leitor);
 			ps.setInt(16, leitor.getId());
 			ps.executeUpdate();
 
 			return 0;
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível atualizar o leitor", ex);
+			new Alerta().erro("Não foi possível atualizar o leitor");
 		}
 		return 1;
 	}
 
 	@Override
 	public int cadastrar(Leitor leitor) {
-		String nome = leitor.getNome();
-
 		StringBuilder query = new StringBuilder();
 		query.append("insert into leitor(");
 		query.append("nome, email, telefone, celular, logradouro, ");
@@ -78,15 +70,13 @@ public class LeitorModel implements GenericModel<Leitor> {
 		query.append("rg, cpf, status, trab, incompleto, data_cadastro) ");
 		query.append("values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, current_date)");
 
-		logger.trace("Iniciando cadastro do leitor:" + nome);
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
-
 			incluirParametros(ps, leitor);
 			ps.executeUpdate();
 
 			return 0;
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível cadastrar o leitor", ex);
+			new Alerta().erro("Não foi possível cadastrar o leitor");
 		}
 		return 1;
 	}
@@ -102,9 +92,7 @@ public class LeitorModel implements GenericModel<Leitor> {
 
 		ObservableList<Leitor> leitores = FXCollections.observableArrayList();
 
-		logger.trace("Iniciando consulta do leitor: " + nome);
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
-
 			ps.setString(1, "%" + nome + "%");
 			ps.setInt(2, resultados);
 
@@ -119,7 +107,7 @@ public class LeitorModel implements GenericModel<Leitor> {
 				}
 			}
 		} catch (SQLException ex) {
-			logger.fatal("Não foi possível consultar o leitor", ex);
+			new Alerta().erro("Não foi possível consultar o leitor");
 		}
 		return leitores;
 	}
