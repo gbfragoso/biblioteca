@@ -12,7 +12,6 @@ import org.casadeguara.controllers.CadastroLivroController;
 import org.casadeguara.controllers.CadastroPalavrasController;
 import org.casadeguara.controllers.CadastroUsuarioController;
 import org.casadeguara.controllers.ConsultaExemplarController;
-import org.casadeguara.controllers.ImpressosController;
 import org.casadeguara.controllers.LoginController;
 import org.casadeguara.controllers.MovimentacaoController;
 import org.casadeguara.entidades.Usuario;
@@ -27,7 +26,6 @@ import org.casadeguara.views.CadastroPalavrasView;
 import org.casadeguara.views.CadastroUsuarioView;
 import org.casadeguara.views.ConsultaExemplarView;
 import org.casadeguara.views.GenericView;
-import org.casadeguara.views.ImpressosView;
 import org.casadeguara.views.LoginView;
 import org.casadeguara.views.MenuLateral;
 import org.casadeguara.views.MenuSuperior;
@@ -68,7 +66,6 @@ public class App extends Application {
 	private CadastroPalavrasView cadastroPalavrasView;
 	private CadastroUsuarioView cadastroUsuarioView;
 	private ConsultaExemplarView consultaView;
-	private ImpressosView impressosView;
 	private LoginView loginView;
 	private MovimentacaoView movimentacaoView;
 
@@ -84,7 +81,6 @@ public class App extends Application {
 		cadastroPalavrasView = new CadastroPalavrasView();
 		cadastroUsuarioView = new CadastroUsuarioView();
 		consultaView = new ConsultaExemplarView();
-		impressosView = new ImpressosView();
 		loginView = new LoginView();
 		movimentacaoView = new MovimentacaoView();
 		menuLateral = new MenuLateral();
@@ -101,7 +97,6 @@ public class App extends Application {
 		new CadastroPalavrasController(cadastroPalavrasView);
 		new CadastroUsuarioController(cadastroUsuarioView);
 		consultaController = new ConsultaExemplarController(consultaView);
-		new ImpressosController(impressosView);
 		loginController = new LoginController(loginView);
 		new MovimentacaoController(movimentacaoView);
 	}
@@ -124,7 +119,6 @@ public class App extends Application {
 		configurarMargem(cadastroUsuarioView);
 		configurarMargem(consultaView);
 		configurarMargem(movimentacaoView);
-		configurarMargem(impressosView);
 	}
 
 	private void configurarRedirecionamento() {
@@ -135,7 +129,6 @@ public class App extends Application {
 		menuLateral.acaoBotaoCadastroLeitor(event -> redirecionarPara(cadastroLeitorView));
 		menuLateral.acaoBotaoCadastroLivro(event -> redirecionarPara(cadastroLivroView));
 		menuLateral.acaoBotaoCadastroPalavras(event -> redirecionarPara(cadastroPalavrasView));
-		menuLateral.acaoBotaoImpressos(event -> redirecionarPara(impressosView));
 		menuSuperior.acaoMenuAdministracao(event -> redirecionarPara(administracaoView));
 		menuSuperior.acaoMenuCadastroUsuario(event -> redirecionarPara(cadastroUsuarioView));
 	}

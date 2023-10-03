@@ -20,6 +20,13 @@ public class AdministracaoView implements GenericView {
 	private Button btnRecuperar;
 	private Button btnAlterarEmprestimo;
 	private Button btnAlterarChaveMestra;
+	private Button btnEmprestimo;
+	private Button btnInventario;
+	private Button btnHistorico;
+	private Button btnLeitor;
+	private Button btnEmprestimoData;
+	private Button btnEmprestimoLivro;
+	private Button btnEmprestimosAtrasados;
 
 	public AdministracaoView() {
 		painelAdmin = new TilePane();
@@ -33,6 +40,13 @@ public class AdministracaoView implements GenericView {
 		btnEtiqueta = new Button("Gerador de etiquetas");
 		btnAlterarEmprestimo = new Button("Alterar empréstimo");
 		btnRecuperar = new Button("Recuperar empréstimo");
+		btnEmprestimo = new Button("Empréstimos");
+		btnEmprestimoData = new Button("Empréstimos por Data");
+		btnEmprestimoLivro = new Button("Empréstimos por Livro");
+		btnEmprestimosAtrasados = new Button("Empréstimos Atrasados");
+		btnHistorico = new Button("Histórico do leitor");
+		btnInventario = new Button("Inventário");
+		btnLeitor = new Button("Relação de Leitores");
 
 		configurarTamanhoBotao(btnAlterarChaveMestra);
 		configurarTamanhoBotao(btnConfiguracao);
@@ -40,9 +54,17 @@ public class AdministracaoView implements GenericView {
 		configurarTamanhoBotao(btnEtiqueta);
 		configurarTamanhoBotao(btnRecuperar);
 		configurarTamanhoBotao(btnAlterarEmprestimo);
+		configurarTamanhoBotao(btnEmprestimo);
+		configurarTamanhoBotao(btnEmprestimoData);
+		configurarTamanhoBotao(btnEmprestimoLivro);
+		configurarTamanhoBotao(btnEmprestimosAtrasados);
+		configurarTamanhoBotao(btnHistorico);
+		configurarTamanhoBotao(btnInventario);
+		configurarTamanhoBotao(btnLeitor);
 
 		painelAdmin.getChildren().addAll(btnAlterarChaveMestra, btnConfiguracao, btnCobrancas, btnEtiqueta,
-				btnAlterarEmprestimo, btnRecuperar);
+				btnAlterarEmprestimo, btnRecuperar, btnEmprestimo, btnEmprestimoData, btnEmprestimoLivro,
+				btnEmprestimosAtrasados, btnHistorico, btnInventario, btnLeitor);
 	}
 
 	@Override
@@ -72,6 +94,34 @@ public class AdministracaoView implements GenericView {
 
 	public void acaoBotaoRecuperarEmprestimo(EventHandler<ActionEvent> event) {
 		btnRecuperar.setOnAction(event);
+	}
+	
+	public void acaoBtnEmprestimo(EventHandler<ActionEvent> event) {
+		btnEmprestimo.setOnAction(event);
+	}
+
+	public void acaoBtnEmprestimoPorData(EventHandler<ActionEvent> event) {
+		btnEmprestimoData.setOnAction(event);
+	}
+
+	public void acaoBtnEmprestimoPorLivro(EventHandler<ActionEvent> event) {
+		btnEmprestimoLivro.setOnAction(event);
+	}
+
+	public void acaoBtnEmprestimosAtrasados(EventHandler<ActionEvent> event) {
+		btnEmprestimosAtrasados.setOnAction(event);
+	}
+
+	public void acaoBtnHistorico(EventHandler<ActionEvent> event) {
+		btnHistorico.setOnAction(event);
+	}
+
+	public void acaoBtnInventario(EventHandler<ActionEvent> event) {
+		btnInventario.setOnAction(event);
+	}
+
+	public void acaoBtnLeitor(EventHandler<ActionEvent> event) {
+		btnLeitor.setOnAction(event);
 	}
 
 	@Override
