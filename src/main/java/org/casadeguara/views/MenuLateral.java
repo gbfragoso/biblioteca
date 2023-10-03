@@ -12,7 +12,8 @@ public class MenuLateral {
 
 	private VBox menuLateral;
 	private ToggleButton movimentacao;
-	private ToggleButton consultaExemplar;
+	private ToggleButton consultaEmprestimos;
+	private ToggleButton consultaExemplares;
 	private ToggleButton cadastroAutor;
 	private ToggleButton cadastroEditora;
 	private ToggleButton cadastroLeitor;
@@ -29,7 +30,8 @@ public class MenuLateral {
 		Label cadastro = new Label("Cadastro");
 
 		movimentacao = new ToggleButton("Movimentação");
-		consultaExemplar = new ToggleButton("Exemplares");
+		consultaEmprestimos = new ToggleButton("Empréstimos");
+		consultaExemplares = new ToggleButton("Exemplares");
 		cadastroAutor = new ToggleButton("Autor");
 		cadastroEditora = new ToggleButton("Editora");
 		cadastroLeitor = new ToggleButton("Leitor");
@@ -37,7 +39,8 @@ public class MenuLateral {
 		cadastroPalavra = new ToggleButton("Palavra-chave");
 
 		movimentacao.setPrefSize(250, 32);
-		consultaExemplar.setPrefSize(250, 32);
+		consultaEmprestimos.setPrefSize(250, 32);
+		consultaExemplares.setPrefSize(250, 32);
 		cadastroAutor.setPrefSize(250, 32);
 		cadastroEditora.setPrefSize(250, 32);
 		cadastroLeitor.setPrefSize(250, 32);
@@ -45,7 +48,8 @@ public class MenuLateral {
 		cadastroPalavra.setPrefSize(250, 32);
 
 		movimentacao.setAlignment(Pos.BASELINE_LEFT);
-		consultaExemplar.setAlignment(Pos.BASELINE_LEFT);
+		consultaEmprestimos.setAlignment(Pos.BASELINE_LEFT);
+		consultaExemplares.setAlignment(Pos.BASELINE_LEFT);
 		cadastroAutor.setAlignment(Pos.BASELINE_LEFT);
 		cadastroEditora.setAlignment(Pos.BASELINE_LEFT);
 		cadastroLeitor.setAlignment(Pos.BASELINE_LEFT);
@@ -53,21 +57,21 @@ public class MenuLateral {
 		cadastroPalavra.setAlignment(Pos.BASELINE_LEFT);
 
 		group = new ToggleGroup();
-		group.getToggles().addAll(movimentacao, consultaExemplar, cadastroAutor, cadastroEditora, cadastroLeitor,
-				cadastroLivro, cadastroPalavra);
+		group.getToggles().addAll(movimentacao, consultaEmprestimos, consultaExemplares, cadastroAutor, cadastroEditora,
+				cadastroLeitor, cadastroLivro, cadastroPalavra);
 		group.selectToggle(movimentacao);
 
-		menuLateral.getChildren().addAll(acervo, movimentacao, consultas, consultaExemplar, cadastro, cadastroAutor,
-				cadastroEditora, cadastroLeitor, cadastroLivro, cadastroPalavra);
+		menuLateral.getChildren().addAll(acervo, movimentacao, consultas, consultaEmprestimos, consultaExemplares,
+				cadastro, cadastroAutor, cadastroEditora, cadastroLeitor, cadastroLivro, cadastroPalavra);
 	}
 
 	public void destacarMenuConsulta() {
-		group.selectToggle(consultaExemplar);
+		group.selectToggle(consultaExemplares);
 	}
 
 	public void configurarAcesso(boolean[] acesso) {
 		movimentacao.setDisable(!acesso[0]);
-		consultaExemplar.setDisable(!acesso[1]);
+		consultaExemplares.setDisable(!acesso[1]);
 		cadastroAutor.setDisable(!acesso[3]);
 		cadastroEditora.setDisable(!acesso[4]);
 		cadastroLeitor.setDisable(!acesso[5]);
@@ -99,8 +103,12 @@ public class MenuLateral {
 		acaoBotao(cadastroPalavra, event);
 	}
 
-	public void acaoBotaoConsulta(EventHandler<ActionEvent> event) {
-		acaoBotao(consultaExemplar, event);
+	public void acaoBotaoConsultaEmprestimos(EventHandler<ActionEvent> event) {
+		acaoBotao(consultaEmprestimos, event);
+	}
+
+	public void acaoBotaoConsultaExemplares(EventHandler<ActionEvent> event) {
+		acaoBotao(consultaExemplares, event);
 	}
 
 	public void acaoBotaoMovimentacao(EventHandler<ActionEvent> event) {

@@ -45,7 +45,7 @@ public class AutorModel implements GenericModel<Autor> {
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query)) {
 			ps.setString(1, nome);
 			ps.executeUpdate();
-			
+
 			return 0;
 		} catch (SQLException ex) {
 			new Alerta().erro("Não foi possível cadastrar o autor");

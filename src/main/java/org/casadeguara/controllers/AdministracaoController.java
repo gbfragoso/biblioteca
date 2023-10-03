@@ -32,7 +32,7 @@ public class AdministracaoController implements GenericController {
 	public AdministracaoController(AdministracaoView view) {
 		this.view = view;
 		this.model = new AdministracaoModel();
-		
+
 		imprimir = new Impressora();
 		regraModel = new RegraModel();
 
@@ -48,7 +48,6 @@ public class AdministracaoController implements GenericController {
 			view.acaoBotaoCobrancas(event -> realizarCobrancas());
 			view.acaoBotaoEtiqueta(event -> geradorEtiquetas());
 			view.acaoBotaoRecuperarEmprestimo(event -> recuperarEmprestimoDevolvido());
-			view.acaoBtnEmprestimo(event -> emprestimos());
 			view.acaoBtnEmprestimoPorData(event -> emprestimosPorData());
 			view.acaoBtnEmprestimoPorLivro(event -> emprestimosPorLivro());
 			view.acaoBtnEmprestimosAtrasados(event -> emprestimosEmAtraso());
@@ -137,10 +136,6 @@ public class AdministracaoController implements GenericController {
 		selecionar.showAndWait();
 
 		return 0;
-	}
-	
-	public void emprestimos() {
-		imprimir.relacaoEmprestimos("true");
 	}
 
 	public void emprestimosEmAtraso() {

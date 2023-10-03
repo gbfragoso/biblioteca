@@ -35,9 +35,7 @@ public class ConsultaExemplarController implements GenericController {
 	}
 
 	private void verificarResultados(ObservableList<ConsultaExemplar> resultados) {
-		if (resultados.isEmpty()) {
-			view.mensagemInformativa("Nenhum livro encontrado para esta pesquisa.");
-		} else {
+		if (!resultados.isEmpty()) {
 			view.setResultadosConsulta(resultados);
 		}
 	}

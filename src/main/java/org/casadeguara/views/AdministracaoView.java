@@ -20,7 +20,6 @@ public class AdministracaoView implements GenericView {
 	private Button btnRecuperar;
 	private Button btnAlterarEmprestimo;
 	private Button btnAlterarChaveMestra;
-	private Button btnEmprestimo;
 	private Button btnInventario;
 	private Button btnHistorico;
 	private Button btnLeitor;
@@ -40,7 +39,6 @@ public class AdministracaoView implements GenericView {
 		btnEtiqueta = new Button("Gerador de etiquetas");
 		btnAlterarEmprestimo = new Button("Alterar empréstimo");
 		btnRecuperar = new Button("Recuperar empréstimo");
-		btnEmprestimo = new Button("Empréstimos");
 		btnEmprestimoData = new Button("Empréstimos por Data");
 		btnEmprestimoLivro = new Button("Empréstimos por Livro");
 		btnEmprestimosAtrasados = new Button("Empréstimos Atrasados");
@@ -54,7 +52,6 @@ public class AdministracaoView implements GenericView {
 		configurarTamanhoBotao(btnEtiqueta);
 		configurarTamanhoBotao(btnRecuperar);
 		configurarTamanhoBotao(btnAlterarEmprestimo);
-		configurarTamanhoBotao(btnEmprestimo);
 		configurarTamanhoBotao(btnEmprestimoData);
 		configurarTamanhoBotao(btnEmprestimoLivro);
 		configurarTamanhoBotao(btnEmprestimosAtrasados);
@@ -63,7 +60,7 @@ public class AdministracaoView implements GenericView {
 		configurarTamanhoBotao(btnLeitor);
 
 		painelAdmin.getChildren().addAll(btnAlterarChaveMestra, btnConfiguracao, btnCobrancas, btnEtiqueta,
-				btnAlterarEmprestimo, btnRecuperar, btnEmprestimo, btnEmprestimoData, btnEmprestimoLivro,
+				btnAlterarEmprestimo, btnRecuperar, btnEmprestimoData, btnEmprestimoLivro,
 				btnEmprestimosAtrasados, btnHistorico, btnInventario, btnLeitor);
 	}
 
@@ -94,10 +91,6 @@ public class AdministracaoView implements GenericView {
 
 	public void acaoBotaoRecuperarEmprestimo(EventHandler<ActionEvent> event) {
 		btnRecuperar.setOnAction(event);
-	}
-	
-	public void acaoBtnEmprestimo(EventHandler<ActionEvent> event) {
-		btnEmprestimo.setOnAction(event);
 	}
 
 	public void acaoBtnEmprestimoPorData(EventHandler<ActionEvent> event) {
