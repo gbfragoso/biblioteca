@@ -11,8 +11,8 @@ import org.casadeguara.controllers.CadastroLeitorController;
 import org.casadeguara.controllers.CadastroLivroController;
 import org.casadeguara.controllers.CadastroPalavrasController;
 import org.casadeguara.controllers.CadastroUsuarioController;
+import org.casadeguara.controllers.ConsultaEmprestimoController;
 import org.casadeguara.controllers.ConsultaExemplarController;
-import org.casadeguara.controllers.ImpressosController;
 import org.casadeguara.controllers.LoginController;
 import org.casadeguara.controllers.MovimentacaoController;
 import org.casadeguara.entidades.Usuario;
@@ -25,9 +25,9 @@ import org.casadeguara.views.CadastroLeitorView;
 import org.casadeguara.views.CadastroLivroView;
 import org.casadeguara.views.CadastroPalavrasView;
 import org.casadeguara.views.CadastroUsuarioView;
+import org.casadeguara.views.ConsultaEmprestimoView;
 import org.casadeguara.views.ConsultaExemplarView;
 import org.casadeguara.views.GenericView;
-import org.casadeguara.views.ImpressosView;
 import org.casadeguara.views.LoginView;
 import org.casadeguara.views.MenuLateral;
 import org.casadeguara.views.MenuSuperior;
@@ -67,8 +67,8 @@ public class App extends Application {
 	private CadastroLivroView cadastroLivroView;
 	private CadastroPalavrasView cadastroPalavrasView;
 	private CadastroUsuarioView cadastroUsuarioView;
-	private ConsultaExemplarView consultaView;
-	private ImpressosView impressosView;
+	private ConsultaEmprestimoView consultaEmprestimoView;
+	private ConsultaExemplarView consultaExemplarView;
 	private LoginView loginView;
 	private MovimentacaoView movimentacaoView;
 
@@ -83,8 +83,8 @@ public class App extends Application {
 		cadastroLivroView = new CadastroLivroView();
 		cadastroPalavrasView = new CadastroPalavrasView();
 		cadastroUsuarioView = new CadastroUsuarioView();
-		consultaView = new ConsultaExemplarView();
-		impressosView = new ImpressosView();
+		consultaEmprestimoView = new ConsultaEmprestimoView();
+		consultaExemplarView = new ConsultaExemplarView();
 		loginView = new LoginView();
 		movimentacaoView = new MovimentacaoView();
 		menuLateral = new MenuLateral();
@@ -100,8 +100,8 @@ public class App extends Application {
 		new CadastroLivroController(cadastroLivroView);
 		new CadastroPalavrasController(cadastroPalavrasView);
 		new CadastroUsuarioController(cadastroUsuarioView);
-		consultaController = new ConsultaExemplarController(consultaView);
-		new ImpressosController(impressosView);
+		new ConsultaEmprestimoController(consultaEmprestimoView);
+		consultaController = new ConsultaExemplarController(consultaExemplarView);
 		loginController = new LoginController(loginView);
 		new MovimentacaoController(movimentacaoView);
 	}
@@ -122,20 +122,20 @@ public class App extends Application {
 		configurarMargem(cadastroLivroView);
 		configurarMargem(cadastroPalavrasView);
 		configurarMargem(cadastroUsuarioView);
-		configurarMargem(consultaView);
+		configurarMargem(consultaEmprestimoView);
+		configurarMargem(consultaExemplarView);
 		configurarMargem(movimentacaoView);
-		configurarMargem(impressosView);
 	}
 
 	private void configurarRedirecionamento() {
 		menuLateral.acaoBotaoMovimentacao(event -> redirecionarPara(movimentacaoView));
-		menuLateral.acaoBotaoConsulta(event -> redirecionarPara(consultaView));
+		menuLateral.acaoBotaoConsultaEmprestimos(event -> redirecionarPara(consultaEmprestimoView));
+		menuLateral.acaoBotaoConsultaExemplares(event -> redirecionarPara(consultaExemplarView));
 		menuLateral.acaoBotaoCadastroAutor(event -> redirecionarPara(cadastroAutorView));
 		menuLateral.acaoBotaoCadastroEditora(event -> redirecionarPara(cadastroEditoraView));
 		menuLateral.acaoBotaoCadastroLeitor(event -> redirecionarPara(cadastroLeitorView));
 		menuLateral.acaoBotaoCadastroLivro(event -> redirecionarPara(cadastroLivroView));
 		menuLateral.acaoBotaoCadastroPalavras(event -> redirecionarPara(cadastroPalavrasView));
-		menuLateral.acaoBotaoImpressos(event -> redirecionarPara(impressosView));
 		menuSuperior.acaoMenuAdministracao(event -> redirecionarPara(administracaoView));
 		menuSuperior.acaoMenuCadastroUsuario(event -> redirecionarPara(cadastroUsuarioView));
 	}
@@ -146,7 +146,7 @@ public class App extends Application {
 			if (pesquisa != null && !pesquisa.isEmpty()) {
 				menuLateral.destacarMenuConsulta();
 				consultaController.buscaRapida(pesquisa);
-				redirecionarPara(consultaView);
+				redirecionarPara(consultaExemplarView);
 			}
 		});
 

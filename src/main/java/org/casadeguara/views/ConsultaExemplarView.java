@@ -52,6 +52,7 @@ public class ConsultaExemplarView implements GenericView {
 
 		tabelaConsulta = new TableView<>();
 		tabelaConsulta.setItems(resultadoConsulta);
+		tabelaConsulta.setPlaceholder(new Label("Nenhum resultado para esta consulta"));
 
 		TableColumn<ConsultaExemplar, String> tabelaConsultaTombo = new TableColumn<>("Tombo");
 		TableColumn<ConsultaExemplar, Integer> tabelaConsultaExemplar = new TableColumn<>("Ex.");

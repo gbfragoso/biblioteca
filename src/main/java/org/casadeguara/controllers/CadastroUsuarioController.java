@@ -31,7 +31,7 @@ public class CadastroUsuarioController implements GenericController {
 
 	public void alterarUsuario() {
 		Usuario usuarioAtual = view.getUsuarioSelecionado();
-		
+
 		if (usuarioAtual != null) {
 			usuarioAtual.setNome(view.getNomeUsuario());
 			usuarioAtual.setTipo(view.getTipoUsuario());

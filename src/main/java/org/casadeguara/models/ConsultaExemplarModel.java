@@ -65,7 +65,7 @@ public class ConsultaExemplarModel {
 		query.append("inner join livro c on (a.livro = c.idlivro) ");
 		query.append("where unaccent(titulo) like unaccent(?) and a.status != 'Deletado' ");
 		query.append("order by c.tombo::int, a.numero");
-		
+
 		return buscar(query.toString(), titulo.toUpperCase());
 	}
 
@@ -88,7 +88,8 @@ public class ConsultaExemplarModel {
 			try (ResultSet rs = ps.executeQuery()) {
 
 				while (rs.next()) {
-					ConsultaExemplar r = new ConsultaExemplar(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getString(4));
+					ConsultaExemplar r = new ConsultaExemplar(rs.getString(1), rs.getString(2), rs.getInt(3),
+							rs.getString(4));
 					resultados.add(r);
 				}
 			}

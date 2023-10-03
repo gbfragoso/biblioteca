@@ -12,13 +12,13 @@ public class MenuLateral {
 
 	private VBox menuLateral;
 	private ToggleButton movimentacao;
-	private ToggleButton consulta;
+	private ToggleButton consultaEmprestimos;
+	private ToggleButton consultaExemplares;
 	private ToggleButton cadastroAutor;
 	private ToggleButton cadastroEditora;
 	private ToggleButton cadastroLeitor;
 	private ToggleButton cadastroLivro;
 	private ToggleButton cadastroPalavra;
-	private ToggleButton relatorios;
 	private ToggleGroup group;
 
 	public MenuLateral() {
@@ -26,58 +26,57 @@ public class MenuLateral {
 		menuLateral.setPrefWidth(250);
 		menuLateral.setId("menuLateral");
 		Label acervo = new Label("Acervo");
+		Label consultas = new Label("Consultas");
 		Label cadastro = new Label("Cadastro");
-		Label estatisticas = new Label("Estatísticas");
 
 		movimentacao = new ToggleButton("Movimentação");
-		consulta = new ToggleButton("Consultas");
+		consultaEmprestimos = new ToggleButton("Empréstimos");
+		consultaExemplares = new ToggleButton("Exemplares");
 		cadastroAutor = new ToggleButton("Autor");
 		cadastroEditora = new ToggleButton("Editora");
 		cadastroLeitor = new ToggleButton("Leitor");
 		cadastroLivro = new ToggleButton("Livro");
 		cadastroPalavra = new ToggleButton("Palavra-chave");
-		relatorios = new ToggleButton("Relatórios");
 
 		movimentacao.setPrefSize(250, 32);
-		consulta.setPrefSize(250, 32);
+		consultaEmprestimos.setPrefSize(250, 32);
+		consultaExemplares.setPrefSize(250, 32);
 		cadastroAutor.setPrefSize(250, 32);
 		cadastroEditora.setPrefSize(250, 32);
 		cadastroLeitor.setPrefSize(250, 32);
 		cadastroLivro.setPrefSize(250, 32);
 		cadastroPalavra.setPrefSize(250, 32);
-		relatorios.setPrefSize(250, 32);
 
 		movimentacao.setAlignment(Pos.BASELINE_LEFT);
-		consulta.setAlignment(Pos.BASELINE_LEFT);
+		consultaEmprestimos.setAlignment(Pos.BASELINE_LEFT);
+		consultaExemplares.setAlignment(Pos.BASELINE_LEFT);
 		cadastroAutor.setAlignment(Pos.BASELINE_LEFT);
 		cadastroEditora.setAlignment(Pos.BASELINE_LEFT);
 		cadastroLeitor.setAlignment(Pos.BASELINE_LEFT);
 		cadastroLivro.setAlignment(Pos.BASELINE_LEFT);
 		cadastroPalavra.setAlignment(Pos.BASELINE_LEFT);
-		relatorios.setAlignment(Pos.BASELINE_LEFT);
 
 		group = new ToggleGroup();
-		group.getToggles().addAll(movimentacao, consulta, cadastroAutor, cadastroEditora, cadastroLeitor,
-				cadastroLivro, cadastroPalavra, relatorios);
+		group.getToggles().addAll(movimentacao, consultaEmprestimos, consultaExemplares, cadastroAutor, cadastroEditora,
+				cadastroLeitor, cadastroLivro, cadastroPalavra);
 		group.selectToggle(movimentacao);
 
-		menuLateral.getChildren().addAll(acervo, movimentacao, consulta, cadastro, cadastroAutor,
-				cadastroEditora, cadastroLeitor, cadastroLivro, cadastroPalavra, estatisticas, relatorios);
+		menuLateral.getChildren().addAll(acervo, movimentacao, consultas, consultaEmprestimos, consultaExemplares,
+				cadastro, cadastroAutor, cadastroEditora, cadastroLeitor, cadastroLivro, cadastroPalavra);
 	}
 
 	public void destacarMenuConsulta() {
-		group.selectToggle(consulta);
+		group.selectToggle(consultaExemplares);
 	}
 
 	public void configurarAcesso(boolean[] acesso) {
 		movimentacao.setDisable(!acesso[0]);
-		consulta.setDisable(!acesso[1]);
+		consultaExemplares.setDisable(!acesso[1]);
 		cadastroAutor.setDisable(!acesso[3]);
 		cadastroEditora.setDisable(!acesso[4]);
 		cadastroLeitor.setDisable(!acesso[5]);
 		cadastroLivro.setDisable(!acesso[6]);
 		cadastroPalavra.setDisable(!acesso[7]);
-		relatorios.setDisable(!acesso[9]);
 	}
 
 	private void acaoBotao(ToggleButton button, EventHandler<ActionEvent> event) {
@@ -104,12 +103,12 @@ public class MenuLateral {
 		acaoBotao(cadastroPalavra, event);
 	}
 
-	public void acaoBotaoConsulta(EventHandler<ActionEvent> event) {
-		acaoBotao(consulta, event);
+	public void acaoBotaoConsultaEmprestimos(EventHandler<ActionEvent> event) {
+		acaoBotao(consultaEmprestimos, event);
 	}
 
-	public void acaoBotaoImpressos(EventHandler<ActionEvent> event) {
-		acaoBotao(relatorios, event);
+	public void acaoBotaoConsultaExemplares(EventHandler<ActionEvent> event) {
+		acaoBotao(consultaExemplares, event);
 	}
 
 	public void acaoBotaoMovimentacao(EventHandler<ActionEvent> event) {
