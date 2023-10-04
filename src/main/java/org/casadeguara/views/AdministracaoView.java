@@ -60,8 +60,8 @@ public class AdministracaoView implements GenericView {
 		configurarTamanhoBotao(btnLeitor);
 
 		painelAdmin.getChildren().addAll(btnAlterarChaveMestra, btnConfiguracao, btnCobrancas, btnEtiqueta,
-				btnAlterarEmprestimo, btnRecuperar, btnEmprestimoData, btnEmprestimoLivro,
-				btnEmprestimosAtrasados, btnHistorico, btnInventario, btnLeitor);
+				btnAlterarEmprestimo, btnRecuperar, btnEmprestimoData, btnEmprestimoLivro, btnEmprestimosAtrasados,
+				btnHistorico, btnInventario, btnLeitor);
 	}
 
 	@Override

@@ -33,8 +33,8 @@ public class ConsultaEmprestimo {
 		this.dataDevolvido = dataDevolvido;
 	}
 
-	public ConsultaEmprestimo(int id, String leitor, String titulo, int numero, Date dataEmprestimo,
-			Date dataDevolucao, Date dataDevolvido) {
+	public ConsultaEmprestimo(int id, String leitor, String titulo, int numero, Date dataEmprestimo, Date dataDevolucao,
+			Date dataDevolvido) {
 		this.id = new SimpleIntegerProperty(this, "id", id);
 		this.leitor = new SimpleStringProperty(this, "leitor", leitor);
 		this.titulo = new SimpleStringProperty(this, "titulo", titulo);

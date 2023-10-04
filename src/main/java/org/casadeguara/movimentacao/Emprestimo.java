@@ -20,7 +20,8 @@ public class Emprestimo {
 	private SimpleIntegerProperty numeroItem;
 	private LocalDate dataDevolucao;
 
-	public Emprestimo(int idemp, int idexemplar, int idleitor, String nomeItem, int numero, int quantidadeRenovacoes, LocalDate dataDevolucao) {
+	public Emprestimo(int idemp, int idexemplar, int idleitor, String nomeItem, int numero, int quantidadeRenovacoes,
+			LocalDate dataDevolucao) {
 		this.idExemplar = idexemplar;
 		this.idLeitor = idleitor;
 		this.quantidadeRenovacoes = quantidadeRenovacoes;
