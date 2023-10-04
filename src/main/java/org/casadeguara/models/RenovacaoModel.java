@@ -1,16 +1,10 @@
 package org.casadeguara.models;
 
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.casadeguara.alertas.Alerta;
 import org.casadeguara.application.App;
 import org.casadeguara.conexao.Conexao;
@@ -24,7 +18,6 @@ import org.casadeguara.movimentacao.Emprestimo;
  */
 public class RenovacaoModel {
 
-	private static final Logger logger = LogManager.getLogger(RenovacaoModel.class);
 	private int duracaoEmprestimo;
 	private int duracaoRenovacao;
 	private int limiteRenovacoes;
@@ -36,24 +29,25 @@ public class RenovacaoModel {
 	}
 
 	public int renovar(List<Emprestimo> emprestimos) {
-		logger.trace("Iniciando a renovação dos empréstimos: " + emprestimos);
 
-		Map<Integer, Integer> renovacoes = consultarRenovacoes(emprestimos);
-		try (Connection con = Conexao.abrir(); CallableStatement cs = con.prepareCall("{call renovar(?,?,?)}")) {
+		StringBuilder query = new StringBuilder();
+		query.append("update emprestimo set data_devolucao = data_emprestimo + ?, renovacoes = renovacoes + 1 ");
+		query.append("where idemp = ?");
+
+		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
 
 			for (Emprestimo e : emprestimos) {
 				int idemprestimo = e.getIdEmprestimo();
-				int quantidadeRenovacoes = renovacoes.get(idemprestimo);
+				int quantidadeRenovacoes = e.getQuantidadeRenovacoes();
 
 				if (validarRenovacao(e.getItemAcervo(), quantidadeRenovacoes)) {
-					cs.setInt(1, idemprestimo);
-					cs.setInt(2, calculaTempoRenovacao(quantidadeRenovacoes));
-					cs.setInt(3, quantidadeRenovacoes);
-					cs.addBatch();
+					ps.setInt(1, calculaTempoRenovacao(quantidadeRenovacoes));
+					ps.setInt(2, idemprestimo);
+					ps.addBatch();
 				}
 			}
 
-			cs.executeBatch();
+			ps.executeBatch();
 			return 0;
 		} catch (SQLException ex) {
 			new Alerta().erro("Não foi possível renovar os empréstimos");
@@ -63,35 +57,6 @@ public class RenovacaoModel {
 
 	private int calculaTempoRenovacao(int quantidadeRenovacoes) {
 		return duracaoEmprestimo + ((quantidadeRenovacoes + 1) * duracaoRenovacao);
-	}
-
-	private Map<Integer, Integer> consultarRenovacoes(List<Emprestimo> emprestimos) {
-		logger.trace("Iniciando consulta de renovações");
-
-		List<Integer> idemprestimos = emprestimos.stream().map(Emprestimo::getIdEmprestimo)
-				.collect(Collectors.toList());
-
-		Map<Integer, Integer> renovacoes = new HashMap<>();
-
-		StringBuilder query = new StringBuilder();
-		query.append("select idemp, coalesce(quantidade, 0) from emprestimo ");
-		query.append("left join renovacao on (emprestimo = idemp) ");
-		query.append("where idemp = ANY(?)");
-
-		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
-
-			ps.setArray(1, con.createArrayOf("integer", idemprestimos.toArray()));
-
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					renovacoes.put(rs.getInt(1), rs.getInt(2));
-				}
-			}
-		} catch (SQLException ex) {
-			new Alerta().erro("Não foi possível consultar as renovações");
-		}
-
-		return renovacoes;
 	}
 
 	private boolean validarRenovacao(String titulo, int quantidadeRenovacoes) {

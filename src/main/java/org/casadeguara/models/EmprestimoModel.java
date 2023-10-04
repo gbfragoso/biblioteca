@@ -34,7 +34,7 @@ public class EmprestimoModel {
 
 	public ObservableList<Emprestimo> consultar(int idleitor) {
 		StringBuilder query = new StringBuilder();
-		query.append("select idemp, exemplar, titulo, numero, data_devolucao from emprestimo ");
+		query.append("select idemp, exemplar, titulo, numero, renovacoes, data_devolucao from emprestimo ");
 		query.append("inner join exemplar on (idexemplar = exemplar) ");
 		query.append("inner join livro on (exemplar.livro = idlivro) ");
 		query.append("where leitor = ?");
@@ -47,7 +47,7 @@ public class EmprestimoModel {
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
 					Emprestimo e = new Emprestimo(rs.getInt(1), rs.getInt(2), idleitor, rs.getString(3), rs.getInt(4),
-							rs.getDate(5).toLocalDate());
+							rs.getInt(5), rs.getDate(6).toLocalDate());
 					listaEmprestimos.add(e);
 				}
 			}

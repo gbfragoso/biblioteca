@@ -3,7 +3,6 @@ package org.casadeguara.views;
 import java.time.LocalDate;
 
 import org.casadeguara.consultas.ConsultaEmprestimo;
-import org.casadeguara.movimentacao.Emprestimo;
 import org.casadeguara.utilitarios.Formatador;
 import org.controlsfx.control.textfield.CustomTextField;
 
