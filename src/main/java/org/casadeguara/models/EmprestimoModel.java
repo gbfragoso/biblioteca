@@ -37,7 +37,7 @@ public class EmprestimoModel {
 		query.append("select idemp, exemplar, titulo, numero, renovacoes, data_devolucao from emprestimo ");
 		query.append("inner join exemplar on (idexemplar = exemplar) ");
 		query.append("inner join livro on (exemplar.livro = idlivro) ");
-		query.append("where leitor = ?");
+		query.append("where leitor = ? and data_devolvido is null");
 
 		ObservableList<Emprestimo> listaEmprestimos = FXCollections.observableArrayList();
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
@@ -60,17 +60,13 @@ public class EmprestimoModel {
 	public int emprestar(int idleitor, String nomeLeitor, List<Acervo> exemplares, int quantidadeItens) {
 		if (validarEmprestimo(quantidadeItens)) {
 			try (Connection con = Conexao.abrir();
-					CallableStatement cs = con.prepareCall("{call emprestar(?,?,?,?,?,?,?,?)}")) {
+					CallableStatement cs = con.prepareCall("{call emprestar(?,?,?,?)}")) {
 
 				for (Acervo e : exemplares) {
 					cs.setInt(1, idleitor);
-					cs.setString(2, nomeLeitor);
-					cs.setInt(3, e.getId());
-					cs.setString(4, Integer.toString(e.getTombo()));
-					cs.setString(5, e.getTitulo());
-					cs.setInt(6, e.getNumero());
-					cs.setInt(7, App.getUsuario().getId());
-					cs.setInt(8, duracaoEmprestimo);
+					cs.setInt(2, e.getId());
+					cs.setInt(3, App.getUsuario().getId());
+					cs.setInt(4, duracaoEmprestimo);
 					cs.addBatch();
 				}
 				cs.executeBatch();

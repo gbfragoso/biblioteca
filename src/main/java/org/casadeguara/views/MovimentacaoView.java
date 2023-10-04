@@ -146,7 +146,7 @@ public class MovimentacaoView implements GenericView {
 		TableColumn<Emprestimo, Integer> idemprestimo = new TableColumn<>("Id");
 		TableColumn<Emprestimo, String> titulo = new TableColumn<>("Título");
 		TableColumn<Emprestimo, Integer> numeroExemplar = new TableColumn<>("Exemplar");
-		TableColumn<Emprestimo, LocalDate> dataDevolucao = new TableColumn<>("Devolução");
+		TableColumn<Emprestimo, LocalDate> dataDevolucao = new TableColumn<>("Devolver até");
 
 		vincularColunaAtributo(idemprestimo, "idEmprestimo");
 		vincularColunaAtributo(titulo, "itemAcervo");
@@ -180,7 +180,7 @@ public class MovimentacaoView implements GenericView {
 		TableColumn<Acervo, String> tabelaItemsTitulo = new TableColumn<>("Título");
 		TableColumn<Acervo, Integer> tabelaItemsExemplar = new TableColumn<>("Exemplar");
 		TableColumn<Acervo, String> tabelaItemsStatus = new TableColumn<>("Status");
-		TableColumn<Acervo, LocalDate> tabelaItemsDevolucao = new TableColumn<>("Devolução");
+		TableColumn<Acervo, LocalDate> tabelaItemsDevolucao = new TableColumn<>("Devolver até");
 
 		vincularColunaAtributo(tabelaItemsTitulo, "titulo");
 		vincularColunaAtributo(tabelaItemsExemplar, "numero");

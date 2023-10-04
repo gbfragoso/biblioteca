@@ -91,8 +91,6 @@ public class MovimentacaoController implements GenericController {
 						return null;
 					}
 				};
-
-				new Alerta().progresso(devolverExemplar);
 				new Thread(devolverExemplar).start();
 
 				devolverExemplar.setOnSucceeded(event -> view.removerEmprestimosSelecionados());

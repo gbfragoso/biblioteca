@@ -24,13 +24,13 @@ public class ConsultaEmprestimoModel {
 
 		StringBuilder query = new StringBuilder();
 		query.append(
-				"select a.idemp, b.nome, d.titulo, c.numero, a.data_emprestimo, a.data_devolucao from emprestimo a ");
+				"select a.idemp, b.nome, d.titulo, c.numero, a.data_emprestimo, a.data_devolucao, a.data_devolvido from emprestimo a ");
 		query.append("inner join leitor b on (a.leitor = b.idleitor) ");
 		query.append("inner join exemplar c on (a.exemplar = c.idexemplar) ");
 		query.append("inner join livro d on (c.livro = d.idlivro) ");
 		query.append(
 				"where unaccent(b.nome) like unaccent(?) or unaccent(d.titulo) like unaccent(?) or d.tombo like (?) ");
-		query.append("order by a.idemp");
+		query.append("order by b.idleitor, a.data_emprestimo, a.idemp");
 
 		ObservableList<ConsultaEmprestimo> resultados = FXCollections.observableArrayList();
 
@@ -43,7 +43,7 @@ public class ConsultaEmprestimoModel {
 
 				while (rs.next()) {
 					ConsultaEmprestimo r = new ConsultaEmprestimo(rs.getInt(1), rs.getString(2), rs.getString(3),
-							rs.getInt(4), rs.getDate(5), rs.getDate(6));
+							rs.getInt(4), rs.getDate(5), rs.getDate(6), rs.getDate(7));
 					resultados.add(r);
 				}
 			}
