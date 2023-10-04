@@ -10,9 +10,11 @@ import org.casadeguara.controllers.CadastroEditoraController;
 import org.casadeguara.controllers.CadastroLeitorController;
 import org.casadeguara.controllers.CadastroLivroController;
 import org.casadeguara.controllers.CadastroPalavrasController;
+import org.casadeguara.controllers.CadastroSerieController;
 import org.casadeguara.controllers.CadastroUsuarioController;
 import org.casadeguara.controllers.ConsultaEmprestimoController;
 import org.casadeguara.controllers.ConsultaExemplarController;
+import org.casadeguara.controllers.ConsultaSerieController;
 import org.casadeguara.controllers.LoginController;
 import org.casadeguara.controllers.MovimentacaoController;
 import org.casadeguara.entidades.Usuario;
@@ -24,9 +26,11 @@ import org.casadeguara.views.CadastroEditoraView;
 import org.casadeguara.views.CadastroLeitorView;
 import org.casadeguara.views.CadastroLivroView;
 import org.casadeguara.views.CadastroPalavrasView;
+import org.casadeguara.views.CadastroSerieView;
 import org.casadeguara.views.CadastroUsuarioView;
 import org.casadeguara.views.ConsultaEmprestimoView;
 import org.casadeguara.views.ConsultaExemplarView;
+import org.casadeguara.views.ConsultaSerieView;
 import org.casadeguara.views.GenericView;
 import org.casadeguara.views.LoginView;
 import org.casadeguara.views.MenuLateral;
@@ -66,9 +70,11 @@ public class App extends Application {
 	private CadastroLeitorView cadastroLeitorView;
 	private CadastroLivroView cadastroLivroView;
 	private CadastroPalavrasView cadastroPalavrasView;
+	private CadastroSerieView cadastroSerieView;
 	private CadastroUsuarioView cadastroUsuarioView;
 	private ConsultaEmprestimoView consultaEmprestimoView;
 	private ConsultaExemplarView consultaExemplarView;
+	private ConsultaSerieView consultaSerieView;
 	private LoginView loginView;
 	private MovimentacaoView movimentacaoView;
 
@@ -82,9 +88,11 @@ public class App extends Application {
 		cadastroLeitorView = new CadastroLeitorView();
 		cadastroLivroView = new CadastroLivroView();
 		cadastroPalavrasView = new CadastroPalavrasView();
+		cadastroSerieView = new CadastroSerieView();
 		cadastroUsuarioView = new CadastroUsuarioView();
 		consultaEmprestimoView = new ConsultaEmprestimoView();
 		consultaExemplarView = new ConsultaExemplarView();
+		consultaSerieView = new ConsultaSerieView();
 		loginView = new LoginView();
 		movimentacaoView = new MovimentacaoView();
 		menuLateral = new MenuLateral();
@@ -99,8 +107,10 @@ public class App extends Application {
 		new CadastroLeitorController(cadastroLeitorView);
 		new CadastroLivroController(cadastroLivroView);
 		new CadastroPalavrasController(cadastroPalavrasView);
+		new CadastroSerieController(cadastroSerieView);
 		new CadastroUsuarioController(cadastroUsuarioView);
 		new ConsultaEmprestimoController(consultaEmprestimoView);
+		new ConsultaSerieController(consultaSerieView);
 		consultaController = new ConsultaExemplarController(consultaExemplarView);
 		loginController = new LoginController(loginView);
 		new MovimentacaoController(movimentacaoView);
@@ -121,9 +131,11 @@ public class App extends Application {
 		configurarMargem(cadastroLeitorView);
 		configurarMargem(cadastroLivroView);
 		configurarMargem(cadastroPalavrasView);
+		configurarMargem(cadastroSerieView);
 		configurarMargem(cadastroUsuarioView);
 		configurarMargem(consultaEmprestimoView);
 		configurarMargem(consultaExemplarView);
+		configurarMargem(consultaSerieView);
 		configurarMargem(movimentacaoView);
 	}
 
@@ -131,11 +143,13 @@ public class App extends Application {
 		menuLateral.acaoBotaoMovimentacao(event -> redirecionarPara(movimentacaoView));
 		menuLateral.acaoBotaoConsultaEmprestimos(event -> redirecionarPara(consultaEmprestimoView));
 		menuLateral.acaoBotaoConsultaExemplares(event -> redirecionarPara(consultaExemplarView));
+		menuLateral.acaoBotaoConsultaSeries(event -> redirecionarPara(consultaSerieView));
 		menuLateral.acaoBotaoCadastroAutor(event -> redirecionarPara(cadastroAutorView));
 		menuLateral.acaoBotaoCadastroEditora(event -> redirecionarPara(cadastroEditoraView));
 		menuLateral.acaoBotaoCadastroLeitor(event -> redirecionarPara(cadastroLeitorView));
 		menuLateral.acaoBotaoCadastroLivro(event -> redirecionarPara(cadastroLivroView));
 		menuLateral.acaoBotaoCadastroPalavras(event -> redirecionarPara(cadastroPalavrasView));
+		menuLateral.acaoBotaoCadastroSerie(event -> redirecionarPara(cadastroSerieView));
 		menuSuperior.acaoMenuAdministracao(event -> redirecionarPara(administracaoView));
 		menuSuperior.acaoMenuCadastroUsuario(event -> redirecionarPara(cadastroUsuarioView));
 	}
