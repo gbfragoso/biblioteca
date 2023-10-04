@@ -3,7 +3,6 @@ package org.casadeguara.views;
 import java.time.LocalDate;
 
 import org.casadeguara.consultas.ConsultaEmprestimo;
-import org.casadeguara.movimentacao.Emprestimo;
 import org.casadeguara.utilitarios.Formatador;
 import org.controlsfx.control.textfield.CustomTextField;
 
@@ -58,7 +57,8 @@ public class ConsultaEmprestimoView implements GenericView {
 		TableColumn<ConsultaEmprestimo, String> tabelaConsultaTitulo = new TableColumn<>("Título");
 		TableColumn<ConsultaEmprestimo, Integer> tabelaConsultaExemplar = new TableColumn<>("Ex.");
 		TableColumn<ConsultaEmprestimo, LocalDate> tabelaConsultaEmprestimo = new TableColumn<>("Empréstimo");
-		TableColumn<ConsultaEmprestimo, LocalDate> tabelaConsultaDevolucao = new TableColumn<>("Devolução");
+		TableColumn<ConsultaEmprestimo, LocalDate> tabelaConsultaDevolucao = new TableColumn<>("Prazo");
+		TableColumn<ConsultaEmprestimo, LocalDate> tabelaConsultaDevolvido = new TableColumn<>("Devolvido em");
 
 		tabelaConsultaEmprestimo.setCellFactory(coluna -> {
 			return new TableCell<ConsultaEmprestimo, LocalDate>() {
@@ -88,12 +88,27 @@ public class ConsultaEmprestimoView implements GenericView {
 			};
 		});
 
-		configurarTamanhoFixo(tabelaConsultaId, tabelaConsulta, 0.08);
-		configurarTamanhoFixo(tabelaConsultaLeitor, tabelaConsulta, 0.30);
-		configurarTamanhoFixo(tabelaConsultaTitulo, tabelaConsulta, 0.30);
-		configurarTamanhoFixo(tabelaConsultaExemplar, tabelaConsulta, 0.08);
-		configurarTamanhoFixo(tabelaConsultaEmprestimo, tabelaConsulta, 0.10);
-		configurarTamanhoFixo(tabelaConsultaDevolucao, tabelaConsulta, 0.10);
+		tabelaConsultaDevolvido.setCellFactory(coluna -> {
+			return new TableCell<ConsultaEmprestimo, LocalDate>() {
+				@Override
+				protected void updateItem(LocalDate item, boolean empty) {
+					super.updateItem(item, empty);
+					if (item != null && !empty) {
+						setText(formatar.data(item));
+					} else {
+						setText("");
+					}
+				}
+			};
+		});
+
+		configurarTamanhoFixo(tabelaConsultaId, tabelaConsulta, 0.05);
+		configurarTamanhoFixo(tabelaConsultaLeitor, tabelaConsulta, 0.3);
+		configurarTamanhoFixo(tabelaConsultaTitulo, tabelaConsulta, 0.3);
+		configurarTamanhoFixo(tabelaConsultaExemplar, tabelaConsulta, 0.05);
+		configurarTamanhoFixo(tabelaConsultaEmprestimo, tabelaConsulta, 0.1);
+		configurarTamanhoFixo(tabelaConsultaDevolucao, tabelaConsulta, 0.1);
+		configurarTamanhoFixo(tabelaConsultaDevolvido, tabelaConsulta, 0.09);
 
 		vincularColunaAtributo(tabelaConsultaId, "id");
 		vincularColunaAtributo(tabelaConsultaLeitor, "leitor");
@@ -101,9 +116,10 @@ public class ConsultaEmprestimoView implements GenericView {
 		vincularColunaAtributo(tabelaConsultaExemplar, "numero");
 		vincularColunaAtributo(tabelaConsultaEmprestimo, "dataEmprestimo");
 		vincularColunaAtributo(tabelaConsultaDevolucao, "dataDevolucao");
+		vincularColunaAtributo(tabelaConsultaDevolvido, "dataDevolvido");
 
 		tabelaConsulta.getColumns().addAll(tabelaConsultaId, tabelaConsultaLeitor, tabelaConsultaTitulo,
-				tabelaConsultaExemplar, tabelaConsultaEmprestimo, tabelaConsultaDevolucao);
+				tabelaConsultaExemplar, tabelaConsultaEmprestimo, tabelaConsultaDevolucao, tabelaConsultaDevolvido);
 
 		AnchorPane.setTopAnchor(titulo, 0.0);
 		AnchorPane.setTopAnchor(pesquisar, 38.0);

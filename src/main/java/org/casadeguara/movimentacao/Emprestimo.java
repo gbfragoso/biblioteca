@@ -13,15 +13,17 @@ public class Emprestimo {
 
 	private final int idExemplar;
 	private final int idLeitor;
+	private final int quantidadeRenovacoes;
 
 	private final SimpleIntegerProperty idEmprestimo;
 	private SimpleStringProperty itemAcervo;
 	private SimpleIntegerProperty numeroItem;
 	private LocalDate dataDevolucao;
 
-	public Emprestimo(int idemp, int idexemplar, int idleitor, String nomeItem, int numero, LocalDate dataDevolucao) {
+	public Emprestimo(int idemp, int idexemplar, int idleitor, String nomeItem, int numero, int quantidadeRenovacoes, LocalDate dataDevolucao) {
 		this.idExemplar = idexemplar;
 		this.idLeitor = idleitor;
+		this.quantidadeRenovacoes = quantidadeRenovacoes;
 
 		idEmprestimo = new SimpleIntegerProperty(this, "idEmprestimo", idemp);
 		itemAcervo = new SimpleStringProperty(this, "itemAcervo", nomeItem);
@@ -52,5 +54,9 @@ public class Emprestimo {
 
 	public int getNumeroItem() {
 		return numeroItem.get();
+	}
+
+	public int getQuantidadeRenovacoes() {
+		return quantidadeRenovacoes;
 	}
 }
