@@ -28,7 +28,7 @@ public class ConsultaSerieModel {
 		query.append("where unaccent(c.nome) like unaccent(?) ");
 		query.append(
 				"or c.idserie = (select serie from livro d where (d.tombo like (?) or unaccent(d.titulo) like unaccent(?)) ");
-		query.append("and serie is not null limit 1)");
+		query.append("and serie is not null limit 1) order by a.ordem");
 
 		ObservableList<ConsultaSerie> resultados = FXCollections.observableArrayList();
 
