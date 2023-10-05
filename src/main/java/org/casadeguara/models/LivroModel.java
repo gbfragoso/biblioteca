@@ -82,7 +82,12 @@ public class LivroModel implements GenericModel<Livro> {
 
 	public int cadastrar(Livro livro) {
 		String titulo = livro.getTitulo();
-		String query = "insert into livro (titulo, tombo, editora, data_cadastro) values (?,?,?,current_date)";
+		String query = "";
+		if (livro.getSerie() != null && livro.getOrdemColecao() != null) {
+			query = "insert into livro (titulo, tombo, editora, serie, ordem, data_cadastro) values (?,?,?,?,?,current_date)";
+		} else {
+			query = "insert into livro (titulo, tombo, editora, data_cadastro) values (?,?,?,current_date)";
+		}
 
 		try (Connection con = Conexao.abrir();
 				PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -90,6 +95,10 @@ public class LivroModel implements GenericModel<Livro> {
 			ps.setString(1, titulo);
 			ps.setString(2, livro.getTombo());
 			ps.setInt(3, livro.getEditora().getId());
+			if (livro.getSerie() != null || livro.getOrdemColecao() != null) {
+				ps.setInt(4, livro.getSerie().getId());
+				ps.setInt(5, livro.getOrdemColecao());
+			}
 			ps.executeUpdate();
 
 			try (ResultSet rs = ps.getGeneratedKeys()) {
