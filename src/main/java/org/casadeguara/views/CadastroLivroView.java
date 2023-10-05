@@ -198,8 +198,10 @@ public class CadastroLivroView implements GenericView {
 
 		txtTitulo.clear();
 		txtTombo.clear();
+		txtOrdem.clear();
 		pesquisarLivros.clear();
 		pesquisarEditoras.clear();
+		pesquisarSerie.clear();
 	}
 
 	public void limparNotificacoes() {

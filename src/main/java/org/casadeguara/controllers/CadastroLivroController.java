@@ -210,9 +210,15 @@ public class CadastroLivroController implements GenericController {
 			view.setTituloLivro(livro.getTitulo());
 			view.setTomboLivro(livro.getTombo());
 			view.setEditora(livro.getEditora());
-			view.setSerie(livro.getSerie());
-			if (livro.getOrdemColecao() != null) {
-				view.setOrdemColecao(livro.getOrdemColecao().toString());
+
+			Serie serie = livro.getSerie();
+			if (serie != null && serie.getId() > 0) {
+				view.setSerie(serie);
+			}
+
+			Integer ordemColecao = livro.getOrdemColecao();
+			if (ordemColecao != null && ordemColecao > 0) {
+				view.setOrdemColecao(ordemColecao.toString());
 			}
 
 			int idlivro = livro.getId();

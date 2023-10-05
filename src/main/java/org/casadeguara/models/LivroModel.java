@@ -16,6 +16,7 @@ import org.casadeguara.entidades.Editora;
 import org.casadeguara.entidades.Exemplar;
 import org.casadeguara.entidades.Livro;
 import org.casadeguara.entidades.PalavraChave;
+import org.casadeguara.entidades.Serie;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -114,8 +115,9 @@ public class LivroModel implements GenericModel<Livro> {
 
 	public ObservableList<Livro> consultar(String titulo, int resultados) {
 		StringBuilder query = new StringBuilder();
-		query.append("select idlivro, tombo, titulo, editora.ideditora, editora.nome from livro ");
+		query.append("select idlivro, tombo, titulo, editora.ideditora, editora.nome, serie.idserie, serie.nome, ordem from livro ");
 		query.append("left join editora on (editora = ideditora) ");
+		query.append("left join serie on (serie = idserie) ");
 		query.append("where tombo || ' - ' || unaccent(titulo) like unaccent(?) limit ?");
 		ObservableList<Livro> livros = FXCollections.observableArrayList();
 
@@ -126,9 +128,12 @@ public class LivroModel implements GenericModel<Livro> {
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
 					Editora editora = new Editora(rs.getInt(4), rs.getString(5));
+					Serie serie = new Serie(rs.getInt(6), rs.getString(7));
 
 					Livro livro = new Livro(rs.getInt(1), rs.getString(2), rs.getString(3));
 					livro.setEditora(editora);
+					livro.setSerie(serie);
+					livro.setOrdemColecao(rs.getInt(8));
 					livros.add(livro);
 				}
 			}
