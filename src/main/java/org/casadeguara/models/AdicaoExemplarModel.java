@@ -31,7 +31,7 @@ public class AdicaoExemplarModel {
 		StringBuilder query = new StringBuilder();
 		query.append("select DATE_PART('day', current_timestamp - data_devolvido) from emprestimo ");
 		query.append("where leitor = ? and exemplar = ? ");
-		query.append("order by idmov desc");
+		query.append("order by idemp desc");
 
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
 
