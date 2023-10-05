@@ -12,6 +12,8 @@ public class Livro {
 	private String tombo;
 	private String titulo;
 	private Editora editora;
+	private Serie serie;
+	private Integer ordemColecao;
 
 	public Livro(int idlivro, String tombo, String titulo) {
 		this.idlivro = idlivro;
@@ -49,6 +51,22 @@ public class Livro {
 
 	public void setTombo(String tombo) {
 		this.tombo = tombo;
+	}
+
+	public Serie getSerie() {
+		return serie;
+	}
+
+	public void setSerie(Serie serie) {
+		this.serie = serie;
+	}
+
+	public Integer getOrdemColecao() {
+		return ordemColecao;
+	}
+
+	public void setOrdemColecao(Integer ordemColecao) {
+		this.ordemColecao = ordemColecao;
 	}
 
 	@Override

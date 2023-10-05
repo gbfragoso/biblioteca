@@ -53,14 +53,24 @@ public class LivroModel implements GenericModel<Livro> {
 		String titulo = livro.getTitulo();
 
 		StringBuilder query = new StringBuilder();
-		query.append("update livro set titulo = ?, tombo = ?, editora = ? where idlivro = ?");
+		if (livro.getSerie() != null && livro.getOrdemColecao() != null) {
+			query.append("update livro set titulo = ?, tombo = ?, editora = ?, serie = ?, ordem = ? where idlivro = ?");
+		} else {
+			query.append("update livro set titulo = ?, tombo = ?, editora = ? where idlivro = ?");
+		}
 
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
 
 			ps.setString(1, titulo);
 			ps.setString(2, livro.getTombo());
 			ps.setInt(3, livro.getEditora().getId());
-			ps.setInt(4, livro.getId());
+			if (livro.getSerie() == null || livro.getOrdemColecao() == null) {
+				ps.setInt(4, livro.getId());
+			} else {
+				ps.setInt(4, livro.getSerie().getId());
+				ps.setInt(5, livro.getOrdemColecao());
+				ps.setInt(6, livro.getId());
+			}
 			ps.executeUpdate();
 
 			return 0;

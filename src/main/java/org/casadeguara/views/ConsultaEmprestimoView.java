@@ -58,7 +58,7 @@ public class ConsultaEmprestimoView implements GenericView {
 		TableColumn<ConsultaEmprestimo, Integer> tabelaConsultaExemplar = new TableColumn<>("Ex.");
 		TableColumn<ConsultaEmprestimo, LocalDate> tabelaConsultaEmprestimo = new TableColumn<>("Empréstimo");
 		TableColumn<ConsultaEmprestimo, LocalDate> tabelaConsultaDevolucao = new TableColumn<>("Prazo");
-		TableColumn<ConsultaEmprestimo, LocalDate> tabelaConsultaDevolvido = new TableColumn<>("Devolvido em");
+		TableColumn<ConsultaEmprestimo, LocalDate> tabelaConsultaDevolvido = new TableColumn<>("Devolução");
 
 		tabelaConsultaEmprestimo.setCellFactory(coluna -> {
 			return new TableCell<ConsultaEmprestimo, LocalDate>() {
@@ -108,7 +108,7 @@ public class ConsultaEmprestimoView implements GenericView {
 		configurarTamanhoFixo(tabelaConsultaExemplar, tabelaConsulta, 0.05);
 		configurarTamanhoFixo(tabelaConsultaEmprestimo, tabelaConsulta, 0.1);
 		configurarTamanhoFixo(tabelaConsultaDevolucao, tabelaConsulta, 0.1);
-		configurarTamanhoFixo(tabelaConsultaDevolvido, tabelaConsulta, 0.09);
+		configurarTamanhoFixo(tabelaConsultaDevolvido, tabelaConsulta, 0.1);
 
 		vincularColunaAtributo(tabelaConsultaId, "id");
 		vincularColunaAtributo(tabelaConsultaLeitor, "leitor");
