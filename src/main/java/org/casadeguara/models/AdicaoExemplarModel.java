@@ -29,14 +29,14 @@ public class AdicaoExemplarModel {
 
 	private boolean obedeceIntervaloEmprestimos(Acervo exemplar, Leitor leitor) {
 		StringBuilder query = new StringBuilder();
-		query.append("select DATE_PART('day', current_timestamp - data_devolucao) from movimentacao ");
-		query.append("where leitor like ? and exemplar like ? ");
-		query.append("order by idmov desc");
+		query.append("select DATE_PART('day', current_timestamp - data_devolvido) from emprestimo ");
+		query.append("where leitor = ? and exemplar = ? ");
+		query.append("order by idemp desc");
 
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
 
-			ps.setString(1, leitor.getNome());
-			ps.setString(2, exemplar.getTitulo());
+			ps.setInt(1, leitor.getId());
+			ps.setInt(2, exemplar.getId());
 
 			try (ResultSet rs = ps.executeQuery()) {
 				if (rs.next()) {

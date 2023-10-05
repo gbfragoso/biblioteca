@@ -6,7 +6,7 @@ import javafx.concurrent.Task;
 
 public class Backup {
 
-	private static final String POSTGRES_PATH = "C:\\Program Files\\PostgreSQL\\10\\bin\\pg_dump.exe";
+	private static final String POSTGRES_PATH = "C:\\Program Files\\PostgreSQL\\15\\bin\\pg_dump.exe";
 
 	public void generateOnBackground(String filename, String extension) {
 		Task<Void> backgroundProcess = new Task<Void>() {

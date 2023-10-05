@@ -14,6 +14,7 @@ import org.casadeguara.componentes.MaskedTextField;
 import org.casadeguara.componentes.NotificationButton;
 import org.casadeguara.entidades.Editora;
 import org.casadeguara.entidades.Livro;
+import org.casadeguara.entidades.Serie;
 import org.casadeguara.models.GenericModel;
 
 /**
@@ -32,11 +33,13 @@ public class CadastroLivroView implements GenericView {
 	private Button btnSugerir;
 	private AutoCompleteTextField<Livro> pesquisarLivros;
 	private AutoCompleteTextField<Editora> pesquisarEditoras;
+	private AutoCompleteTextField<Serie> pesquisarSerie;
 	private MaskedTextField txtTombo;
 	private NotificationButton btnAdicionarAutor;
 	private NotificationButton btnAdicionarExemplar;
 	private NotificationButton btnAdicionarPalavra;
 	private TextField txtTitulo;
+	private MaskedTextField txtOrdem;
 
 	public CadastroLivroView() {
 		painelLivro = new AnchorPane();
@@ -49,6 +52,8 @@ public class CadastroLivroView implements GenericView {
 		Label lblEditora = new Label("Publicado por:*");
 		Label lblTitulo = new Label("Título:*");
 		Label lblTombo = new Label("Tombo:*");
+		Label lblSerie = new Label("Série ou Coleção:");
+		Label lblOrdem = new Label("Ordem na coleção:");
 
 		Label lblIncluir = new Label("Informações Adicionais");
 		Label opcoes = new Label("Opções");
@@ -60,10 +65,15 @@ public class CadastroLivroView implements GenericView {
 		pesquisarEditoras = new AutoCompleteTextField<>();
 		pesquisarEditoras.setPrefWidth(535);
 
+		pesquisarSerie = new AutoCompleteTextField<>();
+		pesquisarSerie.setPrefWidth(535);
+
 		txtTitulo = new TextField();
 		txtTombo = new MaskedTextField("#######", ' ');
+		txtOrdem = new MaskedTextField("###", ' ');
 		txtTitulo.setPrefWidth(535);
 		txtTombo.setPrefWidth(535);
+		txtOrdem.setPrefWidth(535);
 
 		btnAdicionarAutor = new NotificationButton("Autores");
 		btnAdicionarExemplar = new NotificationButton("Exemplares");
@@ -96,26 +106,34 @@ public class CadastroLivroView implements GenericView {
 		AnchorPane.setTopAnchor(txtTombo, 195.0);
 		AnchorPane.setTopAnchor(lblEditora, 233.0);
 		AnchorPane.setTopAnchor(pesquisarEditoras, 230.0);
-		AnchorPane.setTopAnchor(lblIncluir, 290.0);
-		AnchorPane.setTopAnchor(btnAdicionarAutor, 320.0);
-		AnchorPane.setTopAnchor(btnAdicionarExemplar, 320.0);
-		AnchorPane.setTopAnchor(btnAdicionarPalavra, 320.0);
-		AnchorPane.setTopAnchor(opcoes, 380.0);
-		AnchorPane.setTopAnchor(btnCadastrar, 410.0);
-		AnchorPane.setTopAnchor(btnAlterar, 410.0);
-		AnchorPane.setTopAnchor(btnLimpar, 410.0);
-		AnchorPane.setTopAnchor(btnSugerir, 410.0);
+		AnchorPane.setTopAnchor(lblSerie, 268.0);
+		AnchorPane.setTopAnchor(pesquisarSerie, 265.0);
+		AnchorPane.setTopAnchor(lblOrdem, 303.0);
+		AnchorPane.setTopAnchor(txtOrdem, 300.0);
+		AnchorPane.setTopAnchor(lblIncluir, 338.0);
+		AnchorPane.setTopAnchor(btnAdicionarAutor, 360.0);
+		AnchorPane.setTopAnchor(btnAdicionarExemplar, 360.0);
+		AnchorPane.setTopAnchor(btnAdicionarPalavra, 360.0);
+		AnchorPane.setTopAnchor(opcoes, 450.0);
+		AnchorPane.setTopAnchor(btnCadastrar, 480.0);
+		AnchorPane.setTopAnchor(btnAlterar, 480.0);
+		AnchorPane.setTopAnchor(btnLimpar, 480.0);
+		AnchorPane.setTopAnchor(btnSugerir, 480.0);
 
 		AnchorPane.setTopAnchor(titulo, 0.0);
 		AnchorPane.setLeftAnchor(pesquise, 0.0);
 		AnchorPane.setLeftAnchor(pesquisarLivros, 0.0);
 		AnchorPane.setLeftAnchor(info, 0.0);
 		AnchorPane.setLeftAnchor(lblTitulo, 0.0);
-		AnchorPane.setLeftAnchor(txtTitulo, 110.0);
+		AnchorPane.setLeftAnchor(txtTitulo, 130.0);
 		AnchorPane.setLeftAnchor(lblTombo, 0.0);
-		AnchorPane.setLeftAnchor(txtTombo, 110.0);
+		AnchorPane.setLeftAnchor(txtTombo, 130.0);
 		AnchorPane.setLeftAnchor(lblEditora, 0.0);
-		AnchorPane.setLeftAnchor(pesquisarEditoras, 110.0);
+		AnchorPane.setLeftAnchor(pesquisarEditoras, 130.0);
+		AnchorPane.setLeftAnchor(lblSerie, 0.0);
+		AnchorPane.setLeftAnchor(pesquisarSerie, 130.0);
+		AnchorPane.setLeftAnchor(lblOrdem, 0.0);
+		AnchorPane.setLeftAnchor(txtOrdem, 130.0);
 		AnchorPane.setLeftAnchor(lblIncluir, 0.0);
 		AnchorPane.setLeftAnchor(btnAdicionarAutor, 0.0);
 		AnchorPane.setLeftAnchor(btnAdicionarExemplar, 185.0);
@@ -126,9 +144,10 @@ public class CadastroLivroView implements GenericView {
 		AnchorPane.setLeftAnchor(btnLimpar, 270.0);
 		AnchorPane.setLeftAnchor(btnSugerir, 405.0);
 
-		painelLivro.getChildren().addAll(titulo, info, pesquise, lblEditora, lblIncluir, lblTitulo, lblTombo, opcoes,
-				txtTitulo, txtTombo, pesquisarEditoras, pesquisarLivros, btnAdicionarAutor, btnAdicionarExemplar,
-				btnAdicionarPalavra, btnCadastrar, btnAlterar, btnSugerir, btnLimpar);
+		painelLivro.getChildren().addAll(titulo, info, pesquise, lblEditora, lblIncluir, lblTitulo, lblTombo, lblSerie,
+				lblOrdem, opcoes, txtTitulo, txtTombo, txtOrdem, pesquisarEditoras, pesquisarLivros, pesquisarSerie,
+				btnAdicionarAutor, btnAdicionarExemplar, btnAdicionarPalavra, btnCadastrar, btnAlterar, btnSugerir,
+				btnLimpar);
 	}
 
 	private void corNotificacao(NotificationButton button) {
@@ -179,8 +198,10 @@ public class CadastroLivroView implements GenericView {
 
 		txtTitulo.clear();
 		txtTombo.clear();
+		txtOrdem.clear();
 		pesquisarLivros.clear();
 		pesquisarEditoras.clear();
+		pesquisarSerie.clear();
 	}
 
 	public void limparNotificacoes() {
@@ -213,6 +234,22 @@ public class CadastroLivroView implements GenericView {
 		pesquisarEditoras.setResult(editora);
 	}
 
+	public Serie getSerie() {
+		return pesquisarSerie.getResult();
+	}
+
+	public void setSerie(Serie serie) {
+		pesquisarSerie.setResult(serie);
+	}
+
+	public String getOrdemColecao() {
+		return txtOrdem.getText();
+	}
+
+	public void setOrdemColecao(String ordem) {
+		txtOrdem.setPlainText(ordem);
+	}
+
 	public void quantidadeAutores(int valor) {
 		btnAdicionarAutor.setNotificationText(valor);
 	}
@@ -231,6 +268,10 @@ public class CadastroLivroView implements GenericView {
 
 	public void setAutoCompleteLivro(GenericModel<Livro> model) {
 		pesquisarLivros.setModel(model);
+	}
+
+	public void setAutoCompleteSerie(GenericModel<Serie> model) {
+		pesquisarSerie.setModel(model);
 	}
 
 	public Livro getLivroSelecionado() {

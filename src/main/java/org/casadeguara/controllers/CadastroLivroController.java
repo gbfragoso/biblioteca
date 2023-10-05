@@ -10,10 +10,12 @@ import org.casadeguara.entidades.Editora;
 import org.casadeguara.entidades.Exemplar;
 import org.casadeguara.entidades.Livro;
 import org.casadeguara.entidades.PalavraChave;
+import org.casadeguara.entidades.Serie;
 import org.casadeguara.models.AutorModel;
 import org.casadeguara.models.EditoraModel;
 import org.casadeguara.models.LivroModel;
 import org.casadeguara.models.PalavraChaveModel;
+import org.casadeguara.models.SerieModel;
 import org.casadeguara.views.CadastroLivroView;
 
 import javafx.collections.FXCollections;
@@ -53,6 +55,7 @@ public class CadastroLivroController implements GenericController {
 
 		view.setAutoCompleteEditora(new EditoraModel());
 		view.setAutoCompleteLivro(model);
+		view.setAutoCompleteSerie(new SerieModel());
 	}
 
 	public void adicionarAutores() {
@@ -90,11 +93,17 @@ public class CadastroLivroController implements GenericController {
 		String titulo = view.getTituloLivro();
 		String tombo = view.getTomboLivro();
 		Editora editora = view.getEditora();
+		Serie serie = view.getSerie();
+		String ordemColecao = view.getOrdemColecao();
 
 		if (livro != null && editora != null && !titulo.isEmpty() && !tombo.isEmpty()) {
 			livro.setTitulo(titulo);
 			livro.setTombo(tombo);
 			livro.setEditora(editora);
+			livro.setSerie(serie);
+			if (ordemColecao != null && !ordemColecao.isEmpty()) {
+				livro.setOrdemColecao(Integer.parseInt(ordemColecao.trim()));
+			}
 
 			Task<Void> atualizandoLivro = new Task<Void>() {
 
@@ -133,6 +142,8 @@ public class CadastroLivroController implements GenericController {
 		String titulo = view.getTituloLivro();
 		String tombo = view.getTomboLivro();
 		Editora editora = view.getEditora();
+		Serie serie = view.getSerie();
+		String ordemColecao = view.getOrdemColecao();
 
 		if (model.verificaTombo(tombo)) {
 			view.mensagemInformativa("Tombo em uso por outro livro");
@@ -142,6 +153,10 @@ public class CadastroLivroController implements GenericController {
 		if (!titulo.isEmpty() && !tombo.isEmpty() && editora != null) {
 			Livro novoLivro = new Livro(0, tombo, titulo);
 			novoLivro.setEditora(editora);
+			novoLivro.setSerie(serie);
+			if (ordemColecao != null && !ordemColecao.isEmpty()) {
+				novoLivro.setOrdemColecao(Integer.parseInt(ordemColecao.trim()));
+			}
 
 			if (!listaAutores.isEmpty() || !listaExemplares.isEmpty() || !listaPalavrasChave.isEmpty()) {
 
@@ -195,6 +210,16 @@ public class CadastroLivroController implements GenericController {
 			view.setTituloLivro(livro.getTitulo());
 			view.setTomboLivro(livro.getTombo());
 			view.setEditora(livro.getEditora());
+
+			Serie serie = livro.getSerie();
+			if (serie != null && serie.getId() > 0) {
+				view.setSerie(serie);
+			}
+
+			Integer ordemColecao = livro.getOrdemColecao();
+			if (ordemColecao != null && ordemColecao > 0) {
+				view.setOrdemColecao(ordemColecao.toString());
+			}
 
 			int idlivro = livro.getId();
 			listaAutores.setAll(model.consultarAutores(idlivro));

@@ -16,6 +16,7 @@ import org.casadeguara.entidades.Editora;
 import org.casadeguara.entidades.Exemplar;
 import org.casadeguara.entidades.Livro;
 import org.casadeguara.entidades.PalavraChave;
+import org.casadeguara.entidades.Serie;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,14 +54,24 @@ public class LivroModel implements GenericModel<Livro> {
 		String titulo = livro.getTitulo();
 
 		StringBuilder query = new StringBuilder();
-		query.append("update livro set titulo = ?, tombo = ?, editora = ? where idlivro = ?");
+		if (livro.getSerie() != null && livro.getOrdemColecao() != null) {
+			query.append("update livro set titulo = ?, tombo = ?, editora = ?, serie = ?, ordem = ? where idlivro = ?");
+		} else {
+			query.append("update livro set titulo = ?, tombo = ?, editora = ? where idlivro = ?");
+		}
 
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
 
 			ps.setString(1, titulo);
 			ps.setString(2, livro.getTombo());
 			ps.setInt(3, livro.getEditora().getId());
-			ps.setInt(4, livro.getId());
+			if (livro.getSerie() == null || livro.getOrdemColecao() == null) {
+				ps.setInt(4, livro.getId());
+			} else {
+				ps.setInt(4, livro.getSerie().getId());
+				ps.setInt(5, livro.getOrdemColecao());
+				ps.setInt(6, livro.getId());
+			}
 			ps.executeUpdate();
 
 			return 0;
@@ -72,7 +83,12 @@ public class LivroModel implements GenericModel<Livro> {
 
 	public int cadastrar(Livro livro) {
 		String titulo = livro.getTitulo();
-		String query = "insert into livro (titulo, tombo, editora, data_cadastro) values (?,?,?,current_date)";
+		String query = "";
+		if (livro.getSerie() != null && livro.getOrdemColecao() != null) {
+			query = "insert into livro (titulo, tombo, editora, serie, ordem, data_cadastro) values (?,?,?,?,?,current_date)";
+		} else {
+			query = "insert into livro (titulo, tombo, editora, data_cadastro) values (?,?,?,current_date)";
+		}
 
 		try (Connection con = Conexao.abrir();
 				PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -80,6 +96,10 @@ public class LivroModel implements GenericModel<Livro> {
 			ps.setString(1, titulo);
 			ps.setString(2, livro.getTombo());
 			ps.setInt(3, livro.getEditora().getId());
+			if (livro.getSerie() != null || livro.getOrdemColecao() != null) {
+				ps.setInt(4, livro.getSerie().getId());
+				ps.setInt(5, livro.getOrdemColecao());
+			}
 			ps.executeUpdate();
 
 			try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -95,8 +115,9 @@ public class LivroModel implements GenericModel<Livro> {
 
 	public ObservableList<Livro> consultar(String titulo, int resultados) {
 		StringBuilder query = new StringBuilder();
-		query.append("select idlivro, tombo, titulo, editora.ideditora, editora.nome from livro ");
+		query.append("select idlivro, tombo, titulo, editora.ideditora, editora.nome, serie.idserie, serie.nome, ordem from livro ");
 		query.append("left join editora on (editora = ideditora) ");
+		query.append("left join serie on (serie = idserie) ");
 		query.append("where tombo || ' - ' || unaccent(titulo) like unaccent(?) limit ?");
 		ObservableList<Livro> livros = FXCollections.observableArrayList();
 
@@ -107,9 +128,12 @@ public class LivroModel implements GenericModel<Livro> {
 			try (ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
 					Editora editora = new Editora(rs.getInt(4), rs.getString(5));
+					Serie serie = new Serie(rs.getInt(6), rs.getString(7));
 
 					Livro livro = new Livro(rs.getInt(1), rs.getString(2), rs.getString(3));
 					livro.setEditora(editora);
+					livro.setSerie(serie);
+					livro.setOrdemColecao(rs.getInt(8));
 					livros.add(livro);
 				}
 			}
