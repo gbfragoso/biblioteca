@@ -83,7 +83,7 @@ public class EmprestimoModel {
 		query.append("select exemplar, a.numero, b.tombo, b.titulo, data_devolucao from emprestimo ");
 		query.append("inner join exemplar a on (idexemplar = exemplar) ");
 		query.append("inner join livro b on (a.livro = idlivro) ");
-		query.append("where leitor = ?");
+		query.append("where leitor = ? and data_devolvido is null");
 
 		ObservableList<Acervo> exp = FXCollections.observableArrayList();
 		try (Connection con = Conexao.abrir(); PreparedStatement ps = con.prepareStatement(query.toString())) {
