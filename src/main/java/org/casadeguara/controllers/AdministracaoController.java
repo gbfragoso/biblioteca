@@ -139,7 +139,7 @@ public class AdministracaoController implements GenericController {
 	}
 
 	public void emprestimosEmAtraso() {
-		imprimir.relacaoEmprestimos("data_devolucao < current_date");
+		imprimir.relacaoEmprestimos("data_devolucao < current_date and data_devolvido is null");
 	}
 
 	public void emprestimosPorLivro() {

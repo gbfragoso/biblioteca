@@ -231,6 +231,9 @@ public class CadastroLivroView implements GenericView {
 	}
 
 	public void setEditora(Editora editora) {
+		if (editora == null || editora.getId() == 0) {
+			return;
+		}
 		pesquisarEditoras.setResult(editora);
 	}
 
@@ -239,6 +242,9 @@ public class CadastroLivroView implements GenericView {
 	}
 
 	public void setSerie(Serie serie) {
+		if (serie == null || serie.getId() == 0) {
+			return;
+		}
 		pesquisarSerie.setResult(serie);
 	}
 
