@@ -101,7 +101,7 @@ public class CadastroLivroController implements GenericController {
 			livro.setTombo(tombo);
 			livro.setEditora(editora);
 			livro.setSerie(serie);
-			if (ordemColecao != null && !ordemColecao.isEmpty()) {
+			if (ordemColecao != null && !ordemColecao.trim().equals("")) {
 				livro.setOrdemColecao(Integer.parseInt(ordemColecao.trim()));
 			}
 
@@ -210,11 +210,7 @@ public class CadastroLivroController implements GenericController {
 			view.setTituloLivro(livro.getTitulo());
 			view.setTomboLivro(livro.getTombo());
 			view.setEditora(livro.getEditora());
-
-			Serie serie = livro.getSerie();
-			if (serie != null && serie.getId() > 0) {
-				view.setSerie(serie);
-			}
+			view.setSerie(livro.getSerie());
 
 			Integer ordemColecao = livro.getOrdemColecao();
 			if (ordemColecao != null && ordemColecao > 0) {
