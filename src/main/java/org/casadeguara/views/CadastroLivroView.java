@@ -243,7 +243,7 @@ public class CadastroLivroView implements GenericView {
 	}
 
 	public String getOrdemColecao() {
-		return txtOrdem.getText();
+		return txtOrdem.getPlainText();
 	}
 
 	public void setOrdemColecao(String ordem) {
